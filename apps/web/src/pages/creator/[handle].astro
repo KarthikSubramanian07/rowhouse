@@ -1,0 +1,202 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrackCard from '../../components/TrackCard.astro';
+import CreatorActions from '../../components/CreatorActions';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+interface CreatorPage {
+  creator: {
+    handle: string;
+    name: string;
+    avatarUrl: string | null;
+    bio: string | null;
+    tone: string | null;
+    followerCount: number;
+    isCreator: boolean;
+  };
+  following: boolean;
+  library: {
+    id: string;
+    title: string;
+    filmSlug: string;
+    durationSeconds: number;
+    listenCount: number;
+    completionRate: number;
+    tone: string | null;
+    isLiveReplay: boolean;
+    createdAt: number;
+  }[];
+  upcoming: {
+    id: string;
+    title: string;
+    filmSlug: string;
+    scheduledFor: number | null;
+    status: string;
+  }[];
+  watchlist: {
+    filmSlug: string;
+    note: string | null;
+    upvotes: number;
+    title: string;
+    year: number | null;
+  }[];
+}
+
+const { handle } = Astro.params;
+const page = await apiFetch<CreatorPage>(Astro, `/creators/${handle}`);
+
+if (!page) {
+  return new Response(null, { status: 404, statusText: 'Creator not found' });
+}
+
+const { creator, following, library, upcoming, watchlist } = page;
+
+// Library newest-first.
+const libraryByDate = [...library].sort((a, b) => b.createdAt - a.createdAt);
+// Only surface schedule entries that are genuinely upcoming/planned.
+const upcomingSorted = [...upcoming].sort(
+  (a, b) => (a.scheduledFor ?? Infinity) - (b.scheduledFor ?? Infinity),
+);
+const watchlistByVotes = [...watchlist].sort((a, b) => b.upvotes - a.upvotes);
+
+const initial = creator.name.slice(0, 1).toUpperCase();
+const followerLabel = `${creator.followerCount.toLocaleString()} ${creator.followerCount === 1 ? 'follower' : 'followers'}`;
+
+const site = 'https://rowhouse.pages.dev';
+const title = `${creator.name} (@${creator.handle}) — Rowhouse`;
+const description = creator.bio
+  ? creator.bio.slice(0, 155)
+  : `${creator.name} on Rowhouse — synced film commentary, live and on demand. ${followerLabel}.`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    name: creator.name,
+    alternateName: `@${creator.handle}`,
+    ...(creator.bio ? { description: creator.bio } : {}),
+    ...(creator.avatarUrl ? { image: creator.avatarUrl } : {}),
+    url: `${site}/creator/${creator.handle}`,
+  },
+};
+
+function scheduleLabel(scheduledFor: number | null): string {
+  if (!scheduledFor) return 'Time TBD';
+  return new Date(scheduledFor * 1000).toLocaleString();
+}
+---
+
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    <!-- Header -->
+    <header class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+      <div class="flex items-start gap-4">
+        {creator.avatarUrl ? (
+          <img
+            src={creator.avatarUrl}
+            alt={creator.name}
+            class="size-16 shrink-0 rounded-full object-cover ring-1 ring-border"
+          />
+        ) : (
+          <span class="grid size-16 shrink-0 place-items-center rounded-full bg-surface-2 font-display text-2xl text-text-hi ring-1 ring-border">
+            {initial}
+          </span>
+        )}
+        <div>
+          <h1 class="font-display text-3xl text-text-hi sm:text-4xl">{creator.name}</h1>
+          <p class="mt-1 font-mono text-sm text-text-mid">@{creator.handle}</p>
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <span class="font-mono text-xs text-text-dim">{followerLabel}</span>
+            {creator.tone && (
+              <span class="rounded-sm border border-border bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.06em] text-text-mid">
+                {creator.tone}
+              </span>
+            )}
+            {creator.isCreator && (
+              <span class="rounded-sm border border-transparent bg-accent/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.06em] text-accent-hi">
+                Creator
+              </span>
+            )}
+          </div>
+          {creator.bio && <p class="mt-3 max-w-xl text-text-mid">{creator.bio}</p>}
+        </div>
+      </div>
+      <div class="shrink-0">
+        <CreatorActions handle={creator.handle} initialFollowing={following} client:load />
+      </div>
+    </header>
+
+    <!-- Library -->
+    <section class="mt-14">
+      <div class="mb-4 flex items-end justify-between">
+        <h2 class="font-display text-2xl text-text-hi">Library</h2>
+        <span class="font-mono text-xs text-text-dim">
+          {library.length} {library.length === 1 ? 'track' : 'tracks'}
+        </span>
+      </div>
+      {libraryByDate.length > 0 ? (
+        <div class="grid gap-3 md:grid-cols-2">
+          {libraryByDate.map((t) => (
+            <TrackCard track={{ ...t, creatorHandle: creator.handle, creatorName: creator.name }} />
+          ))}
+        </div>
+      ) : (
+        <p class="rounded-lg border border-border bg-surface p-6 text-sm text-text-mid">
+          No published commentary yet — the archive starts the moment {creator.name} goes live.
+        </p>
+      )}
+    </section>
+
+    <!-- Upcoming schedule -->
+    {upcomingSorted.length > 0 && (
+      <section class="mt-14">
+        <h2 class="mb-4 font-display text-2xl text-text-hi">Upcoming</h2>
+        <ul class="divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface">
+          {upcomingSorted.map((s) => (
+            <li class="flex items-center justify-between gap-4 px-4 py-3">
+              <div class="min-w-0">
+                <a href={`/film/${s.filmSlug}`} class="truncate text-sm font-medium text-text-hi hover:text-white">
+                  {s.title}
+                </a>
+                <p class="mt-0.5 font-mono text-xs text-text-dim">{scheduleLabel(s.scheduledFor)}</p>
+              </div>
+              <span class="shrink-0 rounded-sm border border-border bg-surface-2 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.06em] text-text-mid">
+                {s.status}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <!-- Watch list -->
+    {watchlistByVotes.length > 0 && (
+      <section class="mt-14 mb-4">
+        <h2 class="mb-1 font-display text-2xl text-text-hi">Watch list</h2>
+        <p class="mb-4 text-sm text-text-mid">What {creator.name} wants to cover next. Upvote to nudge it up the queue.</p>
+        <ul class="divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface">
+          {watchlistByVotes.map((w) => (
+            <li class="flex items-center justify-between gap-4 px-4 py-3">
+              <div class="min-w-0">
+                <a href={`/film/${w.filmSlug}`} class="truncate text-sm font-medium text-text-hi hover:text-white">
+                  {w.title}{w.year ? <span class="text-text-dim"> · {w.year}</span> : null}
+                </a>
+                {w.note && <p class="mt-0.5 truncate text-xs text-text-mid">{w.note}</p>}
+              </div>
+              <CreatorActions
+                mode="upvote"
+                handle={creator.handle}
+                filmSlug={w.filmSlug}
+                initialUpvotes={w.upvotes}
+                client:load
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</Base>

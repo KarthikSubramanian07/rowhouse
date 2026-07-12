@@ -1,0 +1,84 @@
+---
+import '../styles/app.css';
+import AuthNav from '../components/AuthNav';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string | undefined;
+  canonical?: string | undefined;
+  jsonLd?: unknown;
+}
+
+const {
+  title = 'Rowhouse — commentary synced to whatever you’re watching',
+  description = 'Free-forever live commentary for film & TV. Hold up your phone; the commentary snaps to your exact frame. Live or on demand.',
+  ogImage,
+  canonical,
+  jsonLd,
+} = Astro.props;
+
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse.pages.dev';
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="theme-color" content="#0B0B0D" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rowhouse" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0B0D'/%3E%3Crect x='6' y='9' width='4' height='14' fill='%23E0362E'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3Crect x='22' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3C/svg%3E" />
+  </head>
+  <body class="min-h-screen bg-bg text-text-hi">
+    <header class="sticky top-0 z-40 border-b border-border/80 bg-bg/80 backdrop-blur">
+      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <a href="/" class="flex items-center gap-2" aria-label="Rowhouse home">
+          <span class="flex items-end gap-[3px]" aria-hidden="true">
+            <span class="block h-4 w-[3px] bg-accent"></span>
+            <span class="block h-4 w-[3px] bg-text-hi"></span>
+            <span class="block h-4 w-[3px] bg-text-hi"></span>
+          </span>
+          <span class="font-display text-xl font-semibold tracking-tight">Rowhouse</span>
+        </a>
+        <nav class="flex items-center gap-1 text-sm">
+          <a href="/discover" class="rounded-md px-3 py-1.5 text-text-mid transition-colors hover:bg-surface hover:text-text-hi">Discover</a>
+          <a href="/live" class="rounded-md px-3 py-1.5 text-text-mid transition-colors hover:bg-surface hover:text-text-hi">Live</a>
+          <AuthNav client:load />
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="mt-24 border-t border-border/80">
+      <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-text-dim sm:flex-row sm:items-center sm:justify-between sm:px-6">
+        <div class="max-w-md">
+          <p class="font-mono text-xs uppercase tracking-widest text-text-mid">Rowhouse</p>
+          <p class="mt-1">Watch together. React live. Replay forever. The commentary layer — the film stays on your platform of choice.</p>
+        </div>
+        <nav class="flex flex-wrap gap-x-5 gap-y-2">
+          <a href="/discover" class="hover:text-text-hi">Discover</a>
+          <a href="/live" class="hover:text-text-hi">Live now</a>
+          <a href="/about" class="hover:text-text-hi">How sync works</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

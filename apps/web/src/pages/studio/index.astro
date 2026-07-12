@@ -1,0 +1,41 @@
+---
+import Base from '../../layouts/Base.astro';
+import Studio from '../../components/Studio';
+import type { StudioUser } from '../../components/Studio';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+interface Me {
+  user: StudioUser | null;
+  google: boolean;
+}
+
+const me = await apiFetch<Me>(Astro, '/auth/me');
+const user = me?.user ?? null;
+
+const title = 'Studio — Rowhouse';
+const description = 'Go live, drop mini-takes, and turn every session into a searchable track.';
+---
+
+<Base title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
+    <header>
+      <p class="font-mono text-xs uppercase tracking-widest text-text-mid">Creator tools</p>
+      <h1 class="mt-2 font-display text-4xl leading-tight text-text-hi">Studio</h1>
+    </header>
+
+    {user ? (
+      <div class="mt-8">
+        <Studio me={user} client:only="react" />
+      </div>
+    ) : (
+      <div class="mt-8 rounded-lg border border-border bg-surface p-6">
+        <p class="text-text-hi">Sign in to open the studio.</p>
+        <p class="mt-1 text-sm text-text-dim">
+          Use the <span class="text-text-mid">Sign in</span> button at the top-right, then reload this page.
+        </p>
+      </div>
+    )}
+  </article>
+</Base>

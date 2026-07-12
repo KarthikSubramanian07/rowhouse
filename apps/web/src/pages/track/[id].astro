@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import SyncPlayer from '../../components/SyncPlayer';
+import type { TrackDetail } from '../../components/SyncPlayer';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const detail = await apiFetch<TrackDetail>(Astro, `/tracks/${id}`);
+
+if (!detail) {
+  return new Response(null, { status: 404, statusText: 'Track not found' });
+}
+
+const site = 'https://rowhouse.pages.dev';
+const filmTitle = detail.film?.title ?? 'this film';
+const title = `${detail.track.title} — ${detail.creator.name} on Rowhouse`;
+const description = `${detail.creator.name}'s synced commentary on ${filmTitle}. Press play on your film and it locks to your frame.`;
+const ogImage = `${site}/api/og/track/${detail.track.id}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AudioObject',
+  name: detail.track.title,
+  creator: { '@type': 'Person', name: detail.creator.name },
+  duration: `PT${Math.round(detail.track.durationSeconds)}S`,
+  url: `${site}/track/${detail.track.id}`,
+};
+---
+
+<Base title={title} description={description} ogImage={ogImage} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
+    <nav class="font-mono text-xs text-text-dim">
+      {detail.film && <a href={`/film/${detail.film.slug}`} class="hover:text-text-mid">{detail.film.slug}</a>}
+    </nav>
+
+    <header class="mt-4">
+      <div class="flex items-center gap-2">
+        {detail.track.isLiveReplay && (
+          <span class="rounded bg-accent/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-accent-hi">Live replay</span>
+        )}
+        {detail.track.tone && (
+          <span class="rounded border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-dim">{detail.track.tone}</span>
+        )}
+      </div>
+      <h1 class="mt-3 font-display text-4xl leading-tight text-text-hi">{detail.track.title}</h1>
+      <p class="mt-2 text-text-mid">
+        <a href={`/creator/${detail.creator.handle}`} class="hover:text-text-hi">{detail.creator.name}</a>
+        <span class="text-text-dim"> · commentary on </span>
+        {detail.film ? <a href={`/film/${detail.film.slug}`} class="hover:text-text-hi">{detail.film.title}</a> : filmTitle}
+      </p>
+      <p class="mt-1 font-mono text-xs text-text-dim">
+        {Math.round(detail.track.completionRate * 100)}% finish it
+      </p>
+    </header>
+
+    <div class="mt-8">
+      <SyncPlayer detail={detail} client:only="react" />
+    </div>
+
+    <p class="mt-6 text-xs text-text-dim">
+      Rowhouse never records or stores film audio. Your microphone is processed to a fingerprint on
+      your device and discarded — we only deliver the commentary layer over what you're already watching.
+    </p>
+  </article>
+</Base>

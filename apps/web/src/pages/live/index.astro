@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+interface LiveItem {
+  id: string;
+  title: string;
+  filmSlug: string;
+  creatorHandle: string;
+  creatorName: string;
+  mode: string;
+  scheduledFor: number | null;
+  startedAt: number | null;
+}
+
+const data = (await apiFetch<{ live: LiveItem[]; upcoming: LiveItem[] }>(Astro, '/live/now')) ?? {
+  live: [],
+  upcoming: [],
+};
+
+const live = data.live;
+const upcoming = [...data.upcoming].sort(
+  (a, b) => (a.scheduledFor ?? Infinity) - (b.scheduledFor ?? Infinity),
+);
+
+function scheduleLabel(scheduledFor: number | null): string {
+  if (!scheduledFor) return 'Time TBD';
+  return new Date(scheduledFor * 1000).toLocaleString();
+}
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Live film commentary — Rowhouse',
+  url: 'https://rowhouse.pages.dev/live',
+  description: 'Commentary happening right now, synced to your exact frame. Join the room.',
+};
+---
+
+<Base
+  title="Live film commentary — Rowhouse"
+  description="Who's in the room right now. Live commentary synced to your exact frame — join in, or catch what's coming up next."
+  jsonLd={jsonLd}
+>
+  <section class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">The theater</p>
+    <h1 class="mt-3 font-display text-4xl text-text-hi sm:text-5xl">Live now</h1>
+    <p class="mt-4 max-w-2xl text-text-mid">
+      Someone's talking over a film this second. Hold up your phone when you join and the room
+      snaps to wherever you are.
+    </p>
+
+    <!-- Live now -->
+    <section class="mt-10">
+      {live.length > 0 ? (
+        <>
+          <div class="mb-4 flex items-center gap-2">
+            <span class="inline-block size-2 animate-pulse rounded-full bg-accent"></span>
+            <h2 class="font-mono text-xs uppercase tracking-widest text-text-mid">
+              {live.length} live {live.length === 1 ? 'room' : 'rooms'}
+            </h2>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {live.map((s) => (
+              <a
+                href={`/live/${s.id}`}
+                class="group rounded-lg border border-accent/40 bg-surface p-4 transition-colors hover:border-accent"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="inline-block size-1.5 animate-pulse rounded-full bg-accent"></span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-accent-hi">Live</span>
+                </div>
+                <p class="mt-2 text-sm font-medium text-text-hi group-hover:text-white">{s.title}</p>
+                <p class="mt-1 text-xs text-text-mid">
+                  {s.creatorName} · <span class="font-mono text-text-dim">@{s.creatorHandle}</span>
+                </p>
+              </a>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div class="rounded-lg border border-border bg-surface p-8 text-center">
+          <p class="font-display text-xl text-text-hi">The theater's quiet right now.</p>
+          <p class="mx-auto mt-2 max-w-md text-sm text-text-mid">
+            Follow a creator and we'll ping you when the lights go down.
+          </p>
+          <a
+            href="/discover"
+            class="mt-5 inline-block rounded-md border border-border px-4 py-2 text-sm text-text-mid transition-colors hover:border-text-mid hover:text-text-hi"
+          >
+            Find someone to follow →
+          </a>
+        </div>
+      )}
+    </section>
+
+    <!-- Upcoming -->
+    {upcoming.length > 0 && (
+      <section class="mt-14 mb-4">
+        <h2 class="mb-4 font-display text-2xl text-text-hi">Upcoming</h2>
+        <ul class="divide-y divide-border overflow-hidden rounded-lg border border-border bg-surface">
+          {upcoming.map((s) => (
+            <li class="flex items-center justify-between gap-4 px-4 py-3">
+              <div class="min-w-0">
+                <p class="truncate text-sm font-medium text-text-hi">{s.title}</p>
+                <p class="mt-0.5 text-xs text-text-mid">
+                  {s.creatorName} · <span class="font-mono text-text-dim">@{s.creatorHandle}</span>
+                </p>
+              </div>
+              <span class="shrink-0 font-mono text-xs text-text-dim">{scheduleLabel(s.scheduledFor)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </section>
+</Base>

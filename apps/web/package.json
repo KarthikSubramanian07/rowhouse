@@ -1,0 +1,34 @@
+{
+  "name": "@rowhouse/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Rowhouse public site (Astro on Cloudflare Pages) — SEO film pages + the sync players.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "deploy": "astro build && wrangler pages deploy dist --project-name=rowhouse --commit-dirty=true"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.0",
+    "@astrojs/react": "^4.3.0",
+    "@rowhouse/sync-engine": "workspace:*",
+    "@rowhouse/types": "workspace:*",
+    "@rowhouse/ui": "workspace:*",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^5.13.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "@cloudflare/workers-types": "^4.20250712.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "typescript": "^5.7.3",
+    "wrangler": "^4.110.0"
+  }
+}

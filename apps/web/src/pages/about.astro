@@ -1,0 +1,112 @@
+---
+import Base from '../layouts/Base.astro';
+import SyncDemo from '../components/SyncDemo';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: 'How Rowhouse sync works',
+  url: 'https://rowhouse.pages.dev/about',
+  description:
+    'Ten seconds of listening, a constellation-hash landmark match against the film’s fingerprint map, and the commentary snaps to your exact frame — without ever recording the film.',
+};
+---
+
+<Base
+  title="How Rowhouse sync works"
+  description="Hold up your phone. Ten seconds of listening. The commentary locks to your exact frame — on any platform, live or recorded. Here's the engineering, and why it's legally clean."
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">How the sync works</p>
+    <h1 class="mt-3 font-display text-4xl leading-[1.05] text-text-hi sm:text-5xl">
+      Ten seconds of listening. Then the commentary knows exactly where you are.
+    </h1>
+    <p class="mt-5 text-lg text-text-mid">
+      Rowhouse is the commentary layer, not the film. The movie plays wherever you already watch it.
+      We just deliver the person sitting next to you — locked to your frame, not to a countdown or a
+      "press play together" handshake that drifts the moment someone pauses.
+    </p>
+
+    <!-- Live demo -->
+    <div class="mt-10">
+      <SyncDemo client:only="react" />
+    </div>
+
+    <!-- Section 1 -->
+    <section class="mt-16">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">01 — The match</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Hold up your phone. We listen for ten seconds.</h2>
+      <p class="mt-3 text-text-mid">
+        When you join a track, the app opens your mic and captures roughly ten seconds of whatever's
+        in the room. That's enough. We're not trying to understand the audio — we're trying to find
+        one specific fingerprint inside it.
+      </p>
+      <p class="mt-3 text-text-mid">
+        Every point in a film has a distinctive pattern of spectral peaks. We hash those peaks into
+        landmarks — the same constellation-hash idea that lets a phone name a song in a noisy bar —
+        and match your ten seconds against the film's precomputed fingerprint map. The map is dense,
+        so the match resolves to a single moment: not "somewhere in act two," but the exact frame.
+        Then the track snaps to it and rides your clock from there.
+      </p>
+    </section>
+
+    <!-- Section 2 -->
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">02 — The fingerprint map</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">A landmark map, built once, per film.</h2>
+      <p class="mt-3 text-text-mid">
+        Before a film is listenable, we fingerprint it once into a compact map of landmarks and their
+        timestamps. Matching is a lookup against that map — fast enough to lock in the time it takes
+        you to get comfortable, and robust to the messy realities of a living room: TV speakers,
+        background chatter, your phone face-up on the couch.
+      </p>
+      <p class="mt-3 text-text-mid">
+        Because the match is anchored to content rather than to a shared timer, it survives pauses,
+        rewinds, ad breaks, and the fact that your stream started forty seconds after your friend's.
+        Everyone converges on the same frame from wherever they actually are.
+      </p>
+    </section>
+
+    <!-- Section 3 -->
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">03 — Why it's legally clean</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">We never record or store the film.</h2>
+      <p class="mt-3 text-text-mid">
+        The mic capture is turned into a fingerprint on your device and discarded. We don't keep the
+        audio, we don't stream the film, and we don't host a frame of it. The fingerprint map is a set
+        of hashes — you can't reconstruct a movie from it any more than you can rebuild a face from a
+        checksum.
+      </p>
+      <p class="mt-3 text-text-mid">
+        That's the whole point of building the commentary layer separately: the film stays on your
+        platform of choice, under its existing license, and Rowhouse only ever carries the
+        conversation on top of it.
+      </p>
+    </section>
+
+    <!-- Section 4 -->
+    <section class="mt-14 mb-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">04 — The flywheel</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Every live room becomes a permanent track.</h2>
+      <p class="mt-3 text-text-mid">
+        A creator goes live and talks over a film in real time; the room reacts, and those reactions
+        bake into the waveform. The moment it ends, the session is saved as an on-demand track —
+        already synced, already searchable, reactions intact. Six months later someone holds up their
+        phone, matches the same frame, and drops straight into that recorded room.
+      </p>
+      <p class="mt-3 text-text-mid">
+        Live feeds the archive; the archive pulls people back to the next live show. Same sync engine
+        driving both — the only difference is whether the host is still in the room.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">
+          Find a commentary
+        </a>
+        <a href="/live" class="rounded-md border border-border px-4 py-2.5 text-sm text-text-mid transition-colors hover:border-text-mid hover:text-text-hi">
+          See who's live
+        </a>
+      </div>
+    </section>
+  </article>
+</Base>

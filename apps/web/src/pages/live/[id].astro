@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import LivePlayer from '../../components/LivePlayer';
+import type { LiveDetail } from '../../components/LivePlayer';
+import { LiveBadge, Badge } from '@rowhouse/ui';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const detail = await apiFetch<LiveDetail>(Astro, `/live/${id}`);
+
+if (!detail) {
+  return new Response(null, { status: 404, statusText: 'Live session not found' });
+}
+
+const { session, creator, film } = detail;
+const site = 'https://rowhouse.pages.dev';
+const filmTitle = film?.title ?? 'this film';
+const title = `${session.title} — live on Rowhouse`;
+const description =
+  session.status === 'live'
+    ? `${creator.name} is live now with commentary on ${filmTitle}. Watch along and react in real time.`
+    : `${creator.name}'s live commentary on ${filmTitle}. Live or on demand on Rowhouse.`;
+
+const statusLabel =
+  session.status === 'scheduled' ? 'Scheduled' : session.status === 'ended' ? 'Ended' : 'Canceled';
+---
+
+<Base title={title} description={description}>
+  <article class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    <nav class="font-mono text-xs text-text-dim">
+      <a href="/live" class="hover:text-text-mid">live</a> / <span class="text-text-mid">{session.filmSlug}</span>
+    </nav>
+
+    <header class="mt-4">
+      <div class="flex items-center gap-2">
+        {session.status === 'live' ? <LiveBadge /> : <Badge variant="outline">{statusLabel}</Badge>}
+        {session.platform && (
+          <span class="rounded border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-dim">
+            {session.platform}
+          </span>
+        )}
+        <span class="rounded border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-dim">
+          {session.mode}
+        </span>
+      </div>
+
+      <h1 class="mt-3 font-display text-4xl leading-tight text-text-hi">{session.title}</h1>
+      <p class="mt-2 text-text-mid">
+        <a href={`/creator/${creator.handle}`} class="hover:text-text-hi">{creator.name}</a>
+        <span class="text-text-dim"> · commentary on </span>
+        {film ? (
+          <a href={`/film/${film.slug}`} class="hover:text-text-hi">{film.title}</a>
+        ) : (
+          filmTitle
+        )}
+      </p>
+    </header>
+
+    {session.trackId && (
+      <a
+        href={`/track/${session.trackId}`}
+        class="mt-6 flex items-center justify-between gap-3 rounded-lg border border-accent/40 bg-accent/10 px-4 py-3 transition-colors hover:bg-accent/15"
+      >
+        <span class="text-sm text-text-hi">This session was saved → listen to the replay</span>
+        <span class="font-mono text-xs uppercase tracking-widest text-accent-hi">Open track ↗</span>
+      </a>
+    )}
+
+    <div class="mt-8">
+      <LivePlayer session={session} creator={creator} film={film} wsUrl={detail.wsUrl} client:only="react" />
+    </div>
+
+    <p class="mt-6 text-xs text-text-dim">
+      Rowhouse delivers only the commentary layer — the film stays on your platform of choice. Film audio
+      never leaves your device; audio streaming is stubbed in this build.
+    </p>
+  </article>
+</Base>

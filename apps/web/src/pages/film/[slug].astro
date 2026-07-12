@@ -1,0 +1,111 @@
+---
+import Base from '../../layouts/Base.astro';
+import TrackCard from '../../components/TrackCard.astro';
+import { apiFetch } from '../../lib/runtime';
+
+export const prerender = false;
+
+interface FilmPage {
+  film: {
+    slug: string;
+    title: string;
+    year: number | null;
+    mediaType: string;
+    overview: string | null;
+    director: string | null;
+    runtimeMinutes: number | null;
+    genres: string[];
+    season: number | null;
+    episode: number | null;
+  };
+  tracks: {
+    id: string;
+    title: string;
+    creatorHandle: string;
+    creatorName: string;
+    durationSeconds: number;
+    listenCount: number;
+    isLiveReplay: boolean;
+    tone: string | null;
+  }[];
+  creatorCount: number;
+}
+
+const { slug } = Astro.params;
+const page = await apiFetch<FilmPage>(Astro, `/films/${slug}`);
+
+if (!page) {
+  return new Response(null, { status: 404, statusText: 'Film not found' });
+}
+
+const { film, tracks, creatorCount } = page;
+const site = 'https://rowhouse.pages.dev';
+const title = `${film.title} commentary — Rowhouse`;
+const description = film.overview
+  ? `${film.overview.slice(0, 150)}… Listen to synced commentary on ${film.title}, from ${creatorCount} creators.`
+  : `Synced film commentary for ${film.title}. Hold up your phone and the track locks to your frame.`;
+const ogImage = `${site}/api/og/film/${film.slug}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': film.mediaType === 'tv' ? 'TVEpisode' : 'Movie',
+  name: film.title,
+  ...(film.year ? { dateCreated: String(film.year) } : {}),
+  ...(film.director ? { director: { '@type': 'Person', name: film.director } } : {}),
+  genre: film.genres,
+  url: `${site}/film/${film.slug}`,
+};
+---
+
+<Base title={title} description={description} ogImage={ogImage} jsonLd={jsonLd}>
+  <article class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    <nav class="font-mono text-xs text-text-dim">
+      <a href="/discover" class="hover:text-text-mid">discover</a> / <span class="text-text-mid">{film.slug}</span>
+    </nav>
+
+    <header class="mt-6 grid gap-8 md:grid-cols-[200px_1fr]">
+      <div
+        class="flex aspect-[2/3] flex-col justify-between rounded-lg border border-border p-4"
+        style="background: linear-gradient(155deg, var(--surface-2), var(--bg));"
+      >
+        <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">
+          {film.mediaType === 'tv' ? `S${film.season ?? 1} E${film.episode ?? 1}` : 'Film'}
+        </span>
+        <h1 class="font-display text-3xl leading-tight text-text-hi">{film.title}</h1>
+      </div>
+
+      <div>
+        <h1 class="font-display text-4xl text-text-hi sm:text-5xl">{film.title}</h1>
+        <p class="mt-2 font-mono text-sm text-text-mid">
+          {[film.year, film.director, film.runtimeMinutes ? `${film.runtimeMinutes} min` : null].filter(Boolean).join(' · ')}
+        </p>
+        {film.overview && <p class="mt-4 max-w-2xl text-text-mid">{film.overview}</p>}
+        <div class="mt-4 flex flex-wrap gap-2">
+          {film.genres.map((g) => (
+            <span class="rounded-full border border-border px-2.5 py-0.5 text-xs text-text-dim">{g}</span>
+          ))}
+        </div>
+        <div class="mt-6 flex items-center gap-4 font-mono text-xs text-text-dim">
+          <span>{tracks.length} {tracks.length === 1 ? 'commentary' : 'commentaries'}</span>
+          <span>·</span>
+          <span>{creatorCount} {creatorCount === 1 ? 'creator' : 'creators'}</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="mt-12">
+      <h2 class="mb-4 font-display text-2xl text-text-hi">Commentary tracks</h2>
+      {tracks.length > 0 ? (
+        <div class="grid gap-3 md:grid-cols-2">
+          {tracks.map((t) => <TrackCard track={t} />)}
+        </div>
+      ) : (
+        <div class="rounded-lg border border-border bg-surface p-6">
+          <p class="text-text-mid">No commentary yet for {film.title}.</p>
+          <p class="mt-1 text-sm text-text-dim">Be the first — go live or drop a mini-take from the studio.</p>
+          <a href="/studio" class="mt-4 inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hi">Open the studio</a>
+        </div>
+      )}
+    </section>
+  </article>
+</Base>

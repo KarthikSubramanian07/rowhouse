@@ -1,0 +1,124 @@
+---
+import Base from '../layouts/Base.astro';
+import FilmCard from '../components/FilmCard.astro';
+import { apiFetch } from '../lib/runtime';
+
+export const prerender = false;
+
+interface FilmItem {
+  slug: string;
+  title: string;
+  year: number | null;
+  mediaType: 'movie' | 'tv';
+  genres: string[];
+  director: string | null;
+  trackCount: number;
+}
+
+const catalog = (await apiFetch<{ films: FilmItem[] }>(Astro, '/films/catalog'))?.films ?? [];
+
+// Server-side filtering from query params — no client JS.
+const params = Astro.url.searchParams;
+const typeFilter = params.get('type'); // 'movie' | 'tv' | null
+const genreFilter = params.get('genre');
+
+const films = catalog.filter((f) => {
+  if (typeFilter && f.mediaType !== typeFilter) return false;
+  if (genreFilter && (f.genres[0] ?? '') !== genreFilter) return false;
+  return true;
+});
+
+// Genre chips from the leading genre of every film, deduped and ordered by frequency.
+const genreCounts = new Map<string, number>();
+for (const f of catalog) {
+  const g = f.genres[0];
+  if (g) genreCounts.set(g, (genreCounts.get(g) ?? 0) + 1);
+}
+const genres = [...genreCounts.entries()]
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 8)
+  .map(([g]) => g);
+
+function chipHref(next: { type?: string | null; genre?: string | null }): string {
+  const p = new URLSearchParams();
+  const type = next.type === undefined ? typeFilter : next.type;
+  const genre = next.genre === undefined ? genreFilter : next.genre;
+  if (type) p.set('type', type);
+  if (genre) p.set('genre', genre);
+  const qs = p.toString();
+  return qs ? `/discover?${qs}` : '/discover';
+}
+
+const chipBase =
+  'rounded-full border px-3 py-1 font-mono text-xs transition-colors';
+const chipOff = 'border-border text-text-mid hover:border-text-dim hover:text-text-hi';
+const chipOn = 'border-accent bg-accent/15 text-accent-hi';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Discover film commentary — Rowhouse',
+  url: 'https://rowhouse.pages.dev/discover',
+  description: 'Browse the canon and fall down the rabbit hole of synced film & TV commentary.',
+};
+---
+
+<Base
+  title="Discover film commentary — Rowhouse"
+  description="Browse the canon. Every film here has commentary that snaps to your exact frame — live or on demand."
+  jsonLd={jsonLd}
+>
+  <section class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">The rabbit hole</p>
+    <h1 class="mt-3 font-display text-4xl text-text-hi sm:text-5xl">Discover</h1>
+    <p class="mt-4 max-w-2xl text-text-mid">
+      This is the part where you meant to watch one thing and lost the evening. Pick a title —
+      every one carries commentary that finds your frame the second you hold up your phone.
+    </p>
+
+    <!-- Filters -->
+    <div class="mt-8 space-y-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Format</span>
+        <a href={chipHref({ type: null })} class={`${chipBase} ${typeFilter ? chipOff : chipOn}`}>All</a>
+        <a href={chipHref({ type: 'movie' })} class={`${chipBase} ${typeFilter === 'movie' ? chipOn : chipOff}`}>Film</a>
+        <a href={chipHref({ type: 'tv' })} class={`${chipBase} ${typeFilter === 'tv' ? chipOn : chipOff}`}>Series</a>
+      </div>
+      {genres.length > 0 && (
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Genre</span>
+          <a href={chipHref({ genre: null })} class={`${chipBase} ${genreFilter ? chipOff : chipOn}`}>All</a>
+          {genres.map((g) => (
+            <a href={chipHref({ genre: g })} class={`${chipBase} ${genreFilter === g ? chipOn : chipOff}`}>{g}</a>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <!-- Grid -->
+    <div class="mt-8">
+      {films.length > 0 ? (
+        <>
+          <p class="mb-4 font-mono text-xs text-text-dim">
+            {films.length} {films.length === 1 ? 'title' : 'titles'}
+            {(typeFilter || genreFilter) && <span> · <a href="/discover" class="text-text-mid hover:text-text-hi">clear filters</a></span>}
+          </p>
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {films.map((f) => <FilmCard film={f} />)}
+          </div>
+        </>
+      ) : (
+        <div class="rounded-lg border border-border bg-surface p-6">
+          <p class="text-text-mid">
+            {catalog.length === 0
+              ? 'The catalog fills as creators drop commentary. Run the seed script (see the README) to populate the canon locally.'
+              : 'Nothing matches those filters yet.'}
+          </p>
+          {catalog.length > 0 && (
+            <a href="/discover" class="mt-3 inline-block text-sm text-accent-hi hover:text-text-hi">Clear filters →</a>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,143 @@
+---
+import Base from '../layouts/Base.astro';
+import FilmCard from '../components/FilmCard.astro';
+import TrackCard from '../components/TrackCard.astro';
+import SyncDemo from '../components/SyncDemo';
+import { apiFetch } from '../lib/runtime';
+import { formatTimecode } from '@rowhouse/types';
+
+export const prerender = false;
+
+interface TrackItem {
+  id: string;
+  title: string;
+  filmSlug: string;
+  handle: string;
+  name: string;
+  durationSeconds: number;
+  listenCount: number;
+}
+interface FilmItem {
+  slug: string;
+  title: string;
+  year: number | null;
+  mediaType: string;
+  genres: string[];
+  director: string | null;
+  trackCount: number;
+}
+interface LiveItem {
+  id: string;
+  title: string;
+  filmSlug: string;
+  creatorHandle: string;
+  creatorName: string;
+  scheduledFor: number | null;
+}
+
+const discover = (await apiFetch<{ trending: TrackItem[]; catalog: FilmItem[] }>(Astro, '/feed/discover')) ?? {
+  trending: [],
+  catalog: [],
+};
+const liveNow = (await apiFetch<{ live: LiveItem[]; upcoming: LiveItem[] }>(Astro, '/live/now')) ?? {
+  live: [],
+  upcoming: [],
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Rowhouse',
+  url: 'https://rowhouse.pages.dev',
+  description: 'Live and on-demand film commentary, synced to your exact frame.',
+};
+---
+
+<Base jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-24">
+    <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Watch together · React live · Replay forever</p>
+        <h1 class="mt-4 font-display text-5xl leading-[1.02] text-text-hi sm:text-6xl">
+          The film conversation, synced to <span class="text-accent-hi">your exact frame.</span>
+        </h1>
+        <p class="mt-5 max-w-xl text-lg text-text-mid">
+          Hold up your phone. Rowhouse listens for ten seconds and snaps the commentary to
+          wherever you are — on any platform, live right now or recorded six months ago. The film
+          stays on your screen. We just deliver the person sitting next to you.
+        </p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">
+            Find a commentary
+          </a>
+          <a href="/about" class="rounded-md border border-border px-4 py-2.5 text-sm text-text-mid transition-colors hover:border-text-mid hover:text-text-hi">
+            How the sync works
+          </a>
+        </div>
+      </div>
+      <SyncDemo client:only="react" />
+    </div>
+  </section>
+
+  <!-- Live now -->
+  {liveNow.live.length > 0 && (
+    <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
+      <div class="mb-4 flex items-center gap-2">
+        <span class="inline-block size-2 animate-pulse rounded-full bg-accent"></span>
+        <h2 class="font-mono text-xs uppercase tracking-widest text-text-mid">Live now</h2>
+      </div>
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {liveNow.live.map((s) => (
+          <a href={`/live/${s.id}`} class="rounded-lg border border-accent/40 bg-surface p-4 transition-colors hover:border-accent">
+            <p class="text-sm font-medium text-text-hi">{s.title}</p>
+            <p class="mt-1 text-xs text-text-mid">{s.creatorName} · <span class="font-mono">@{s.creatorHandle}</span></p>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Trending commentary -->
+  {discover.trending.length > 0 && (
+    <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
+      <h2 class="mb-4 font-display text-2xl text-text-hi">Trending commentary</h2>
+      <div class="grid gap-3 md:grid-cols-2">
+        {discover.trending.slice(0, 8).map((t) => <TrackCard track={t} />)}
+      </div>
+    </section>
+  )}
+
+  <!-- The canon -->
+  <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
+    <div class="mb-4 flex items-end justify-between">
+      <h2 class="font-display text-2xl text-text-hi">Browse the canon</h2>
+      <a href="/discover" class="text-sm text-text-mid hover:text-text-hi">All films →</a>
+    </div>
+    {discover.catalog.length > 0 ? (
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {discover.catalog.slice(0, 10).map((f) => <FilmCard film={f} />)}
+      </div>
+    ) : (
+      <p class="rounded-lg border border-border bg-surface p-6 text-sm text-text-mid">
+        The catalog fills as creators drop commentary. Run the seed script (see the README) to
+        populate the film-obsessive canon locally.
+      </p>
+    )}
+  </section>
+
+  <!-- Creator CTA -->
+  <section class="mx-auto mt-24 max-w-6xl px-4 sm:px-6">
+    <div class="rounded-lg border border-border bg-surface/60 p-8 sm:p-10">
+      <h2 class="max-w-2xl font-display text-3xl text-text-hi">You already do commentary. Give your audience a seat next to you.</h2>
+      <p class="mt-3 max-w-2xl text-text-mid">
+        Go live with a sync layer nobody else has. Every session auto-saves as a permanent, searchable
+        track — with the room's reactions baked into the waveform.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center gap-4">
+        <a href="/studio" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hi">Open the studio</a>
+        <span class="font-mono text-xs text-text-dim">Free forever · {formatTimecode(600)} to your first sync</span>
+      </div>
+    </div>
+  </section>
+</Base>

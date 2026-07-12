@@ -1,0 +1,42 @@
+---
+import { formatTimecode } from '@rowhouse/types';
+interface Props {
+  track: {
+    id: string;
+    title: string;
+    filmSlug?: string;
+    creatorHandle?: string;
+    handle?: string;
+    creatorName?: string;
+    name?: string;
+    durationSeconds: number;
+    listenCount: number;
+    isLiveReplay?: boolean;
+    tone?: string | null;
+  };
+}
+const { track } = Astro.props;
+const handle = track.creatorHandle ?? track.handle ?? 'creator';
+const creatorName = track.creatorName ?? track.name ?? handle;
+---
+
+<a
+  href={`/track/${track.id}`}
+  class="group flex items-center gap-4 rounded-lg border border-border bg-surface p-3 transition-colors hover:border-accent/40"
+>
+  <div class="grid size-12 shrink-0 place-items-center rounded-md bg-surface-2 font-mono text-[10px] text-text-mid ring-1 ring-border">
+    {formatTimecode(track.durationSeconds)}
+  </div>
+  <div class="min-w-0 flex-1">
+    <div class="flex items-center gap-2">
+      {track.isLiveReplay && (
+        <span class="rounded bg-accent/15 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-accent-hi">Replay</span>
+      )}
+      <h3 class="truncate text-sm font-medium text-text-hi group-hover:text-white">{track.title}</h3>
+    </div>
+    <p class="mt-0.5 truncate text-xs text-text-mid">
+      {creatorName} · <span class="font-mono text-text-dim">@{handle}</span>
+    </p>
+  </div>
+  <span class="shrink-0 font-mono text-xs text-text-dim">{track.listenCount.toLocaleString()} listens</span>
+</a>
