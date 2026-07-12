@@ -1,0 +1,36 @@
+{
+  "name": "rowhouse",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Watch together. React live. Replay forever. Free-forever live commentary platform for film & TV.",
+  "type": "module",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "run-p -l dev:api dev:web",
+    "dev:api": "pnpm --filter @rowhouse/api dev",
+    "dev:web": "pnpm --filter @rowhouse/web dev",
+    "build": "pnpm -r --filter=./packages/* build && pnpm --filter @rowhouse/web build",
+    "deploy": "pnpm --filter @rowhouse/api deploy && pnpm --filter @rowhouse/web deploy",
+    "deploy:api": "pnpm --filter @rowhouse/api deploy",
+    "deploy:web": "pnpm --filter @rowhouse/web deploy",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "test:sync": "pnpm --filter @rowhouse/sync-engine test",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check": "biome check --write .",
+    "db:migrate": "pnpm --filter @rowhouse/api db:migrate",
+    "db:seed": "pnpm --filter @rowhouse/api db:seed",
+    "setup": "./setup.sh",
+    "prepare": "lefthook install || true"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.3",
+    "lefthook": "^1.10.10",
+    "npm-run-all2": "^7.0.2",
+    "typescript": "^5.7.3"
+  }
+}

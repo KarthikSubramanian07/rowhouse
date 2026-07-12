@@ -1,0 +1,15 @@
+# Pre-commit hooks (fast, staged-only). Installed locally via `pnpm prepare`.
+# Never touches your remote — this runs on your machine before a commit.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome
+      glob: "*.{js,ts,jsx,tsx,json,jsonc,css,astro}"
+      run: pnpm exec biome check --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+
+pre-push:
+  jobs:
+    - name: typecheck
+      run: pnpm typecheck
+    - name: test
+      run: pnpm test

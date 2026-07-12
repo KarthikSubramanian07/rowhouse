@@ -1,0 +1,36 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+.astro/
+.output/
+.vercel/
+.wrangler/
+*.tsbuildinfo
+
+# cloudflare local state
+.dev.vars
+.dev.vars.*
+wrangler.local.jsonc
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# test / coverage
+coverage/
+.vitest/
+
+# editor / os
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# generated worker types
+worker-configuration.d.ts
