@@ -11,14 +11,14 @@
     {
       "binding": "DB",
       "database_name": "rowhouse",
-      "database_id": "REPLACE_WITH_D1_ID",
+      "database_id": "38b0face-bc86-4be0-8320-2dd7999cccd5",
       "migrations_dir": "migrations"
     }
   ],
 
   "kv_namespaces": [
-    { "binding": "SESSIONS", "id": "REPLACE_WITH_KV_SESSIONS_ID" },
-    { "binding": "CONFIG", "id": "REPLACE_WITH_KV_CONFIG_ID" }
+    { "binding": "SESSIONS", "id": "5bd95dea00be4d55b1b2ae364c016807" },
+    { "binding": "CONFIG", "id": "b17f435b605a4b7c808759d460e100fc" }
   ],
 
   "r2_buckets": [
