@@ -1,0 +1,33 @@
+/*
+ * @rowhouse/ui — stylesheet entrypoint.
+ * Import once in the consuming app:  import '@rowhouse/ui/styles.css';
+ *
+ * Order matters: Tailwind first, then raw tokens + fonts, then the @theme that
+ * maps them into Tailwind's design system.
+ */
+@import 'tailwindcss';
+@import './tokens.css';
+@import './fonts.css';
+@import './theme.css';
+
+/* Sensible dark-first document defaults. */
+:root {
+  --rh-focus-ring: var(--accent);
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--text-hi);
+  font-family: var(--rh-font-ui);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--text-hi);
+}

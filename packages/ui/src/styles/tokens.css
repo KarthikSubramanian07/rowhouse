@@ -1,0 +1,60 @@
+/*
+ * Rowhouse design tokens — the single source of truth.
+ *
+ * These are raw CSS custom properties. They are mapped into Tailwind v4's
+ * `@theme` in `theme.css` (which is what generates the `bg-*`, `text-*`,
+ * `rounded-*`, `font-*` utilities). Consume these directly in hand-written CSS,
+ * or via the generated Tailwind utilities in components.
+ *
+ * The world: a cinema is dark. People sit in a row in the glow of a screen and
+ * react together. Dark-first, warm off-whites (never pure #fff), one cinema-red
+ * accent, a semantic "locked" green reserved strictly for the sync state.
+ */
+:root {
+  color-scheme: dark;
+
+  /* ── Surfaces (near-black, faintly cool → raised panels) ────────────── */
+  --bg: #0b0b0d;
+  --surface: #131317;
+  --surface-2: #17171c;
+  --border: #24242b;
+
+  /* ── Text (warm off-white, never pure white) ───────────────────────── */
+  --text-hi: #f2f0ec;
+  --text-mid: #9e9ea7;
+  --text-dim: #64646d;
+
+  /* ── Brand accent — cinema red. THE single accent.
+   *    live/REC, primary action, focus rings. Nothing else. ──────────── */
+  --accent: #e0362e;
+  --accent-hi: #ff5b54;
+
+  /* ── Semantic status: the sync "locked" state ONLY.
+   *    Never use in chrome or branding. ──────────────────────────────── */
+  --locked: #3dd68c;
+
+  /* ── Reaction palette (audience reactions only) ────────────────────── */
+  --react-fire: #ff7a45;
+  --react-laugh: #f5c518;
+  --react-cry: #4c8dff;
+  --react-shock: #b57bff;
+
+  /* ── Radii ─────────────────────────────────────────────────────────── */
+  --radius-1: 4px;
+  --radius-2: 8px;
+  --radius-3: 12px;
+
+  /* ── Spacing base — everything sits on a 4px grid ──────────────────── */
+  --space-unit: 4px;
+
+  /* ── Type scale (documented; mapped to Tailwind text-* in theme.css) ─
+   *    UI runs a touch tighter than 16px for an engineered, dense feel. */
+  --type-xs: 0.75rem; /* 12px — timecodes, meta, mono labels */
+  --type-sm: 0.8125rem; /* 13px — secondary UI */
+  --type-base: 0.9375rem; /* 15px — body / default UI */
+  --type-md: 1.0625rem; /* 17px — emphasized body */
+  --type-lg: 1.375rem; /* 22px — section headings */
+  --type-xl: 1.875rem; /* 30px — card titles */
+  --type-2xl: 2.5rem; /* 40px — page titles */
+  --type-display: 4rem; /* 64px — Fraunces hero / film titles */
+}

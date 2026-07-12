@@ -1,0 +1,116 @@
+/*
+ * Tailwind v4 theme — maps the raw tokens (tokens.css / fonts.css) into
+ * Tailwind's CSS-first `@theme`. This is what generates the utility classes
+ * the components use (bg-accent, text-text-hi, rounded-md, font-mono, …).
+ *
+ * Only tailwind-namespaced keys live inside `@theme`; every value references a
+ * raw token so there is exactly one source of truth.
+ */
+@theme {
+  /* ── Colors ────────────────────────────────────────────────────────── */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+
+  --color-text-hi: var(--text-hi);
+  --color-text-mid: var(--text-mid);
+  --color-text-dim: var(--text-dim);
+
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+
+  --color-locked: var(--locked);
+
+  --color-fire: var(--react-fire);
+  --color-laugh: var(--react-laugh);
+  --color-cry: var(--react-cry);
+  --color-shock: var(--react-shock);
+
+  /* ── Radii ─────────────────────────────────────────────────────────── */
+  --radius-sm: var(--radius-1);
+  --radius-md: var(--radius-2);
+  --radius-lg: var(--radius-3);
+
+  /* ── Spacing base (4px grid) ───────────────────────────────────────── */
+  --spacing: var(--space-unit);
+
+  /* ── Fonts ─────────────────────────────────────────────────────────── */
+  --font-display: var(--rh-font-display);
+  --font-sans: var(--rh-font-ui);
+  --font-mono: var(--rh-font-mono);
+
+  /* ── Type scale ────────────────────────────────────────────────────── */
+  --text-xs: var(--type-xs);
+  --text-sm: var(--type-sm);
+  --text-base: var(--type-base);
+  --text-md: var(--type-md);
+  --text-lg: var(--type-lg);
+  --text-xl: var(--type-xl);
+  --text-2xl: var(--type-2xl);
+  --text-display: var(--type-display);
+
+  /* ── Motion — the ONLY "alive" motions in the system.
+   *    Both are guarded for prefers-reduced-motion below. ─────────────── */
+  --animate-live-pulse: rh-live-pulse 1.8s ease-in-out infinite;
+  --animate-scan: rh-scan 1.15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  --animate-spin: rh-spin 0.7s linear infinite;
+}
+
+/* A subtle live pulse — used by LiveBadge / REC dots. */
+@keyframes rh-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.82);
+  }
+}
+
+/* The sync-lock scan — a precision sweep, not a spinner. */
+@keyframes rh-scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+@keyframes rh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Overlay / content fade for dialogs, dropdowns, tooltips. */
+@keyframes rh-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * Quality floor: motion is a garnish, never load-bearing. Guard every
+ * animation. Anything driven by these tokens resolves to a static state.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-live-pulse,
+  .animate-scan,
+  .animate-spin,
+  [class*='animate-'],
+  [data-rh-anim] {
+    animation: none !important;
+  }
+
+  /* The sync-lock sweep collapses to a steady, centered line. */
+  [data-rh-scan-sweep] {
+    display: none;
+  }
+}
