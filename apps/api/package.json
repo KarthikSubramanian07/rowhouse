@@ -1,0 +1,37 @@
+{
+  "name": "@rowhouse/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Rowhouse backend: Hono API, ChatRoom Durable Object, queues/cron, Satori OG cards.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:migrate": "wrangler d1 migrations apply rowhouse --local",
+    "db:migrate:remote": "wrangler d1 migrations apply rowhouse --remote",
+    "db:seed": "wrangler d1 execute rowhouse --local --file=./seed/seed.sql",
+    "cf-typegen": "wrangler types"
+  },
+  "dependencies": {
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
+    "@pushforge/builder": "^2.0.5",
+    "@resvg/resvg-wasm": "^2.6.2",
+    "@rowhouse/db": "workspace:*",
+    "@rowhouse/sync-engine": "workspace:*",
+    "@rowhouse/types": "workspace:*",
+    "arctic": "^3.7.0",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.29",
+    "satori": "^0.26.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250712.0",
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.110.0"
+  }
+}

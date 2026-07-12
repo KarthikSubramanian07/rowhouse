@@ -1,0 +1,61 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rowhouse-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "observability": { "enabled": true },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rowhouse",
+      "database_id": "REPLACE_WITH_D1_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "kv_namespaces": [
+    { "binding": "SESSIONS", "id": "REPLACE_WITH_KV_SESSIONS_ID" },
+    { "binding": "CONFIG", "id": "REPLACE_WITH_KV_CONFIG_ID" }
+  ],
+
+  "r2_buckets": [
+    { "binding": "AUDIO", "bucket_name": "rowhouse-audio" },
+    { "binding": "FINGERPRINTS", "bucket_name": "rowhouse-fingerprints" },
+    { "binding": "MEDIA", "bucket_name": "rowhouse-media" }
+  ],
+
+  "durable_objects": {
+    "bindings": [{ "name": "CHAT", "class_name": "ChatRoom" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ChatRoom"] }],
+
+  "queues": {
+    "producers": [{ "binding": "JOBS", "queue": "rowhouse-jobs" }],
+    "consumers": [
+      {
+        "queue": "rowhouse-jobs",
+        "max_batch_size": 10,
+        "max_batch_timeout": 30,
+        "max_retries": 3,
+        "dead_letter_queue": "rowhouse-jobs-dlq"
+      }
+    ]
+  },
+
+  "triggers": {
+    // */15: process pending fingerprint/clip jobs. 0 3: nightly housekeeping.
+    "crons": ["*/15 * * * *", "0 3 * * *"]
+  },
+
+  "vars": {
+    "APP_ORIGIN": "https://rowhouse.pages.dev",
+    "PUBLIC_API_ORIGIN": "https://rowhouse-api.workers.dev",
+    "VAPID_SUBJECT": "mailto:push@rowhouse.gg",
+    "TMDB_IMAGE_BASE": "https://image.tmdb.org/t/p"
+  }
+  // Secrets (wrangler secret put): GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+  // SESSION_PEPPER, VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, TMDB_API_KEY, TMDB_READ_TOKEN
+}
