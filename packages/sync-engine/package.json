@@ -1,0 +1,23 @@
+{
+  "name": "@rowhouse/sync-engine",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Audio-to-position synchronization: constellation-hash landmark matching against a known film reference timeline. The moat.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:bench": "vitest bench",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vitest": "^4.1.0"
+  }
+}
