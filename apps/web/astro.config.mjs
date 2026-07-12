@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://rowhouse.pages.dev',
+  site: 'https://rowhouse-gg.pages.dev',
   // SSR on Cloudflare Pages; data-driven pages fetch the API server-side so film
   // pages render indexable HTML. Static pages opt in with `export const prerender = true`.
   output: 'server',

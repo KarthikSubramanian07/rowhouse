@@ -42,7 +42,7 @@ egress bill; each is overridden with the Cloudflare equivalent.
 
 Two deployables, **one clean public origin**:
 
-- **`apps/web`** → Cloudflare **Pages** project `rowhouse` → `rowhouse.pages.dev`.
+- **`apps/web`** → Cloudflare **Pages** project `rowhouse` → `rowhouse-gg.pages.dev`.
   Astro SSR for the SEO film/creator/home pages; the interactive players and
   studio are React islands. The browser talks **only** to this origin.
 - **`apps/api`** → a Worker on `workers.dev` (the invisible backend): the Hono
@@ -50,7 +50,7 @@ Two deployables, **one clean public origin**:
 
 The web app proxies `/api/*` to the backend Worker **server-side**
 (`src/pages/api/[...path].ts`) and pipes `Set-Cookie` straight through, so session
-cookies stay **first-party** on `rowhouse.pages.dev`. This is what lets us keep a
+cookies stay **first-party** on `rowhouse-gg.pages.dev`. This is what lets us keep a
 clean public domain *and* working auth without third-party cookies. The live
 WebSocket connects directly to the Worker (cross-origin WS is fine; chat identity
 is passed as a query param).

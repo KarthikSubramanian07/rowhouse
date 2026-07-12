@@ -51,7 +51,7 @@
   },
 
   "vars": {
-    "APP_ORIGIN": "https://rowhouse.pages.dev",
+    "APP_ORIGIN": "https://rowhouse-gg.pages.dev",
     "PUBLIC_API_ORIGIN": "https://rowhouse-api.workers.dev",
     "VAPID_SUBJECT": "mailto:push@rowhouse.gg",
     "TMDB_IMAGE_BASE": "https://image.tmdb.org/t/p"

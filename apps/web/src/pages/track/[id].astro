@@ -13,7 +13,7 @@ if (!detail) {
   return new Response(null, { status: 404, statusText: 'Track not found' });
 }
 
-const site = 'https://rowhouse.pages.dev';
+const site = 'https://rowhouse-gg.pages.dev';
 const filmTitle = detail.film?.title ?? 'this film';
 const title = `${detail.track.title} — ${detail.creator.name} on Rowhouse`;
 const description = `${detail.creator.name}'s synced commentary on ${filmTitle}. Press play on your film and it locks to your frame.`;

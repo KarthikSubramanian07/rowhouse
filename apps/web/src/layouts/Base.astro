@@ -18,7 +18,7 @@ const {
   jsonLd,
 } = Astro.props;
 
-const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse.pages.dev';
+const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse-gg.pages.dev';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
 ---
 

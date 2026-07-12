@@ -41,13 +41,13 @@ pnpm deploy         # deploys the API Worker, then the Pages site
 ```
 
 - Backend Worker → `rowhouse-api.<your-subdomain>.workers.dev` (invisible; called via the proxy).
-- Public site → **`rowhouse.pages.dev`** (a *production* Pages deploy gets the bare
+- Public site → **`rowhouse-gg.pages.dev`** (a *production* Pages deploy gets the bare
   project domain — no hashed `e5e…` preview subdomain).
 
 Set the web project's env var so its `/api` proxy points at your Worker:
 
 ```bash
-pnpm exec wrangler pages secret put PUBLIC_API_ORIGIN --project-name rowhouse
+pnpm exec wrangler pages secret put PUBLIC_API_ORIGIN --project-name rowhouse-gg
 # value: https://rowhouse-api.<your-subdomain>.workers.dev
 ```
 

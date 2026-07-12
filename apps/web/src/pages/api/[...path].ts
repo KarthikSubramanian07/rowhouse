@@ -4,7 +4,7 @@ import { apiOrigin } from '../../lib/runtime';
 export const prerender = false;
 
 /**
- * Same-origin API proxy. The browser calls /api/* on rowhouse.pages.dev; we
+ * Same-origin API proxy. The browser calls /api/* on rowhouse-gg.pages.dev; we
  * forward to the backend Worker server-side and pipe the response (including
  * Set-Cookie) straight back — so session cookies are first-party. This is what
  * lets the split (clean public domain + invisible backend Worker) keep auth

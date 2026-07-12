@@ -64,7 +64,7 @@ const watchlistByVotes = [...watchlist].sort((a, b) => b.upvotes - a.upvotes);
 const initial = creator.name.slice(0, 1).toUpperCase();
 const followerLabel = `${creator.followerCount.toLocaleString()} ${creator.followerCount === 1 ? 'follower' : 'followers'}`;
 
-const site = 'https://rowhouse.pages.dev';
+const site = 'https://rowhouse-gg.pages.dev';
 const title = `${creator.name} (@${creator.handle}) — Rowhouse`;
 const description = creator.bio
   ? creator.bio.slice(0, 155)
