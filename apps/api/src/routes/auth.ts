@@ -9,6 +9,7 @@ import {
   SESSION_COOKIE,
   sessionCookieOptions,
 } from '../auth/session.js';
+import type { Env } from '../env.js';
 import { badRequest } from '../lib/http.js';
 import { getOrCreateDevUser, upsertOAuthUser } from '../services/users.js';
 import type { AppEnv } from '../types.js';
@@ -16,6 +17,12 @@ import type { AppEnv } from '../types.js';
 export const authRoutes = new Hono<AppEnv>();
 
 const isSecure = (origin: string) => origin.startsWith('https://');
+
+function allowDevLogin(env: Env): boolean {
+  const origin = env.PUBLIC_API_ORIGIN;
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) return true;
+  return env.ALLOW_DEV_LOGIN === '1';
+}
 
 authRoutes.get('/me', (c) =>
   c.json({ user: c.get('user') ?? null, google: googleConfigured(c.env) }),
@@ -62,13 +69,18 @@ authRoutes.get('/google/callback', async (c) => {
 });
 
 /**
- * Zero-secret dev login. Enabled only when Google OAuth is not configured, so it
- * can't be abused in a real deployment. It exists so the whole app runs and can be
- * demoed without any secrets.
+ * Zero-secret local login. Enabled only when Google OAuth is not configured AND
+ * either the API origin is localhost or ALLOW_DEV_LOGIN=1 is set. This prevents
+ * accidental creator/pro demo accounts on a public workers.dev deploy.
  */
 authRoutes.post('/dev', async (c) => {
   if (googleConfigured(c.env))
     throw badRequest('dev_login_disabled', 'Google OAuth is configured; use it.');
+  if (!allowDevLogin(c.env))
+    throw badRequest(
+      'dev_login_disabled',
+      'Dev login is disabled outside localhost. Set ALLOW_DEV_LOGIN=1 to opt in.',
+    );
   const user = await getOrCreateDevUser(c.get('db'));
   const token = await createSession(c.get('db'), user.id, c.env.SESSION_PEPPER);
   setCookie(c, SESSION_COOKIE, token, sessionCookieOptions(isSecure(c.env.PUBLIC_API_ORIGIN)));

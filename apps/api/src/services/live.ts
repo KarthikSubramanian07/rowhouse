@@ -13,6 +13,7 @@ import {
 } from '@rowhouse/sync-engine';
 import { eq } from 'drizzle-orm';
 import type { Providers } from '../adapters/index.js';
+import { internalAuthHeaders } from '../auth/chatToken.js';
 import type { Env } from '../env.js';
 import { newId } from '../lib/ids.js';
 
@@ -26,7 +27,9 @@ interface DoTimeline {
 
 async function fetchTimeline(env: Env, sessionId: string): Promise<DoTimeline> {
   const stub = env.CHAT.get(env.CHAT.idFromName(sessionId));
-  const res = await stub.fetch('https://do/timeline');
+  const res = await stub.fetch('https://do/timeline', {
+    headers: internalAuthHeaders(env),
+  });
   if (!res.ok) return { reactions: [], peakViewers: 0, chatCount: 0 };
   return (await res.json()) as DoTimeline;
 }

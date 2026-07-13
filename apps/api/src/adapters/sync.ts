@@ -97,7 +97,8 @@ export class MockSyncEngine implements SyncEngine {
   }
 }
 
-export function resolveSyncEngine(env: Env): SyncEngine {
-  if (env.ACRCLOUD_KEY && env.ACRCLOUD_SECRET) return new AcrCloudSyncEngine(env);
+export function resolveSyncEngine(_env: Env): SyncEngine {
+  void _env;
+  // ACRCloud remains a documented stub; never select it until buildMap/match work.
   return new SelfHostedSyncEngine();
 }

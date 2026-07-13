@@ -61,8 +61,8 @@ Set secrets with `wrangler secret put <NAME>` from `apps/api`.
 
 | Feature | Secrets | Where to get them |
 |---|---|---|
-| Google sign-in | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google Cloud Console, OAuth. Redirect URI: `https://<api>/auth/google/callback`. Until set, a keyless dev login is used. |
-| Session hardening | `SESSION_PEPPER` | any long random string (`openssl rand -hex 32`). |
+| Google sign-in | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google Cloud Console, OAuth. Redirect URI: `https://<api>/auth/google/callback`. Until set, keyless dev login works on localhost only (set `ALLOW_DEV_LOGIN=1` to opt in elsewhere). |
+| Session hardening | `SESSION_PEPPER` | any long random string (`openssl rand -hex 32`). Also signs live chat WS tokens; set this before public launch. |
 | Real film metadata | `TMDB_READ_TOKEN` | themoviedb.org, API, v4 read token. Until set, the mock catalog is used. |
 | Web Push | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` | `pnpm exec web-push generate-vapid-keys`, or any VAPID tool. |
 | Live streaming | 100ms or CF Realtime credentials | wire into `apps/api/src/adapters/stream.ts`. |

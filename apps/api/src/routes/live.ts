@@ -2,8 +2,9 @@ import { liveSessions, users } from '@rowhouse/db';
 import { scheduleSessionSchema } from '@rowhouse/types';
 import { asc, desc, eq, inArray } from 'drizzle-orm';
 import { Hono } from 'hono';
+import { mintChatToken, verifyChatToken } from '../auth/chatToken.js';
 import { requireCreator } from '../auth/middleware.js';
-import { badRequest, forbidden, notFound } from '../lib/http.js';
+import { badRequest, conflict, forbidden, notFound } from '../lib/http.js';
 import { newId } from '../lib/ids.js';
 import { getFilmBySlug } from '../services/films.js';
 import { assembleLiveSession } from '../services/live.js';
@@ -105,6 +106,25 @@ liveRoutes.get('/:id', async (c) => {
   });
 });
 
+/**
+ * Mint a short-lived WS token over the first-party /api proxy so the browser can
+ * prove identity on the cross-origin Worker WebSocket (cookies are not sent there).
+ */
+liveRoutes.post('/:id/ws-token', async (c) => {
+  const id = c.req.param('id');
+  const row = await c.get('db').select().from(liveSessions).where(eq(liveSessions.id, id)).get();
+  if (!row) throw notFound('session_not_found');
+  const user = c.get('user');
+  const token = await mintChatToken(c.env, {
+    sid: id,
+    uid: user?.id ?? null,
+    name: user?.displayName?.trim() || `guest-${crypto.randomUUID().slice(0, 8)}`,
+    // Guests may react/watch; only signed-in users may send chat text.
+    chat: Boolean(user),
+  });
+  return c.json({ token, chat: Boolean(user) });
+});
+
 async function ownSession(c: import('hono').Context<AppEnv>, id: string) {
   const s = await c.get('db').select().from(liveSessions).where(eq(liveSessions.id, id)).get();
   if (!s) throw notFound('session_not_found');
@@ -114,13 +134,15 @@ async function ownSession(c: import('hono').Context<AppEnv>, id: string) {
 
 liveRoutes.post('/:id/start', requireCreator, async (c) => {
   const s = await ownSession(c, c.req.param('id'));
+  if (s.status === 'live') return c.json({ status: 'live', room: null, already: true });
+  if (s.status !== 'scheduled')
+    throw conflict('invalid_transition', `Cannot start a session in status "${s.status}".`);
   const room = await c.get('providers').stream.createRoom(s.id, s.mode as 'audio' | 'video');
   await c
     .get('db')
     .update(liveSessions)
     .set({ status: 'live', startedAt: Math.floor(Date.now() / 1000) })
     .where(eq(liveSessions.id, s.id));
-  // "Creator went live" push fan-out is enqueued for the queue consumer.
   await c.env.JOBS.send({ type: 'notify_live', liveSessionId: s.id });
   return c.json({ status: 'live', room });
 });
@@ -128,6 +150,15 @@ liveRoutes.post('/:id/start', requireCreator, async (c) => {
 /** End the session, then assemble the async track with reactions preserved. */
 liveRoutes.post('/:id/end', requireCreator, async (c) => {
   const s = await ownSession(c, c.req.param('id'));
+  if (s.status === 'ended') {
+    return c.json({
+      trackId: s.trackId,
+      already: true,
+      peakViewers: s.peakViewers,
+    });
+  }
+  if (s.status !== 'live')
+    throw conflict('invalid_transition', `Cannot end a session in status "${s.status}".`);
   await c
     .get('db')
     .update(liveSessions)
@@ -142,20 +173,18 @@ liveRoutes.post('/:id/end', requireCreator, async (c) => {
 liveRoutes.get('/:id/ws', async (c) => {
   if (c.req.header('upgrade') !== 'websocket') throw badRequest('expected_websocket');
   const id = c.req.param('id');
-  const user = c.get('user');
   const incoming = new URL(c.req.url);
+  const token = incoming.searchParams.get('token');
+  if (!token) throw badRequest('missing_chat_token', 'Mint a token via POST /live/:id/ws-token.');
+
+  const claims = await verifyChatToken(c.env, token, id);
+  if (!claims) throw forbidden('invalid_chat_token');
+
   const url = new URL('https://do/ws');
-  if (user) {
-    // Same-origin (cookie present): trusted identity.
-    url.searchParams.set('uid', user.id);
-    url.searchParams.set('name', user.displayName);
-    url.searchParams.set('chat', '1');
-  } else {
-    // Cross-origin WS (no cookie): client supplies a display name to chat as.
-    const name = incoming.searchParams.get('name')?.slice(0, 40) ?? 'guest';
-    url.searchParams.set('name', name);
-    if (incoming.searchParams.get('chat') === '1') url.searchParams.set('chat', '1');
-  }
+  if (claims.uid) url.searchParams.set('uid', claims.uid);
+  url.searchParams.set('name', claims.name);
+  if (claims.chat) url.searchParams.set('chat', '1');
+
   const stub = c.env.CHAT.get(c.env.CHAT.idFromName(id));
   return stub.fetch(new Request(url, c.req.raw));
 });

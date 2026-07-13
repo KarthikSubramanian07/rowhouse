@@ -26,6 +26,14 @@ import type { AppEnv } from './types.js';
 
 const app = new Hono<AppEnv>();
 
+app.use('*', async (c, next) => {
+  await next();
+  c.header('X-Content-Type-Options', 'nosniff');
+  c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
+  c.header('X-Frame-Options', 'DENY');
+  c.header('Permissions-Policy', 'camera=(), geolocation=()');
+});
+
 app.use('*', (c, next) =>
   cors({
     origin: [c.env.APP_ORIGIN, 'http://localhost:4321', 'http://localhost:8788'],
