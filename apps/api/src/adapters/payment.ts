@@ -1,8 +1,8 @@
 /**
- * PaymentProvider — Phase-2 seam. The core platform is FREE FOREVER (spec §12);
- * Pro ($4.99), creator subscriptions, and super-reactions are additive. Mock is a
- * no-op that keeps the seam typed without wiring a processor. Stripe activates
- * here later. Never gates core functionality.
+ * PaymentProvider is a Phase-2 seam. The core platform is free (spec §12); Pro
+ * ($4.99), creator subscriptions, and super-reactions are additive. The mock is a
+ * no-op that keeps the seam typed without wiring a processor. Stripe activates here
+ * later. This never gates core functionality.
  */
 import type { Env } from '../env.js';
 

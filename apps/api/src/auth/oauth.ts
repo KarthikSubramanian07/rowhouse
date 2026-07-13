@@ -36,7 +36,7 @@ interface IdTokenClaims {
   picture?: string;
 }
 
-/** Decode (not verify — Arctic already validated the code exchange) the ID token. */
+/** Decode the ID token. No verification needed; Arctic already validated the code exchange. */
 export function decodeIdToken(idToken: string): GoogleProfile {
   const parts = idToken.split('.');
   if (parts.length !== 3) throw new Error('bad_id_token');

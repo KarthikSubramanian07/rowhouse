@@ -1,12 +1,12 @@
 /**
  * SyncEngine adapter. The listener's mic capture is fingerprinted and matched
- * CLIENT-SIDE (mic audio never leaves the device — privacy + the legal
- * invariant), so the server side is mainly map generation/validation and an
+ * client-side (mic audio never leaves the device, both for privacy and as a legal
+ * invariant), so the server side is mainly map generation and validation, plus an
  * optional server match for the hosted-API path.
  *
- *  - SelfHostedSyncEngine — the real $0, scales-forever product (@rowhouse/sync-engine).
- *  - AcrCloudSyncEngine   — optional hosted accelerator (free tier ~1k/day). Stub.
- *  - MockSyncEngine       — deterministic fixture offsets; the test default.
+ *  SelfHostedSyncEngine: the default $0 engine (@rowhouse/sync-engine).
+ *  AcrCloudSyncEngine: optional hosted accelerator (free tier ~1k/day). Stub.
+ *  MockSyncEngine: deterministic fixture offsets; the test default.
  */
 import {
   buildFingerprintMap,
@@ -53,9 +53,9 @@ export class SelfHostedSyncEngine implements SyncEngine {
 }
 
 /**
- * ACRCloud broadcast-monitoring accelerator. Intentionally a stub — activating it
- * costs per-call money and it's only a faster-MVP path; the self-hosted engine is
- * the real product. Documented in DECISIONS.md.
+ * ACRCloud broadcast-monitoring accelerator. Left as a stub on purpose: activating
+ * it costs money per call and only serves as a faster MVP path, while the
+ * self-hosted engine is the shipping product. Documented in DECISIONS.md.
  */
 export class AcrCloudSyncEngine implements SyncEngine {
   readonly name = 'acrcloud' as const;

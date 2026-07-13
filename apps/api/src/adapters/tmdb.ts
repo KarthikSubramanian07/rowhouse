@@ -1,8 +1,8 @@
 /**
- * Film/TV metadata provider. TMDB is free at our scale; the mock ships a curated
- * catalog of film-obsessive canon so the SEO film pages and demo render fully
- * with ZERO keys. Mock posters are intentionally null — the UI renders an
- * on-brand typographic poster fallback rather than depending on a remote image.
+ * Film and TV metadata provider. TMDB is free at our scale; the mock ships a
+ * curated catalog so the SEO film pages and demo render fully with zero keys. Mock
+ * posters are null on purpose: the UI renders a typographic poster fallback instead
+ * of depending on a remote image.
  */
 import type { Film, MediaType } from '@rowhouse/types';
 import { filmSlug } from '@rowhouse/types';
@@ -28,7 +28,7 @@ export interface TmdbProvider {
   ): Promise<Film | null>;
 }
 
-// ── Curated mock catalog ──────────────────────────────────────────────
+// Curated mock catalog.
 function film(f: Omit<Film, 'slug'> & { slug?: string }): Film {
   return {
     ...f,
@@ -236,7 +236,7 @@ function toSummary(f: Film): FilmSummary {
   };
 }
 
-/** Real TMDB provider (v4 read token). Thin fetch client — no extra dependency. */
+/** Real TMDB provider (v4 read token). Thin fetch client with no extra dependency. */
 export class TmdbApiProvider implements TmdbProvider {
   readonly name = 'tmdb' as const;
   constructor(private readonly env: Env) {}

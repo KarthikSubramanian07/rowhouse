@@ -20,9 +20,9 @@ export interface ReactionBarProps {
 }
 
 /**
- * The audience's voice. Four reactions — fire / laugh / cry / shock. Each button
- * flashes its own color on press (a quick tap-flash), then settles back to the
- * quiet chrome. Colors come from the reaction palette, never the brand accent.
+ * Four reactions: fire, laugh, cry, shock. Each button flashes its own color on
+ * press, then settles back. Colors come from the reaction palette, never the
+ * brand accent.
  */
 export function ReactionBar({ onReact, className, disabled = false }: ReactionBarProps) {
   const [flash, setFlash] = React.useState<ReactionType | null>(null);

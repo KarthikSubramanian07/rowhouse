@@ -1,11 +1,11 @@
 /**
- * The stored fingerprint map: hash → sorted list of reference anchor times.
+ * The stored fingerprint map: hash to a sorted list of reference anchor times.
  *
  * Layout is two parallel Int32Arrays sorted by hash (then time), so a lookup is
- * a pair of binary searches for the hash's [lo, hi) range — 8 bytes/entry, no
- * per-entry object overhead, gzips well, and loads on the client as a raw
- * ArrayBuffer with zero parsing. A 2-hour film ≈ 1.4M entries ≈ 11 MB (~5 MB
- * gzipped). See DECISIONS.md §sync for the size math.
+ * a pair of binary searches for the hash's [lo, hi) range. This is 8 bytes per
+ * entry with no per-entry object overhead, gzips well, and loads on the client
+ * as a raw ArrayBuffer with zero parsing. A 2-hour film is roughly 1.4M entries,
+ * about 11 MB (~5 MB gzipped). See DECISIONS.md §sync for the size math.
  */
 import type { Landmark } from './landmarks.js';
 import { encodeHash } from './landmarks.js';

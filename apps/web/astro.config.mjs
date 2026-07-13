@@ -14,7 +14,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwind()],
     ssr: {
-      // Workspace packages ship TS source — let Vite transform them.
+      // Workspace packages ship TS source, so let Vite transform them.
       noExternal: ['@rowhouse/ui', '@rowhouse/types', '@rowhouse/sync-engine'],
     },
   },

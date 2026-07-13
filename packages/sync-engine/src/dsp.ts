@@ -1,7 +1,7 @@
 /**
  * Deterministic DSP front-end shared by map generation and query matching.
  *
- * Pure functions over Float32Array — no Web Audio, no I/O — so the exact same
+ * Pure functions over Float32Array (no Web Audio, no I/O), so the exact same
  * code runs in the browser (listener capture), Node (fixtures/tests) and a
  * Cloudflare Worker (creator map generation). Determinism is a hard requirement:
  * the same PCM must yield byte-identical fingerprints on every platform.
@@ -26,7 +26,7 @@ export function toMono(channels: Float32Array[]): Float32Array {
  * Linear-interpolation resampler to FP.sampleRate. A band-limited (polyphase)
  * resampler would be marginally cleaner, but the constellation peaks we extract
  * are robust to the small aliasing this introduces, and linear interpolation is
- * trivially identical across platforms — which matters more than fidelity here.
+ * trivially identical across platforms, which matters more than fidelity here.
  * Callers that already have 8 kHz PCM (e.g. OfflineAudioContext-rendered
  * captures) should pass srcRate === FP.sampleRate to skip resampling.
  */
@@ -49,7 +49,7 @@ export function resample(
   return out;
 }
 
-/** In-place first-order pre-emphasis: y[n] = x[n] - a*x[n-1]. Returns a new array. */
+/** First-order pre-emphasis: y[n] = x[n] - a*x[n-1]. Returns a new array. */
 export function preEmphasize(x: Float32Array, coeff = FP.preEmphasis): Float32Array {
   const out = new Float32Array(x.length);
   let prev = 0;
@@ -73,7 +73,7 @@ export function hann(n: number): Float64Array {
 }
 
 /**
- * In-place iterative radix-2 Cooley–Tukey FFT. `re`/`im` are power-of-two length.
+ * In-place iterative radix-2 Cooley-Tukey FFT. `re`/`im` are power-of-two length.
  * Self-contained (no dependency) so the whole matcher is owned and runs anywhere.
  */
 export function fftInPlace(re: Float64Array, im: Float64Array): void {

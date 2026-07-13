@@ -1,7 +1,7 @@
 /**
- * Provider registry. One place that resolves every paid/external dependency to a
- * concrete adapter based on the current secrets — mocks by default. Route
- * handlers take a `Providers` bundle so nothing reaches for env directly.
+ * Provider registry. One place that resolves every paid or external dependency to a
+ * concrete adapter based on the current secrets, defaulting to mocks. Route handlers
+ * take a `Providers` bundle so nothing reaches for env directly.
  */
 import type { Env } from '../env.js';
 import { type AiProvider, resolveAi } from './ai.js';

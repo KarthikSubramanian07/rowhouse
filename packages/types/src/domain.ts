@@ -36,7 +36,7 @@ export type ReportReason = (typeof REPORT_REASONS)[number];
 export const CLIP_STATUS = ['suggested', 'approved', 'published', 'rejected'] as const;
 export type ClipStatus = (typeof CLIP_STATUS)[number];
 
-// ── Entities ──────────────────────────────────────────────────────────
+// Entities
 
 export interface User {
   id: string;
@@ -92,7 +92,7 @@ export interface CommentaryTrack {
   tone: Tone | null;
   spoilerSafe: boolean;
   listenCount: number;
-  /** Sum of listens that reached the end / listenCount — the key metric. */
+  /** Sum of listens that reached the end, divided by listenCount. */
   completionRate: number;
   /** Present when this track was born from a live session. */
   liveSessionId: string | null;

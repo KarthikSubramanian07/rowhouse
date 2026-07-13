@@ -11,7 +11,7 @@ import type { AppEnv } from '../types.js';
 
 export const liveRoutes = new Hono<AppEnv>();
 
-/** Schedule a live session (spec §06 — the calendar drives push retention). */
+/** Schedule a live session (spec §06). The calendar drives push retention. */
 liveRoutes.post('/', requireCreator, async (c) => {
   const parsed = scheduleSessionSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) throw badRequest('invalid_session');
@@ -33,7 +33,7 @@ liveRoutes.post('/', requireCreator, async (c) => {
   return c.json({ id, status: 'scheduled' });
 });
 
-/** Live now + upcoming — the home feed's above-the-fold. */
+/** Live now and upcoming. Feeds the home page's above-the-fold. */
 liveRoutes.get('/now', async (c) => {
   const db = c.get('db');
   const now = Math.floor(Date.now() / 1000);
@@ -125,7 +125,7 @@ liveRoutes.post('/:id/start', requireCreator, async (c) => {
   return c.json({ status: 'live', room });
 });
 
-/** End the session → assemble the async track with reactions baked in. */
+/** End the session, then assemble the async track with reactions preserved. */
 liveRoutes.post('/:id/end', requireCreator, async (c) => {
   const s = await ownSession(c, c.req.param('id'));
   await c
@@ -138,7 +138,7 @@ liveRoutes.post('/:id/end', requireCreator, async (c) => {
   return c.json(result);
 });
 
-/** Live chat + reaction WebSocket → forwarded to the ChatRoom Durable Object. */
+/** Live chat and reaction WebSocket, forwarded to the ChatRoom Durable Object. */
 liveRoutes.get('/:id/ws', async (c) => {
   if (c.req.header('upgrade') !== 'websocket') throw badRequest('expected_websocket');
   const id = c.req.param('id');

@@ -1,9 +1,9 @@
 /**
- * ChatRoom — one Durable Object per live session. Uses the WebSocket Hibernation
- * API so idle rooms cost no GB-s (critical for $0). Fans out chat + reaction
- * markers to all connected clients and persists them in the DO's SQLite so late
- * joiners get backfill and the finished session can be assembled into an async
- * track with its community reactions baked in (the live→async flywheel).
+ * ChatRoom is one Durable Object per live session. It uses the WebSocket
+ * Hibernation API so idle rooms cost no GB-s (needed to stay at $0). It fans out
+ * chat and reaction markers to all connected clients and persists them in the DO's
+ * SQLite, so late joiners get backfill and the finished session can be assembled
+ * into an async track with the room's reactions preserved.
  */
 import { DurableObject } from 'cloudflare:workers';
 import type { ReactionType } from '@rowhouse/types';
@@ -69,7 +69,7 @@ export class ChatRoom extends DurableObject<Env> {
       name: url.searchParams.get('name') ?? 'guest',
       canChat: url.searchParams.get('chat') === '1',
     };
-    // Hibernatable accept — the runtime tracks the socket across eviction.
+    // Hibernatable accept: the runtime tracks the socket across eviction.
     this.ctx.acceptWebSocket(server);
     server.serializeAttachment(meta);
 
@@ -176,7 +176,7 @@ export class ChatRoom extends DurableObject<Env> {
     this.broadcast({ kind: 'presence', viewers });
   }
 
-  /** Reaction timeline + peak viewers — consumed by track assembly on session end. */
+  /** Reaction timeline and peak viewers, consumed by track assembly on session end. */
   timeline(): { reactions: { t: number; type: string }[]; peakViewers: number; chatCount: number } {
     const reactions = this.sql()
       .exec('SELECT t, type FROM reactions ORDER BY t ASC')

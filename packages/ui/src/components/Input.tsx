@@ -6,7 +6,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   invalid?: boolean;
 }
 
-/** Engineered text input. Dark surface, cinema-red focus ring. */
+/** Text input. Dark surface, cinema-red focus ring. */
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Input(
   { className, invalid = false, type = 'text', ...props },
   ref,

@@ -65,10 +65,10 @@ const initial = creator.name.slice(0, 1).toUpperCase();
 const followerLabel = `${creator.followerCount.toLocaleString()} ${creator.followerCount === 1 ? 'follower' : 'followers'}`;
 
 const site = 'https://rowhouse-gg.pages.dev';
-const title = `${creator.name} (@${creator.handle}) — Rowhouse`;
+const title = `${creator.name} (@${creator.handle}) on Rowhouse`;
 const description = creator.bio
   ? creator.bio.slice(0, 155)
-  : `${creator.name} on Rowhouse — synced film commentary, live and on demand. ${followerLabel}.`;
+  : `${creator.name} on Rowhouse. Synced film commentary, live and on demand. ${followerLabel}.`;
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -145,7 +145,7 @@ function scheduleLabel(scheduledFor: number | null): string {
         </div>
       ) : (
         <p class="rounded-lg border border-border bg-surface p-6 text-sm text-text-mid">
-          No published commentary yet — the archive starts the moment {creator.name} goes live.
+          No published commentary yet. The archive starts the moment {creator.name} goes live.
         </p>
       )}
     </section>

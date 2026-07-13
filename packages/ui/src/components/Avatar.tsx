@@ -9,7 +9,7 @@ export interface AvatarProps extends React.ComponentPropsWithoutRef<typeof Avata
   fallback?: React.ReactNode;
 }
 
-/** Radix Avatar with graceful image → fallback resolution. */
+/** Radix Avatar that falls back from image to fallback content. */
 export const Avatar = React.forwardRef<
   React.ComponentRef<typeof AvatarPrimitive.Root>,
   AvatarProps

@@ -21,7 +21,7 @@ function streamUntilLock(startOffset: number, profileName: keyof typeof PROFILES
   return { session, lockedAt };
 }
 
-describe('LiveSyncSession — sliding-window lock', () => {
+describe('LiveSyncSession - sliding-window lock', () => {
   it('locks within a few seconds in a living room and tracks position', () => {
     const { session, lockedAt } = streamUntilLock(30, 'livingRoom');
     expect(lockedAt).not.toBeNull();

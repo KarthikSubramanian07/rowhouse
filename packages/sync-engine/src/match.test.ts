@@ -20,7 +20,7 @@ interface CorpusRow {
   score: number;
 }
 
-describe('offset-histogram matching — fixture corpus', () => {
+describe('offset-histogram matching - fixture corpus', () => {
   const rows: CorpusRow[] = [];
 
   for (const [name, profile] of Object.entries(PROFILES)) {
@@ -48,7 +48,7 @@ describe('offset-histogram matching — fixture corpus', () => {
   }
 
   it('reports aggregate accuracy for the summary', () => {
-    // Runs last (registration order) — summarize what the per-case tests recorded.
+    // Runs last (registration order); summarizes what the per-case tests recorded.
     const total = rows.length;
     const locked = rows.filter((r) => r.locked).length;
     const meanErr = rows.reduce((s, r) => s + r.absErr, 0) / Math.max(1, total);

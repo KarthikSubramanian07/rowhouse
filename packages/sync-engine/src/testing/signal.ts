@@ -2,18 +2,18 @@
  * Deterministic synthetic-audio generators for the sync-engine fixture corpus.
  *
  * We cannot record a real living room in CI, so we synthesize dialogue-like
- * reference audio (time-varying formant partials + texture, unique at every
+ * reference audio (time-varying formant partials plus texture, unique at every
  * position) and then degrade a slice the way a phone mic in a noisy room
  * degrades TV-speaker playback: band-limiting, additive noise at a target SNR,
- * room reverb, and arbitrary gain. Everything is seeded → byte-reproducible.
+ * room reverb, and arbitrary gain. Everything is seeded and byte-reproducible.
  *
- * This proves the algorithm under controlled degradation. Real consumer-hardware
- * validation (the roadmap's true gate) still needs a device capture pass — see
- * DECISIONS.md §sync and SETUP.md.
+ * This exercises the algorithm under controlled degradation. Validation on real
+ * consumer hardware still needs a device capture pass. See DECISIONS.md §sync
+ * and SETUP.md.
  */
 import { FP } from '../params.js';
 
-/** mulberry32 — small deterministic PRNG. */
+/** mulberry32: small deterministic PRNG. */
 export function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
   return () => {
@@ -127,7 +127,7 @@ function rms(x: Float32Array): number {
   return Math.sqrt(s / Math.max(1, x.length));
 }
 
-/** One-pole high-pass then one-pole low-pass — crude band-pass. */
+/** One-pole high-pass then one-pole low-pass: a crude band-pass. */
 function bandPass(x: Float32Array, sr: number, lo: number, hi: number): Float32Array {
   const out = new Float32Array(x.length);
   // High-pass

@@ -1,11 +1,11 @@
 /*
- * Self-hosted fonts (no external CDN — the site deploys to Cloudflare Pages).
+ * Self-hosted fonts (no external CDN - the site deploys to Cloudflare Pages).
  * Every font ships from an @fontsource-variable package bundled with the app.
  *
  * The trio:
- *   Display → Fraunces Variable   (editorial cinematic serif — film titles + hero moments ONLY)
+ *   Display → Fraunces Variable   (editorial cinematic serif - film titles + hero moments ONLY)
  *   UI/body → Geist Variable      (engineered, developer-grade)
- *   Mono    → Geist Mono Variable (TIMECODES + data readouts — the signature)
+ *   Mono    → Geist Mono Variable (TIMECODES + data readouts - the signature)
  *
  * These CSS vars are the canonical font-family definitions. `theme.css` maps
  * them into Tailwind's `--font-*` namespace (font-display / font-sans / font-mono).

@@ -46,7 +46,7 @@ export default function AuthNav() {
   if (!me.user) {
     return (
       <Button size="sm" onClick={signIn} disabled={busy}>
-        {busy ? 'Signing in…' : 'Sign in'}
+        {busy ? 'Signing in...' : 'Sign in'}
       </Button>
     );
   }

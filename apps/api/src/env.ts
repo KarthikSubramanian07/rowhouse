@@ -1,7 +1,7 @@
 /**
- * Worker bindings + environment. With NO secrets set, the app runs fully on mock
- * adapters (see src/adapters) and every test passes green — real providers only
- * activate when the corresponding secrets are present.
+ * Worker bindings and environment. With no secrets set, the app runs entirely on
+ * mock adapters (see src/adapters) and the tests pass. Real providers activate only
+ * when their corresponding secrets are present.
  */
 export interface Env {
   // Storage / data
@@ -20,7 +20,7 @@ export interface Env {
   VAPID_SUBJECT: string;
   TMDB_IMAGE_BASE: string;
 
-  // Secrets (all optional — absence selects a mock adapter)
+  // Secrets. All optional; when one is absent, its adapter falls back to a mock.
   SESSION_PEPPER?: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;

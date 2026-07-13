@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Rowhouse public site (Astro on Cloudflare Pages) — SEO film pages + the sync players.",
+  "description": "Rowhouse public site (Astro on Cloudflare Pages) - SEO film pages + the sync players.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",

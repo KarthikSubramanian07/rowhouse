@@ -5,10 +5,10 @@ import { buildReferenceFixture, PROFILES, simulateCapture } from './testing/inde
 const ref = buildReferenceFixture(30, 42);
 
 /**
- * The load-bearing legal invariant, made technical: the app listens, derives a
- * fingerprint, and discards the audio. It never records, returns, retains, or
- * persists raw film audio. If this ever regresses, Rowhouse stops being a
- * "commentary layer" and becomes a content problem. See DECISIONS.md §legal.
+ * The legal invariant, made technical: the app listens, derives a fingerprint,
+ * and discards the audio. It never records, returns, retains, or persists raw
+ * film audio. If this regresses, Rowhouse stops being a commentary layer and
+ * becomes a content-hosting problem. See DECISIONS.md §legal.
  */
 describe('no raw film audio persisted', () => {
   const cap = simulateCapture(ref.pcm, 10, 10, PROFILES.livingRoom);

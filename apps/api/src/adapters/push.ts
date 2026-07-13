@@ -1,8 +1,8 @@
 /**
- * Web Push (VAPID). Free forever, no vendor. Mock is the default (no VAPID keys);
- * the real sender uses @pushforge/builder, which does VAPID + RFC 8291 payload
- * encryption on the Workers runtime via WebCrypto. The "creator went live" push
- * is the platform's single highest-value retention touchpoint (spec §06).
+ * Web Push (VAPID). Free, no vendor. The mock is the default when no VAPID keys are
+ * set; the real sender uses @pushforge/builder, which does VAPID and RFC 8291
+ * payload encryption on the Workers runtime via WebCrypto. The "creator went live"
+ * push is the platform's main retention touchpoint (spec §06).
  */
 import type { PushSubscriptionInput } from '@rowhouse/types';
 import type { Env } from '../env.js';

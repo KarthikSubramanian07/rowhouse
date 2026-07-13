@@ -19,9 +19,9 @@ type Props = FollowProps | UpvoteProps;
 
 /**
  * Interactive creator-profile actions. Two shapes:
- *  - follow (default): Follow/Following toggle → POST/DELETE /creators/:handle/follow
- *  - upvote: watch-list upvote → POST /watchlist/:handle/:filmSlug/upvote
- * Both are optimistic and surface a subtle sign-in hint on 401.
+ *  - follow (default): Follow/Following toggle, calls POST/DELETE /creators/:handle/follow
+ *  - upvote: watch-list upvote, calls POST /watchlist/:handle/:filmSlug/upvote
+ * Both update optimistically and show a quiet sign-in hint on a 401.
  */
 export default function CreatorActions(props: Props) {
   if (props.mode === 'upvote') return <UpvoteButton {...props} />;

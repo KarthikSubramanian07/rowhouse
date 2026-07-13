@@ -3,13 +3,14 @@
  *
  * The listener's mic streams in chunks. We keep a rolling buffer (default 10 s),
  * re-match it each tick, and declare LOCKED only when consecutive windows agree
- * on the same reference-vs-audio-clock offset ("anchor"). After locking we can
- * predict the reference position from the audio clock alone — no continuous
- * matching needed — and the always-visible resync button re-runs the search.
+ * on the same reference-vs-audio-clock offset ("anchor"). After locking, the
+ * reference position is predicted from the audio clock alone, with no continuous
+ * matching needed, and the always-visible resync button re-runs the search.
  *
  * The "anchor" is the reference offset relative to the listener's own audio
- * clock: anchor = referencePosition − audioClockNow. For a true match it's
- * stable, so position(t) = anchor + t. This is the safety-valve UX made real.
+ * clock: anchor = referencePosition - audioClockNow. For a true match it is
+ * stable, so position(t) = anchor + t. The resync button exposes this as a
+ * safety valve.
  */
 import { resample, toMono } from './dsp.js';
 import { captureToFingerprint } from './fingerprint.js';
@@ -25,7 +26,7 @@ export interface LiveSyncState {
   positionSeconds: number;
   /** Reference offset relative to the audio clock (s). Stable once locked. */
   anchorSeconds: number;
-  /** 0…1 confidence of the most recent window. */
+  /** 0...1 confidence of the most recent window. */
   confidence: number;
   /** Agreeing landmarks in the most recent window. */
   score: number;
@@ -125,7 +126,7 @@ export class LiveSyncSession {
     return anchor === null ? 0 : anchor + audioClockSeconds;
   }
 
-  /** Drop the lock and re-search — the always-visible resync button. */
+  /** Drop the lock and re-search. Backs the always-visible resync button. */
   resync(): void {
     this.lockedAnchor = null;
     this.lastAnchor = null;

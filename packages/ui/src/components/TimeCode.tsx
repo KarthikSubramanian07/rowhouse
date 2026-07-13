@@ -8,8 +8,8 @@ export interface TimeCodeProps {
 }
 
 /**
- * TimeCode — the signature typographic object. Mono, tabular figures so digits
- * never jitter as they tick. Renders e.g. `1:23:14` or `4:07`.
+ * TimeCode: mono, tabular figures so digits don't jitter as they tick. Renders
+ * e.g. `1:23:14` or `4:07`.
  */
 export function TimeCode({ seconds, className }: TimeCodeProps) {
   return (

@@ -41,8 +41,8 @@ export interface AssembledResult {
 
 /**
  * End a live session and auto-save it as a searchable async commentary track with
- * its community reaction markers baked in. THE live→async flywheel: a live event
- * becomes a permanent catalog entry with the room's reactions preserved.
+ * its reaction markers preserved. A live event becomes a permanent catalog entry
+ * that carries the room's reactions with it.
  */
 export async function assembleLiveSession(
   db: Database,

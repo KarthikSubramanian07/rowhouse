@@ -1,8 +1,8 @@
 /**
- * Client-side mic capture → PCM chunks. The mic stream is turned into Float32
- * frames and handed to the sync engine, then discarded. Nothing is recorded or
- * uploaded — the legal invariant, enforced in the browser: film audio never
- * leaves the device.
+ * Client-side mic capture to PCM chunks. The mic stream is turned into Float32
+ * frames, handed to the sync engine, then discarded. Nothing is recorded or
+ * uploaded. That is the legal invariant, enforced in the browser: film audio
+ * never leaves the device.
  */
 export interface Capture {
   sampleRate: number;

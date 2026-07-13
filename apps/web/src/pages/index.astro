@@ -58,14 +58,15 @@ const jsonLd = {
   <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-24">
     <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
       <div>
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Watch together · React live · Replay forever</p>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Watch together. React live. Replay forever.</p>
         <h1 class="mt-4 font-display text-5xl leading-[1.02] text-text-hi sm:text-6xl">
           The film conversation, synced to <span class="text-accent-hi">your exact frame.</span>
         </h1>
         <p class="mt-5 max-w-xl text-lg text-text-mid">
-          Hold up your phone. Rowhouse listens for ten seconds and snaps the commentary to
-          wherever you are — on any platform, live right now or recorded six months ago. The film
-          stays on your screen. We just deliver the person sitting next to you.
+          Hold up your phone. Rowhouse listens for about ten seconds and lines the commentary up to
+          where you are in the film. Works with Netflix, a Blu-ray, whatever you're playing, live
+          right now or recorded six months ago. The film stays on your screen; we add the
+          commentary on top.
         </p>
         <div class="mt-7 flex flex-wrap gap-3">
           <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">
@@ -112,7 +113,7 @@ const jsonLd = {
   <section class="mx-auto mt-20 max-w-6xl px-4 sm:px-6">
     <div class="mb-4 flex items-end justify-between">
       <h2 class="font-display text-2xl text-text-hi">Browse the canon</h2>
-      <a href="/discover" class="text-sm text-text-mid hover:text-text-hi">All films →</a>
+      <a href="/discover" class="text-sm text-text-mid hover:text-text-hi">All films</a>
     </div>
     {discover.catalog.length > 0 ? (
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -131,12 +132,12 @@ const jsonLd = {
     <div class="rounded-lg border border-border bg-surface/60 p-8 sm:p-10">
       <h2 class="max-w-2xl font-display text-3xl text-text-hi">You already do commentary. Give your audience a seat next to you.</h2>
       <p class="mt-3 max-w-2xl text-text-mid">
-        Go live with a sync layer nobody else has. Every session auto-saves as a permanent, searchable
-        track — with the room's reactions baked into the waveform.
+        Go live over a film, and everyone in the room hears you locked to their frame. Every session
+        saves as a permanent, searchable track, with the room's reactions marked on the waveform.
       </p>
       <div class="mt-6 flex flex-wrap items-center gap-4">
         <a href="/studio" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hi">Open the studio</a>
-        <span class="font-mono text-xs text-text-dim">Free forever · {formatTimecode(600)} to your first sync</span>
+        <span class="font-mono text-xs text-text-dim">Free forever. Your first sync in about {formatTimecode(600)}.</span>
       </div>
     </div>
   </section>

@@ -1,12 +1,12 @@
 /**
- * @rowhouse/ui — the Rowhouse design system.
- * Dark, engineered, cinematic. Import styles once in the app:
+ * @rowhouse/ui: the Rowhouse design system.
+ * Import styles once in the app:
  *   import '@rowhouse/ui/styles.css';
  */
 
 export { Avatar, type AvatarProps } from './components/Avatar.js';
 export { Badge, type BadgeProps, badge } from './components/Badge.js';
-// ── Primitives ────────────────────────────────────────────────────────
+// Primitives
 export { Button, type ButtonProps, button } from './components/Button.js';
 export {
   Card,
@@ -46,9 +46,9 @@ export { ReactionBar, type ReactionBarProps } from './components/ReactionBar.js'
 export { Spinner, type SpinnerProps } from './components/Spinner.js';
 export { SyncLock, type SyncLockProps, type SyncStatus } from './components/SyncLock.js';
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/Tabs.js';
-// ── Signature components ──────────────────────────────────────────────
+// Signature components
 export { TimeCode, type TimeCodeProps } from './components/TimeCode.js';
-// ── Toasts (re-exported from sonner, themed) ──────────────────────────
+// Toasts (re-exported from sonner, themed)
 export { Toaster, type ToasterProps, toast } from './components/Toaster.js';
 export {
   Tooltip,
@@ -65,6 +65,6 @@ export {
   Wordmark,
   type WordmarkProps,
 } from './components/Wordmark.js';
-// ── Utilities ─────────────────────────────────────────────────────────
+// Utilities
 export { type ClassValue, cn } from './lib/cn.js';
 export { REACTION_COLORS, REACTION_LABELS } from './lib/reactions.js';

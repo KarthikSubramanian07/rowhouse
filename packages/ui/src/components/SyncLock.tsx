@@ -10,7 +10,7 @@ export interface SyncLockProps {
   positionSeconds?: number;
   /** Match confidence 0..1, shown as a subtle readout when locked. */
   confidence?: number;
-  /** Re-run the sync. Always available — this is precision tuning, not failure. */
+  /** Re-run the sync. Always available; it is precision tuning, not a failure state. */
   onResync?: () => void;
   className?: string;
 }
@@ -22,13 +22,13 @@ const STATUS_LABEL: Record<SyncStatus, string> = {
 };
 
 /**
- * SyncLock — the magic moment. An instrument panel, not a spinner.
+ * SyncLock: an instrument panel, not a spinner.
  *
- *   idle       → quiet, waiting. A muted readout.
- *   listening  → a precision sweep scans for the position (oscilloscope-like).
- *                Reduced-motion collapses the sweep to a static "listening…".
- *   locked     → decisive resolve to the semantic "locked" green: the big mono
- *                TimeCode + a subtle confidence readout. Resync stays visible.
+ *   idle       quiet, waiting. A muted readout.
+ *   listening  a sweep scans for the position (oscilloscope-like). Reduced-motion
+ *              collapses the sweep to a static "listening...".
+ *   locked     resolves to the semantic "locked" green: the big mono TimeCode
+ *              plus a confidence readout. Resync stays visible.
  */
 export function SyncLock({
   status,
@@ -71,7 +71,7 @@ export function SyncLock({
               isLocked ? 'text-locked' : 'text-text-mid',
             )}
           >
-            sync · {STATUS_LABEL[status]}
+            sync: {STATUS_LABEL[status]}
           </span>
         </div>
 
@@ -126,7 +126,7 @@ export function SyncLock({
               }}
             />
           </div>
-          <span className="shrink-0 font-mono text-xs text-accent-hi">listening…</span>
+          <span className="shrink-0 font-mono text-xs text-accent-hi">listening...</span>
         </div>
       ) : (
         <div className="font-mono text-2xl text-text-dim tabular-nums">--:--</div>

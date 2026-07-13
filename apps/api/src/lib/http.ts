@@ -1,7 +1,7 @@
 import { HTTPException } from 'hono/http-exception';
 import type { ZodError } from 'zod';
 
-/** Typed application error → JSON with a stable `error` code. */
+/** Typed application error that serializes to JSON with a stable `error` code. */
 export class AppError extends HTTPException {
   readonly code: string;
   constructor(

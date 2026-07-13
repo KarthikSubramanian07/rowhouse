@@ -1,5 +1,5 @@
 /**
- * Rowhouse OG design tokens — dark, cinematic, high-contrast.
+ * Rowhouse OG design tokens: dark, cinematic, high-contrast.
  * Kept in one place so every card reads as the same product.
  */
 
@@ -16,13 +16,13 @@ export const COLOR = {
   border: '#24242B',
   textHi: '#F2F0EC',
   textMid: '#9E9EA7',
-  /** Cinema red — the brand accent. */
+  /** Cinema red, the brand accent. */
   accent: '#E0362E',
   /** "Locked" mint (verified / committed state). */
   mint: '#3DD68C',
 } as const;
 
-/** Reaction palette — used for track "tone" badges and audiogram spikes. */
+/** Reaction palette, used for track "tone" badges and audiogram spikes. */
 export const REACTION = {
   fire: '#FF7A45',
   laugh: '#F5C518',

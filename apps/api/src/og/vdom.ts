@@ -74,7 +74,7 @@ export function text(style: Style, value: string | number): VNode {
   return { type: 'div', props: { style, children: [String(value)] } };
 }
 
-/** An <img> — `src` MUST be a data: URL (Satori cannot fetch remote images on Workers). */
+/** An <img>. `src` must be a data: URL (Satori cannot fetch remote images on Workers). */
 export function img(src: string, style: Style): VNode {
   return { type: 'img', props: { style, src } };
 }

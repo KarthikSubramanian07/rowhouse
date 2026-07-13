@@ -25,7 +25,7 @@ export interface BadgeProps
   extends React.HTMLAttributes<HTMLSpanElement>,
     VariantProps<typeof badge> {}
 
-/** Small mono status pill. Uppercase, engineered, terse. */
+/** Small mono status pill. Uppercase. */
 export function Badge({ className, variant, ...props }: BadgeProps) {
   return <span className={cn(badge({ variant }), className)} {...props} />;
 }

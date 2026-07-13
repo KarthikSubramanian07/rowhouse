@@ -128,7 +128,7 @@ export async function getFilmPage(db: Database, slug: string): Promise<FilmPage 
   return { film, tracks: list, creatorCount };
 }
 
-/** All films that have at least one track — the discovery/catalog surface. */
+/** All films that have at least one track. Backs the discovery and catalog surface. */
 export async function catalogFilms(
   db: Database,
   limit = 60,

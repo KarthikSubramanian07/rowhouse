@@ -1,5 +1,5 @@
 # Pre-commit hooks (fast, staged-only). Installed locally via `pnpm prepare`.
-# Never touches your remote — this runs on your machine before a commit.
+# Never touches your remote - this runs on your machine before a commit.
 pre-commit:
   parallel: true
   jobs:

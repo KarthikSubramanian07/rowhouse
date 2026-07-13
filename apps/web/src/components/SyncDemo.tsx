@@ -12,7 +12,7 @@ import { playBuffer, startMicCapture } from '../lib/sync-capture';
 const SR = 8000;
 const REF_SECONDS = 48;
 const DEMO_SEED = 7;
-// Where "the film" is currently playing — the sync must discover this exact frame.
+// Where "the film" is currently playing. The sync has to discover this exact frame.
 const START_OFFSET = 18;
 
 const DEMO_MARKERS = [
@@ -92,7 +92,7 @@ export default function SyncDemo() {
     setMode('idle');
   }
 
-  /** Simulate: feed the reference straight into the engine — always works, no mic. */
+  /** Simulate: feed the reference straight into the engine. Always works, no mic. */
   function startSimulate() {
     if (!referenceRef.current || !sessionRef.current) return;
     reset();
@@ -127,7 +127,7 @@ export default function SyncDemo() {
         await startMicCapture((chunk, sr) => onNewState(session.pushCapture(chunk, sr)))
       ).stop;
     } catch {
-      setError('Microphone access was denied — try the simulation instead.');
+      setError('Microphone access was denied. Try the simulation instead.');
       setMode('idle');
       playRef.current?.stop();
     }
@@ -140,7 +140,7 @@ export default function SyncDemo() {
       <div className="mb-4 flex items-center justify-between">
         <p className="font-mono text-xs uppercase tracking-widest text-text-mid">Sync demo</p>
         <p className="font-mono text-xs text-text-dim">
-          reference @ {START_OFFSET}s · found automatically
+          reference @ {START_OFFSET}s, found automatically
         </p>
       </div>
 
@@ -164,7 +164,7 @@ export default function SyncDemo() {
         {state.status !== 'locked' ? (
           <>
             <Button onClick={startSimulate}>
-              {mode === 'simulate' ? 'Listening…' : 'Run the sync'}
+              {mode === 'simulate' ? 'Listening...' : 'Run the sync'}
             </Button>
             <Button variant="outline" onClick={startMic}>
               Try with your microphone
@@ -177,10 +177,10 @@ export default function SyncDemo() {
         )}
         <span className="font-mono text-xs text-text-dim">
           {state.status === 'locked'
-            ? `locked · ${Math.round(state.confidence * 100)}% confidence · ${state.score} landmarks`
+            ? `locked, ${Math.round(state.confidence * 100)}% confidence, ${state.score} landmarks`
             : mode === 'mic'
-              ? 'playing the reference — hold your phone near the speaker'
-              : 'no film audio is ever stored — only a fingerprint'}
+              ? 'playing the reference, hold your phone near the speaker'
+              : 'we store a fingerprint, never the film audio'}
         </span>
       </div>
       {error && <p className="mt-3 text-sm text-accent-hi">{error}</p>}

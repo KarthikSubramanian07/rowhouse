@@ -166,7 +166,7 @@ trackRoutes.get('/:id/fingerprint', async (c) => {
   });
 });
 
-/** Record a listen; `completed` feeds the all-important completion rate. */
+/** Record a listen; `completed` feeds the completion rate. */
 trackRoutes.post('/:id/listen', async (c) => {
   const id = c.req.param('id');
   const body = (await c.req.json().catch(() => ({}))) as { completed?: boolean };

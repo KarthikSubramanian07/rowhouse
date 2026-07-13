@@ -13,8 +13,8 @@ const SIZES = {
 } as const;
 
 /**
- * "Rowhouse" wordmark — engineered, tight, high-contrast. The "ow" carries the
- * single cinema-red accent (a row of seats lit by the screen). Not cute.
+ * "Rowhouse" wordmark. The "ow" carries the single cinema-red accent (a row of
+ * seats lit by the screen).
  */
 export function Wordmark({ className, size = 'md' }: WordmarkProps) {
   return (
@@ -44,8 +44,7 @@ export interface LogoProps {
 }
 
 /**
- * Logo mark — a row of five seats in the dark, one lit cinema-red (the reactor).
- * Engineered geometry, no gradients.
+ * Logo mark: a row of seats in the dark, one lit cinema-red. No gradients.
  */
 export function Logo({ className, size = 24, title = 'Rowhouse' }: LogoProps) {
   return (

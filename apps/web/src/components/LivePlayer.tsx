@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/client';
 import { startMicCapture } from '../lib/sync-capture';
 
-// ── Props (mirrors GET /live/:id) ─────────────────────────────────────
+// Props (mirrors GET /live/:id).
 export interface LiveSessionInfo {
   id: string;
   title: string;
@@ -45,7 +45,7 @@ export interface LiveDetail {
   wsUrl: string;
 }
 
-// ── Realtime message contracts ────────────────────────────────────────
+// Realtime message contracts.
 type WsIn =
   | { kind: 'chat'; id: number; name: string; body: string; at: number }
   | { kind: 'reaction'; t: number; type: ReactionType }
@@ -226,23 +226,23 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
   }
 
   /**
-   * Live sessions ship no fingerprint map yet, so the mic can only listen — it
-   * can't lock automatically. We still surface the precision-tuning feel, then
-   * hand off to the always-visible manual entry.
+   * Live sessions ship no fingerprint map yet, so the mic can only listen; it
+   * can't lock on automatically. We still show the listening state, then hand
+   * off to the manual entry, which is always visible.
    */
   async function startSync() {
     setNote(null);
     setSyncStatus('listening');
     try {
       const cap = await startMicCapture(() => {
-        /* no fingerprint map for live — capture is discarded */
+        /* no fingerprint map for live, so the capture is discarded */
       });
       stopMicRef.current = cap.stop;
       listenTimerRef.current = setTimeout(() => {
         stopMicRef.current?.();
         stopMicRef.current = null;
         setSyncStatus((s) => (s === 'listening' ? 'idle' : s));
-        setNote('No fingerprint map for this live session — set your position manually below.');
+        setNote('No fingerprint map for this live session. Set your position manually below.');
       }, 2600);
     } catch {
       setSyncStatus('idle');
@@ -271,7 +271,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
     <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
       <style dangerouslySetInnerHTML={{ __html: LOCAL_STYLE }} />
 
-      {/* ── Left column: stream + sync ─────────────────────────────── */}
+      {/* Left column: stream and sync. */}
       <div className="flex flex-col gap-6">
         {/* Stream panel (audio transport is stubbed in this build). */}
         <div className="relative overflow-hidden rounded-lg border border-border bg-surface/60">
@@ -301,14 +301,14 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
               <p className="font-display text-lg text-text-hi">{creator.name}</p>
               <div className="mt-2 flex items-center justify-center gap-2">
                 {isLive ? (
-                  <LiveBadge label={`LIVE — ${session.mode} commentary`} />
+                  <LiveBadge label={`Live ${session.mode} commentary`} />
                 ) : (
                   <Badge variant="outline">{session.status}</Badge>
                 )}
               </div>
             </div>
 
-            {/* Calm equalizer — evokes audio without claiming it plays. */}
+            {/* Calm equalizer. Suggests audio without claiming it plays. */}
             <div className="flex h-10 items-end gap-1" aria-hidden>
               {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
                 <span
@@ -330,7 +330,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
           </p>
         </div>
 
-        {/* Sync panel — precision tuning, resync always visible. */}
+        {/* Sync panel. Manual entry and resync stay visible. */}
         <div className="rounded-lg border border-border bg-surface/60 p-5 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
@@ -341,7 +341,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
               </p>
             </div>
             <Button variant="outline" size="sm" onClick={startSync}>
-              {syncStatus === 'listening' ? 'Listening…' : 'Sync to my film'}
+              {syncStatus === 'listening' ? 'Listening...' : 'Sync to my film'}
             </Button>
           </div>
 
@@ -383,7 +383,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
         </div>
       </div>
 
-      {/* ── Right column: chat + reactions ─────────────────────────── */}
+      {/* Right column: chat and reactions. */}
       <aside className="flex min-h-[420px] flex-col rounded-lg border border-border bg-surface/60">
         <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
           <div className="flex items-center gap-2">
@@ -400,7 +400,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
         <div className="flex-1 space-y-2.5 overflow-y-auto px-4 py-3" style={{ maxHeight: 420 }}>
           {messages.length === 0 ? (
             <p className="text-sm text-text-dim">
-              {isLive ? 'No messages yet — say hi.' : 'Chat opens when the session goes live.'}
+              {isLive ? 'No messages yet. Say hi.' : 'Chat opens when the session goes live.'}
             </p>
           ) : (
             messages.map((m) => (
@@ -423,7 +423,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder={isLive ? 'Say something…' : 'Chat is closed'}
+              placeholder={isLive ? 'Say something...' : 'Chat is closed'}
               disabled={!isLive || conn !== 'open'}
               className="h-9 flex-1 rounded-md border border-border bg-bg px-3 text-sm text-text-hi outline-none placeholder:text-text-dim focus:border-accent disabled:opacity-50"
             />

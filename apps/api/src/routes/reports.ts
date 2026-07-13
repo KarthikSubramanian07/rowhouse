@@ -8,7 +8,7 @@ import type { AppEnv } from '../types.js';
 
 export const reportRoutes = new Hono<AppEnv>();
 
-/** Flag content for moderation (spec §11 — queue reviewed within 24h). */
+/** Flag content for moderation (spec §11). Queue is reviewed within 24h. */
 reportRoutes.post('/', requireAuth, async (c) => {
   const parsed = reportSchema.safeParse(await c.req.json().catch(() => ({})));
   if (!parsed.success) throw badRequest('invalid_report');

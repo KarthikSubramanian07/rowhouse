@@ -1,5 +1,5 @@
 /*
- * Rowhouse design tokens — the single source of truth.
+ * Rowhouse design tokens - the single source of truth.
  *
  * These are raw CSS custom properties. They are mapped into Tailwind v4's
  * `@theme` in `theme.css` (which is what generates the `bg-*`, `text-*`,
@@ -24,7 +24,7 @@
   --text-mid: #9e9ea7;
   --text-dim: #64646d;
 
-  /* ── Brand accent — cinema red. THE single accent.
+  /* ── Brand accent - cinema red. THE single accent.
    *    live/REC, primary action, focus rings. Nothing else. ──────────── */
   --accent: #e0362e;
   --accent-hi: #ff5b54;
@@ -44,17 +44,17 @@
   --radius-2: 8px;
   --radius-3: 12px;
 
-  /* ── Spacing base — everything sits on a 4px grid ──────────────────── */
+  /* ── Spacing base - everything sits on a 4px grid ──────────────────── */
   --space-unit: 4px;
 
   /* ── Type scale (documented; mapped to Tailwind text-* in theme.css) ─
    *    UI runs a touch tighter than 16px for an engineered, dense feel. */
-  --type-xs: 0.75rem; /* 12px — timecodes, meta, mono labels */
-  --type-sm: 0.8125rem; /* 13px — secondary UI */
-  --type-base: 0.9375rem; /* 15px — body / default UI */
-  --type-md: 1.0625rem; /* 17px — emphasized body */
-  --type-lg: 1.375rem; /* 22px — section headings */
-  --type-xl: 1.875rem; /* 30px — card titles */
-  --type-2xl: 2.5rem; /* 40px — page titles */
-  --type-display: 4rem; /* 64px — Fraunces hero / film titles */
+  --type-xs: 0.75rem; /* 12px - timecodes, meta, mono labels */
+  --type-sm: 0.8125rem; /* 13px - secondary UI */
+  --type-base: 0.9375rem; /* 15px - body / default UI */
+  --type-md: 1.0625rem; /* 17px - emphasized body */
+  --type-lg: 1.375rem; /* 22px - section headings */
+  --type-xl: 1.875rem; /* 30px - card titles */
+  --type-2xl: 2.5rem; /* 40px - page titles */
+  --type-display: 4rem; /* 64px - Fraunces hero / film titles */
 }

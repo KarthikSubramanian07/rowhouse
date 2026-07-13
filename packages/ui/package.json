@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Rowhouse design system — dark, engineered, cinematic React components + design tokens.",
+  "description": "Rowhouse design system - dark, engineered, cinematic React components + design tokens.",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {

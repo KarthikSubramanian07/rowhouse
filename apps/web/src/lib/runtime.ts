@@ -2,8 +2,8 @@
 import type { APIContext, AstroGlobal } from 'astro';
 
 /**
- * Resolve the backend Worker origin. The browser never calls this directly — it
- * hits same-origin /api/* which the proxy (src/pages/api/[...path].ts) forwards
+ * Resolve the backend Worker origin. The browser never calls this directly. It
+ * hits same-origin /api/*, which the proxy (src/pages/api/[...path].ts) forwards
  * here, piping Set-Cookie through so sessions stay first-party on pages.dev.
  */
 export function apiOrigin(ctx: APIContext | AstroGlobal): string {

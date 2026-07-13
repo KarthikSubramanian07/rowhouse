@@ -17,7 +17,7 @@ if (!detail) {
 const { session, creator, film } = detail;
 const site = 'https://rowhouse-gg.pages.dev';
 const filmTitle = film?.title ?? 'this film';
-const title = `${session.title} — live on Rowhouse`;
+const title = `${session.title} (live on Rowhouse)`;
 const description =
   session.status === 'live'
     ? `${creator.name} is live now with commentary on ${filmTitle}. Watch along and react in real time.`
@@ -63,8 +63,8 @@ const statusLabel =
         href={`/track/${session.trackId}`}
         class="mt-6 flex items-center justify-between gap-3 rounded-lg border border-accent/40 bg-accent/10 px-4 py-3 transition-colors hover:bg-accent/15"
       >
-        <span class="text-sm text-text-hi">This session was saved → listen to the replay</span>
-        <span class="font-mono text-xs uppercase tracking-widest text-accent-hi">Open track ↗</span>
+        <span class="text-sm text-text-hi">This session was saved. Listen to the replay.</span>
+        <span class="font-mono text-xs uppercase tracking-widest text-accent-hi">Open track</span>
       </a>
     )}
 
@@ -73,8 +73,8 @@ const statusLabel =
     </div>
 
     <p class="mt-6 text-xs text-text-dim">
-      Rowhouse delivers only the commentary layer — the film stays on your platform of choice. Film audio
-      never leaves your device; audio streaming is stubbed in this build.
+      Rowhouse carries the commentary only; the film stays on your platform of choice. Film audio
+      never leaves your device, and audio streaming is stubbed in this build.
     </p>
   </article>
 </Base>

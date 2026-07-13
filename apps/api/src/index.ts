@@ -1,8 +1,8 @@
 /**
- * Rowhouse backend Worker: Hono API + ChatRoom Durable Object + queue consumer +
- * cron. Runs fully on mock adapters with zero secrets. The public web app
+ * Rowhouse backend Worker: Hono API, ChatRoom Durable Object, queue consumer, and
+ * cron. Runs on mock adapters with zero secrets. The public web app
  * (rowhouse-gg.pages.dev) proxies /api/* here server-side so session cookies stay
- * first-party; this Worker itself is the invisible backend.
+ * first-party; this Worker is the backend behind that proxy.
  */
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';

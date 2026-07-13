@@ -51,9 +51,9 @@ function readVar(el: Element, name: string, fallback: string): string {
 }
 
 /**
- * Waveform — the async player centerpiece. A canvas-rendered commentary
- * waveform with a cinema-red playhead and reaction-marker dots clustered along
- * the timeline. Click or use the arrow keys to seek.
+ * Waveform: the async player centerpiece. A canvas-rendered commentary waveform
+ * with a cinema-red playhead and reaction-marker dots clustered along the
+ * timeline. Click or use the arrow keys to seek.
  */
 export function Waveform({
   peaks,

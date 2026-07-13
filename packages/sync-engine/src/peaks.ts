@@ -3,10 +3,10 @@
  * additive noise and band-limited TV-speaker playback.
  *
  * Method: convert to dB, spectral-whiten against a per-frame moving-median noise
- * floor (neutralises TV EQ + slowly varying room noise — the single most
- * effective robustness step per the research), take 2-D local maxima via a
- * separable max filter, then cap density to the strongest N peaks per second so
- * the SAME peaks are selected from clean and noisy audio regardless of gain.
+ * floor (this neutralises TV EQ and slowly varying room noise, the main
+ * robustness step), take 2-D local maxima via a separable max filter, then cap
+ * density to the strongest N peaks per second so the same peaks are selected from
+ * clean and noisy audio regardless of gain.
  */
 
 import type { Spectrogram } from './dsp.js';
@@ -25,8 +25,9 @@ const EPS = 1e-10;
 
 /**
  * Per-frame spectral whitening: subtract a moving median (approximated by a
- * windowed mean over the band) so peaks are ranked relative to LOCAL background.
- * This is what makes the same peaks emerge from clean vs mic-captured audio.
+ * windowed mean over the band) so peaks are ranked relative to local background.
+ * Ranking against the local floor makes the same peaks emerge from clean and
+ * mic-captured audio.
  */
 function whitenedDb(spec: Spectrogram): Float32Array {
   const { frames, bins, mag } = spec;

@@ -1,8 +1,8 @@
 /**
- * AIProvider — genuinely additive, never required. Rowhouse is not an AI product;
- * the platform is 100% functional with the deterministic mock. Real models
- * (Anthropic) plug in for nicer auto-chaptering / tone tagging / clip captions.
- * Never used for the sync layer — that's a deterministic signal-processing problem.
+ * AiProvider is additive and never required. Rowhouse is not an AI product; the
+ * platform is fully functional with the deterministic mock. Real models (Anthropic)
+ * plug in for better auto-chaptering, tone tagging, and clip captions. The sync
+ * layer never touches this; that is a deterministic signal-processing problem.
  */
 import { type Chapter, detectClipCandidates, type ReactionEvent } from '@rowhouse/sync-engine';
 import type { Tone } from '@rowhouse/types';
@@ -37,7 +37,7 @@ const TONE_KEYWORDS: Record<Tone, string[]> = {
   chaotic: ['chaos', 'losing it', 'screaming', 'wild', 'insane', 'meltdown'],
 };
 
-/** Deterministic heuristics — no network, no keys. */
+/** Deterministic heuristics: no network, no keys. */
 export class MockAiProvider implements AiProvider {
   readonly name = 'mock' as const;
 
@@ -81,7 +81,7 @@ export class MockAiProvider implements AiProvider {
   }): Promise<string> {
     const mm = Math.floor(input.peakSeconds / 60);
     const ss = String(Math.floor(input.peakSeconds % 60)).padStart(2, '0');
-    return `The room lost it at ${mm}:${ss} — ${input.filmTitle}`;
+    return `The room lost it at ${mm}:${ss} during ${input.filmTitle}`;
   }
 }
 

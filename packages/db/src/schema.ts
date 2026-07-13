@@ -2,8 +2,8 @@
  * Rowhouse data model (D1 / SQLite via Drizzle).
  *
  * Timestamps are unix seconds (integer). Booleans are 0/1 integers. Money isn't
- * modelled here — the core platform is free forever (spec §12); Pro/creator-subs
- * are Phase-2 seams left to the PaymentProvider adapter.
+ * modelled here; the core platform is free (spec §12). Pro and creator subs are
+ * Phase-2 seams left to the PaymentProvider adapter.
  */
 import { sql } from 'drizzle-orm';
 import { blob, index, integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -87,7 +87,7 @@ export const films = sqliteTable(
   (t) => [index('films_tmdb_idx').on(t.tmdbId, t.mediaType)],
 );
 
-/** Commentary tracks + mini-takes — the catalog (spec §04). */
+/** Commentary tracks and mini-takes: the catalog (spec §04). */
 export const tracks = sqliteTable(
   'tracks',
   {

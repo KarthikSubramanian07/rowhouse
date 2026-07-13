@@ -10,8 +10,8 @@ export interface SpinnerProps {
 }
 
 /**
- * Minimal loading spinner. The spin is guarded for prefers-reduced-motion
- * (via the `animate-spin` class → static in reduced-motion).
+ * Minimal loading spinner. The spin is guarded for prefers-reduced-motion (the
+ * `animate-spin` class becomes static in reduced-motion).
  */
 export function Spinner({ size = 16, className, label }: SpinnerProps) {
   return (

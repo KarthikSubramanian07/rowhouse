@@ -1,4 +1,4 @@
-/** Slug helpers — the SEO surface depends on stable, readable film slugs. */
+/** Slug helpers. The SEO surface depends on stable, readable film slugs. */
 
 export function slugify(input: string): string {
   return input
@@ -12,9 +12,9 @@ export function slugify(input: string): string {
 }
 
 /**
- * Build a film/episode slug, e.g.:
- *   movie → "mulholland-drive"
- *   tv    → "the-sopranos-s06e21"
+ * Build a film/episode slug. Examples:
+ *   movie: "mulholland-drive"
+ *   tv:    "the-sopranos-s06e21"
  */
 export function filmSlug(input: {
   title: string;
@@ -32,7 +32,7 @@ export function filmSlug(input: {
 }
 
 const zeros = '0000000000';
-/** Format seconds as a timecode: 1:23:14 or 4:07. The signature typographic unit. */
+/** Format seconds as a timecode: 1:23:14 or 4:07. */
 export function formatTimecode(totalSeconds: number): string {
   const s = Math.max(0, Math.floor(totalSeconds));
   const hours = Math.floor(s / 3600);

@@ -1,11 +1,9 @@
 /**
- * Deterministic reaction + clip logic.
- *
- * These are pure functions the platform's "flywheel" depends on, so they're
- * unit-tested hard alongside the sync engine:
- *  - mapping a reaction timestamp to a normalized waveform x-position,
- *  - finding highest-reaction-density moments (auto-clip candidates), and
- *  - assembling a finished live session into a searchable async track with its
+ * Deterministic reaction and clip logic. Pure functions, unit-tested alongside
+ * the sync engine:
+ *  - map a reaction timestamp to a normalized waveform x-position,
+ *  - find highest-reaction-density moments (auto-clip candidates), and
+ *  - assemble a finished live session into a searchable async track with its
  *    community reaction markers baked in.
  */
 
@@ -103,9 +101,9 @@ export interface ClipDetectionOptions {
 }
 
 /**
- * Find the highest-reaction-density moments — the auto-generated clip candidates
- * ("creator losing their mind" audiograms). A sliding window over sorted events;
- * greedy non-overlapping top-K selection so clips don't stack on one spike.
+ * Find the highest-reaction-density moments: the auto-generated clip candidates.
+ * A sliding window over sorted events, with greedy non-overlapping top-K
+ * selection so clips don't stack on one spike.
  */
 export function detectClipCandidates(
   events: ReactionEvent[],
@@ -160,8 +158,8 @@ export interface AssembledTrack {
 
 /**
  * Assemble a finished live session into the async catalog entry: reaction dot
- * clusters, validated chapter markers, and clip candidates — the live→async
- * flywheel made concrete. Deterministic given identical inputs.
+ * clusters, validated chapter markers, and clip candidates. Deterministic given
+ * identical inputs.
  */
 export function assembleTrackFromSession(input: {
   durationSeconds: number;

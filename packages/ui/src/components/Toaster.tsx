@@ -4,8 +4,8 @@ import { Toaster as SonnerToaster, toast } from 'sonner';
 export type ToasterProps = React.ComponentProps<typeof SonnerToaster>;
 
 /**
- * Themed sonner Toaster — dark, engineered, token-aligned. Mount once near the
- * app root. Fire toasts with the re-exported `toast`.
+ * Themed sonner Toaster, aligned to the design tokens. Mount once near the app
+ * root. Fire toasts with the re-exported `toast`.
  */
 export function Toaster(props: ToasterProps) {
   return (

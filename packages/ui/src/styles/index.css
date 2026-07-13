@@ -1,5 +1,5 @@
 /*
- * @rowhouse/ui — stylesheet entrypoint.
+ * @rowhouse/ui - stylesheet entrypoint.
  * Import once in the consuming app:  import '@rowhouse/ui/styles.css';
  *
  * Order matters: Tailwind first, then raw tokens + fonts, then the @theme that

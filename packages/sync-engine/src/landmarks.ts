@@ -2,15 +2,15 @@
  * Landmark pairing and hashing.
  *
  * Each anchor peak is paired with up to `fanOut` later peaks in its target zone.
- * A pair encodes (f1, f2, dt) into a 26-bit hash — deliberately kept ≤ 2^31 so
- * every hash is a positive int32 and the sorted binary map (Int32Array) can be
+ * A pair encodes (f1, f2, dt) into a 26-bit hash. The hash is kept below 2^31 so
+ * every value is a positive int32 and the sorted binary map (Int32Array) can be
  * binary-searched without unsigned-comparison hazards.
  *
  *   hash = (f1 & 0x3FF) << 16 | (f2 & 0x3FF) << 6 | (dt & 0x3F)
- *          └ 10 bits ┘          └ 10 bits ┘         └ 6 bits ┘   = 26 bits
  *
- * f1/f2 are frequency bins (0…512 → 10 bits); dt is the anchor→target frame gap
- * bounded by FP.pair.maxDt = 63 → 6 bits.
+ * Bit layout: bits 16-25 = f1 (10 bits), bits 6-15 = f2 (10 bits), bits 0-5 = dt
+ * (6 bits), 26 bits total. f1/f2 are frequency bins (0 to 512, 10 bits); dt is
+ * the anchor-to-target frame gap, bounded by FP.pair.maxDt = 63 (6 bits).
  */
 import { FP } from './params.js';
 import type { Peak } from './peaks.js';
@@ -20,7 +20,7 @@ export interface Landmark {
   f1: number;
   /** Target frequency bin. */
   f2: number;
-  /** Anchor→target time gap in frames. */
+  /** Anchor-to-target time gap in frames. */
   dt: number;
   /** Anchor frame index (this landmark's time position). */
   t: number;
@@ -53,7 +53,7 @@ export function makeLandmarks(peaks: Peak[]): Landmark[] {
       const target = peaks[j]!;
       const dt = target.t - anchor.t;
       if (dt < minDt) continue;
-      if (dt > maxDt) break; // peaks sorted by time → no further targets in zone
+      if (dt > maxDt) break; // peaks sorted by time, so no further targets in zone
       if (Math.abs(target.f - anchor.f) > maxDf) continue;
       out.push({ f1: anchor.f, f2: target.f, dt, t: anchor.t });
       if (++paired >= fanOut) break;

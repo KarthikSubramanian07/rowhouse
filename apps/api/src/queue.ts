@@ -5,7 +5,7 @@ import type { Env, JobMessage } from './env.js';
 import { getFilmBySlug } from './services/films.js';
 import { assembleLiveSession } from './services/live.js';
 
-/** Queue consumer — background jobs that shouldn't block a request. */
+/** Queue consumer for background jobs that shouldn't block a request. */
 export async function handleQueue(batch: MessageBatch<JobMessage>, env: Env): Promise<void> {
   const db = createDb(env.DB);
   const providers = buildProviders(env);
@@ -43,8 +43,8 @@ async function handleJob(
 }
 
 /**
- * "Your favorite film critic is watching Mulholland Drive right now." The single
- * highest-value retention touchpoint — fan out Web Push to the creator's followers.
+ * Fan out Web Push to a creator's followers when they go live, e.g. "Your favorite
+ * film critic is watching Mulholland Drive right now."
  */
 async function notifyLive(
   db: ReturnType<typeof createDb>,
@@ -73,7 +73,7 @@ async function notifyLive(
     .all();
   const message = {
     title: `${creator.displayName} is live`,
-    body: `Watching ${film.title} right now — hold up your phone and sync in.`,
+    body: `Watching ${film.title} right now. Hold up your phone and sync in.`,
     url: `${env.APP_ORIGIN}/live/${sessionId}`,
     tag: `live-${sessionId}`,
   };

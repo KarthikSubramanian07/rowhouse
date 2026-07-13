@@ -67,7 +67,7 @@ export default function SyncPlayer({ detail }: { detail: TrackDetail }) {
   /** Hold up your phone: match the film audio and jump the commentary to that frame. */
   async function startSync() {
     if (!detail.fingerprintUrl) {
-      setNote('This track has no fingerprint map yet — use the manual position below.');
+      setNote('This track has no fingerprint map yet. Use the manual position below.');
       return;
     }
     setNote(null);
@@ -166,12 +166,12 @@ export default function SyncPlayer({ detail }: { detail: TrackDetail }) {
         <div>
           <p className="text-sm text-text-mid">Watching along?</p>
           <p className="text-xs text-text-dim">
-            Press play on your film, then sync — the commentary snaps to your exact frame.
+            Press play on your film, then sync. The commentary jumps to your exact frame.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={startSync}>
-            {syncStatus === 'listening' ? 'Listening…' : 'Sync to my film'}
+            {syncStatus === 'listening' ? 'Listening...' : 'Sync to my film'}
           </Button>
         </div>
       </div>

@@ -50,7 +50,7 @@ async function serveCached(
       headers: { 'content-type': 'image/png', 'cache-control': 'public, max-age=86400, immutable' },
     });
   } catch {
-    // Best-effort fallback: a minimal on-brand SVG (cards are non-critical).
+    // Best-effort fallback: a minimal SVG, since cards are non-critical.
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630"><rect width="1200" height="630" fill="#0B0B0D"/><rect width="8" height="630" fill="#E0362E"/><text x="64" y="330" fill="#F2F0EC" font-family="serif" font-size="72">Rowhouse</text></svg>`;
     return new Response(svg, {
       headers: { 'content-type': 'image/svg+xml', 'cache-control': 'public, max-age=3600' },

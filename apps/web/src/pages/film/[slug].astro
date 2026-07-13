@@ -40,9 +40,9 @@ if (!page) {
 
 const { film, tracks, creatorCount } = page;
 const site = 'https://rowhouse-gg.pages.dev';
-const title = `${film.title} commentary — Rowhouse`;
+const title = `${film.title} commentary | Rowhouse`;
 const description = film.overview
-  ? `${film.overview.slice(0, 150)}… Listen to synced commentary on ${film.title}, from ${creatorCount} creators.`
+  ? `${film.overview.slice(0, 150)}... Listen to synced commentary on ${film.title}, from ${creatorCount} creators.`
   : `Synced film commentary for ${film.title}. Hold up your phone and the track locks to your frame.`;
 const ogImage = `${site}/api/og/film/${film.slug}`;
 
@@ -102,7 +102,7 @@ const jsonLd = {
       ) : (
         <div class="rounded-lg border border-border bg-surface p-6">
           <p class="text-text-mid">No commentary yet for {film.title}.</p>
-          <p class="mt-1 text-sm text-text-dim">Be the first — go live or drop a mini-take from the studio.</p>
+          <p class="mt-1 text-sm text-text-dim">Be the first. Go live or drop a mini-take from the studio.</p>
           <a href="/studio" class="mt-4 inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-white hover:bg-accent-hi">Open the studio</a>
         </div>
       )}

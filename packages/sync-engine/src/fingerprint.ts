@@ -1,5 +1,5 @@
 /**
- * The shared fingerprint pipeline: PCM → landmarks. Used identically for
+ * The shared fingerprint pipeline: PCM to landmarks. Used identically for
  * creator-side map generation and listener-side query capture.
  */
 import { preEmphasize, resample, spectrogram } from './dsp.js';
@@ -22,13 +22,13 @@ export function fingerprint(pcm: Float32Array, sampleRate: number): Landmark[] {
 }
 
 /**
- * Listener-side capture → discardable fingerprint hashes.
+ * Listener-side capture to discardable fingerprint hashes.
  *
- * Returns ONLY the derived landmark hashes + query anchor times. The input PCM is
- * never returned or retained; the caller is expected to drop it immediately. This
- * is the technical form of Rowhouse's load-bearing legal invariant: the app
- * listens, fingerprints, and discards — it never records or stores film audio.
- * See the "no raw film audio persisted" test.
+ * Returns only the derived landmark hashes and query anchor times. The input PCM
+ * is never returned or retained; the caller is expected to drop it immediately.
+ * This enforces the legal invariant: the app listens, fingerprints, and discards.
+ * It never records or stores film audio. See the "no raw film audio persisted"
+ * test.
  */
 export interface QueryFingerprint {
   /** Parallel arrays: hash[i] occurred at anchor frame time[i] (query timeline). */
@@ -50,6 +50,6 @@ export function captureToFingerprint(pcm: Float32Array, sampleRate: number): Que
     hashes[i] = encodeHash(lm.f1, lm.f2, lm.dt);
     times[i] = lm.t;
   }
-  // pcm intentionally goes out of scope here — nothing retains it.
+  // pcm intentionally goes out of scope here; nothing retains it.
   return { hashes, times, count: landmarks.length, durationSeconds };
 }

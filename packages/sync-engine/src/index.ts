@@ -1,9 +1,9 @@
 /**
- * @rowhouse/sync-engine — audio-to-position synchronization.
+ * @rowhouse/sync-engine: audio-to-position synchronization.
  *
- * The moat: given ~10 s of mic-captured film audio, find the exact reference
- * timeline offset the listener is at, using constellation-hash landmark matching
- * against a per-film fingerprint map. Pure, deterministic, dependency-free — runs
+ * Given ~10 s of mic-captured film audio, find the reference timeline offset the
+ * listener is at, using constellation-hash landmark matching against a per-film
+ * fingerprint map. Pure, deterministic, and dependency-free, so it runs
  * identically in the browser (listener), Node (fixtures) and Workers (map-gen).
  */
 

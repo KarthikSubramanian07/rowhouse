@@ -27,7 +27,7 @@ watchlistRoutes.post('/', requireCreator, async (c) => {
   return c.json({ ok: true });
 });
 
-/** A follower upvotes a title on a creator's watch list (generates anticipation). */
+/** A follower upvotes a title on a creator's watch list. */
 watchlistRoutes.post('/:handle/:filmSlug/upvote', requireAuth, async (c) => {
   const db = c.get('db');
   const voter = c.get('user')!;

@@ -106,11 +106,11 @@ function FilmSearch({
 
   return (
     <div className="relative">
-      <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search films & TV…" />
+      <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search films & TV..." />
       {(results.length > 0 || busy) && (
         <div className="mt-1 max-h-56 overflow-y-auto rounded-md border border-border bg-surface">
           {busy && results.length === 0 ? (
-            <p className="px-3 py-2 text-xs text-text-dim">Searching…</p>
+            <p className="px-3 py-2 text-xs text-text-dim">Searching...</p>
           ) : (
             results.map((f) => (
               <button
@@ -279,7 +279,7 @@ export default function Studio({ me }: { me: StudioUser }) {
         }),
       });
       setTakeTrackId(result.trackId);
-      toast.success('Mini-take created — record/upload audio next.');
+      toast.success('Mini-take created. Record or upload audio next.');
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Could not create the mini-take.');
     } finally {
@@ -305,7 +305,7 @@ export default function Studio({ me }: { me: StudioUser }) {
           </CardHeader>
           <CardBody>
             <Button onClick={becomeCreator} disabled={becoming}>
-              {becoming ? 'Setting up…' : 'Become a creator'}
+              {becoming ? 'Setting up...' : 'Become a creator'}
             </Button>
           </CardBody>
         </Card>
@@ -350,7 +350,7 @@ export default function Studio({ me }: { me: StudioUser }) {
             </Field>
             <div>
               <Button type="submit" disabled={savingProfile}>
-                {savingProfile ? 'Saving…' : 'Save profile'}
+                {savingProfile ? 'Saving...' : 'Save profile'}
               </Button>
             </div>
           </form>
@@ -411,12 +411,12 @@ export default function Studio({ me }: { me: StudioUser }) {
             </Field>
             <div>
               <Button type="submit" disabled={scheduling}>
-                {scheduling ? 'Scheduling…' : 'Schedule session'}
+                {scheduling ? 'Scheduling...' : 'Schedule session'}
               </Button>
             </div>
           </form>
 
-          {/* Session controls — the live → async flywheel. */}
+          {/* Session controls: the live-to-on-demand flywheel. */}
           {session && (
             <div className="mt-6 rounded-md border border-border bg-surface-2 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
@@ -470,7 +470,7 @@ export default function Studio({ me }: { me: StudioUser }) {
                     href={`/track/${endResult.trackId}`}
                     className="mt-3 inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-text-hi hover:bg-accent-hi"
                   >
-                    Open the replay track ↗
+                    Open the replay track
                   </a>
                 </div>
               )}
@@ -509,7 +509,7 @@ export default function Studio({ me }: { me: StudioUser }) {
             </Field>
             <div>
               <Button type="submit" disabled={takingBusy}>
-                {takingBusy ? 'Creating…' : 'Create mini-take'}
+                {takingBusy ? 'Creating...' : 'Create mini-take'}
               </Button>
             </div>
           </form>
@@ -523,7 +523,7 @@ export default function Studio({ me }: { me: StudioUser }) {
                 href={`/track/${takeTrackId}`}
                 className="mt-2 inline-block font-mono text-xs uppercase tracking-widest text-accent-hi hover:text-accent"
               >
-                Open the track ↗
+                Open the track
               </a>
             </div>
           )}

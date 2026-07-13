@@ -14,7 +14,7 @@ import { box, col, img, row, text, type VNode } from './vdom.js';
 /** Hard-truncate with an ellipsis (Satori text-overflow is unreliable across wraps). */
 function clamp(input: string, max: number): string {
   const s = input.trim();
-  return s.length > max ? `${s.slice(0, max - 1).trimEnd()}…` : s;
+  return s.length > max ? `${s.slice(0, max - 1).trimEnd()}...` : s;
 }
 
 /** Resample an arbitrary-length 0..1 series down to `targetN` averaged buckets. */
@@ -64,8 +64,8 @@ function wordmark(): VNode {
 }
 
 /**
- * Root frame: full-bleed dark bg + a 1px engineered inset border + a cinema-red
- * rail down the left edge. `content` fills the padded interior.
+ * Root frame: full-bleed dark bg, a 1px inset border, and a cinema-red rail down
+ * the left edge. `content` fills the padded interior.
  */
 function frame(content: VNode): VNode {
   return box(
@@ -389,7 +389,7 @@ export function buildAudiogramCard(p: AudiogramCardParams): VNode {
           ],
         ),
       ]),
-      // middle: caption (the "losing their mind" line)
+      // middle: caption line
       col({ gap: 14 }, [
         text(
           {
@@ -399,7 +399,7 @@ export function buildAudiogramCard(p: AudiogramCardParams): VNode {
             letterSpacing: 1,
             color: COLOR.textMid,
           },
-          `${handle}  ·  ${clamp(p.filmTitle, 40)}`,
+          `${handle}, ${clamp(p.filmTitle, 40)}`,
         ),
         text(
           {

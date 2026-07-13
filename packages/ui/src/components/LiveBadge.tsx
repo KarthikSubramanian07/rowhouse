@@ -7,7 +7,7 @@ export interface LiveBadgeProps {
 }
 
 /**
- * Pulsing cinema-red "LIVE" pill — the REC light of the product.
+ * Pulsing cinema-red "LIVE" pill.
  * The dot pulse is guarded for prefers-reduced-motion (resolves to a steady dot).
  */
 export function LiveBadge({ className, label = 'LIVE' }: LiveBadgeProps) {

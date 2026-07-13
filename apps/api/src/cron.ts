@@ -13,6 +13,6 @@ export async function handleScheduled(event: ScheduledController, env: Env): Pro
     return;
   }
 
-  // */15 sweep — reserved for pending fingerprint/clip processing. The heavy work
-  // is enqueued to the Queue at request time; this is the safety-net re-drive.
+  // The */15 sweep is reserved for pending fingerprint/clip processing. The heavy
+  // work is enqueued to the Queue at request time; this re-drives anything missed.
 }

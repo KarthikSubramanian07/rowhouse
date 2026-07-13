@@ -1,6 +1,6 @@
 import { encodeBase32LowerCaseNoPadding } from '@oslojs/encoding';
 
-/** URL/DB-safe random id with a short type prefix, e.g. "trk_9x3k…". */
+/** URL/DB-safe random id with a short type prefix, e.g. "trk_9x3k...". */
 export function newId(prefix: string): string {
   const bytes = new Uint8Array(15); // 120 bits
   crypto.getRandomValues(bytes);

@@ -52,7 +52,7 @@ feedRoutes.get('/', async (c) => {
   return c.json({ followingCount: ids.length, recent: followedTracks, discover });
 });
 
-/** Logged-out discovery surface — trending commentary + the catalog. */
+/** Logged-out discovery surface: trending commentary and the catalog. */
 feedRoutes.get('/discover', async (c) => {
   const db = c.get('db');
   const trending = await db

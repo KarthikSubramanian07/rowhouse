@@ -1,7 +1,7 @@
 /*
- * Tailwind v4 theme — maps the raw tokens (tokens.css / fonts.css) into
+ * Tailwind v4 theme - maps the raw tokens (tokens.css / fonts.css) into
  * Tailwind's CSS-first `@theme`. This is what generates the utility classes
- * the components use (bg-accent, text-text-hi, rounded-md, font-mono, …).
+ * the components use (bg-accent, text-text-hi, rounded-md, font-mono, ...).
  *
  * Only tailwind-namespaced keys live inside `@theme`; every value references a
  * raw token so there is exactly one source of truth.
@@ -50,14 +50,14 @@
   --text-2xl: var(--type-2xl);
   --text-display: var(--type-display);
 
-  /* ── Motion — the ONLY "alive" motions in the system.
+  /* ── Motion - the ONLY "alive" motions in the system.
    *    Both are guarded for prefers-reduced-motion below. ─────────────── */
   --animate-live-pulse: rh-live-pulse 1.8s ease-in-out infinite;
   --animate-scan: rh-scan 1.15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   --animate-spin: rh-spin 0.7s linear infinite;
 }
 
-/* A subtle live pulse — used by LiveBadge / REC dots. */
+/* A subtle live pulse - used by LiveBadge / REC dots. */
 @keyframes rh-live-pulse {
   0%,
   100% {
@@ -70,7 +70,7 @@
   }
 }
 
-/* The sync-lock scan — a precision sweep, not a spinner. */
+/* The sync-lock scan - a precision sweep, not a spinner. */
 @keyframes rh-scan {
   0% {
     transform: translateX(-100%);

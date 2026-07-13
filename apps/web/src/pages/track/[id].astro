@@ -15,7 +15,7 @@ if (!detail) {
 
 const site = 'https://rowhouse-gg.pages.dev';
 const filmTitle = detail.film?.title ?? 'this film';
-const title = `${detail.track.title} — ${detail.creator.name} on Rowhouse`;
+const title = `${detail.track.title}, ${detail.creator.name} on Rowhouse`;
 const description = `${detail.creator.name}'s synced commentary on ${filmTitle}. Press play on your film and it locks to your frame.`;
 const ogImage = `${site}/api/og/track/${detail.track.id}`;
 
@@ -60,8 +60,8 @@ const jsonLd = {
     </div>
 
     <p class="mt-6 text-xs text-text-dim">
-      Rowhouse never records or stores film audio. Your microphone is processed to a fingerprint on
-      your device and discarded — we only deliver the commentary layer over what you're already watching.
+      Rowhouse never records or stores film audio. Your microphone is turned into a fingerprint on
+      your device and discarded. We add the commentary over what you're already watching, nothing more.
     </p>
   </article>
 </Base>

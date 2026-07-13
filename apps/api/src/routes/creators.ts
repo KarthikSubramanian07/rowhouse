@@ -16,7 +16,7 @@ import type { AppEnv } from '../types.js';
 
 export const creatorRoutes = new Hono<AppEnv>();
 
-/** Promote the current user to a creator (asymmetric — no approval). */
+/** Promote the current user to a creator. No approval step. */
 creatorRoutes.post('/me/become', requireAuth, async (c) => {
   const db = c.get('db');
   const user = c.get('user')!;
@@ -41,7 +41,7 @@ creatorRoutes.patch('/me', requireAuth, async (c) => {
   return c.json({ ok: true });
 });
 
-/** Creator page (spec §05) — profile, library, upcoming schedule, watch list. */
+/** Creator page (spec §05): profile, library, upcoming schedule, watch list. */
 creatorRoutes.get('/:handle', async (c) => {
   const db = c.get('db');
   const handle = c.req.param('handle');

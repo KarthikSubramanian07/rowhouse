@@ -11,7 +11,7 @@ interface Props {
 }
 
 const {
-  title = 'Rowhouse — commentary synced to whatever you’re watching',
+  title = 'Rowhouse: commentary synced to whatever you’re watching',
   description = 'Free-forever live commentary for film & TV. Hold up your phone; the commentary snaps to your exact frame. Live or on demand.',
   ogImage,
   canonical,
@@ -71,7 +71,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
       <div class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 text-sm text-text-dim sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div class="max-w-md">
           <p class="font-mono text-xs uppercase tracking-widest text-text-mid">Rowhouse</p>
-          <p class="mt-1">Watch together. React live. Replay forever. The commentary layer — the film stays on your platform of choice.</p>
+          <p class="mt-1">Watch together. React live. Replay forever. We carry the commentary; the film stays on your platform of choice.</p>
         </div>
         <nav class="flex flex-wrap gap-x-5 gap-y-2">
           <a href="/discover" class="hover:text-text-hi">Discover</a>

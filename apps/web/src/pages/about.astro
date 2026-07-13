@@ -8,13 +8,13 @@ const jsonLd = {
   headline: 'How Rowhouse sync works',
   url: 'https://rowhouse-gg.pages.dev/about',
   description:
-    'Ten seconds of listening, a constellation-hash landmark match against the film’s fingerprint map, and the commentary snaps to your exact frame — without ever recording the film.',
+    'Ten seconds of listening matches your room against the film’s fingerprint map, and the commentary locks to your exact frame. We never record the film.',
 };
 ---
 
 <Base
   title="How Rowhouse sync works"
-  description="Hold up your phone. Ten seconds of listening. The commentary locks to your exact frame — on any platform, live or recorded. Here's the engineering, and why it's legally clean."
+  description="Hold up your phone. Ten seconds of listening, and the commentary locks to your exact frame, on any platform, live or recorded. Here's how it works, and why it stays on the right side of the law."
   jsonLd={jsonLd}
 >
   <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
@@ -23,9 +23,9 @@ const jsonLd = {
       Ten seconds of listening. Then the commentary knows exactly where you are.
     </h1>
     <p class="mt-5 text-lg text-text-mid">
-      Rowhouse is the commentary layer, not the film. The movie plays wherever you already watch it.
-      We just deliver the person sitting next to you — locked to your frame, not to a countdown or a
-      "press play together" handshake that drifts the moment someone pauses.
+      Rowhouse is the commentary, not the film. The movie plays wherever you already watch it, and we
+      add the commentary on top, locked to your frame. There's no countdown and no "press play
+      together" handshake that falls apart the moment someone pauses.
     </p>
 
     <!-- Live demo -->
@@ -35,31 +35,31 @@ const jsonLd = {
 
     <!-- Section 1 -->
     <section class="mt-16">
-      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">01 — The match</p>
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">01. The match</p>
       <h2 class="mt-2 font-display text-2xl text-text-hi">Hold up your phone. We listen for ten seconds.</h2>
       <p class="mt-3 text-text-mid">
         When you join a track, the app opens your mic and captures roughly ten seconds of whatever's
-        in the room. That's enough. We're not trying to understand the audio — we're trying to find
-        one specific fingerprint inside it.
+        in the room. That's enough. We're not trying to understand the audio. We're looking for one
+        specific fingerprint inside it.
       </p>
       <p class="mt-3 text-text-mid">
         Every point in a film has a distinctive pattern of spectral peaks. We hash those peaks into
-        landmarks — the same constellation-hash idea that lets a phone name a song in a noisy bar —
-        and match your ten seconds against the film's precomputed fingerprint map. The map is dense,
-        so the match resolves to a single moment: not "somewhere in act two," but the exact frame.
-        Then the track snaps to it and rides your clock from there.
+        landmarks, the same idea that lets a phone name a song in a noisy bar, then match your ten
+        seconds against the film's precomputed fingerprint map. The map is dense, so the match lands
+        on a single moment. Not "somewhere in act two," the exact frame. From there the track locks
+        on and rides your clock.
       </p>
     </section>
 
     <!-- Section 2 -->
     <section class="mt-14">
-      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">02 — The fingerprint map</p>
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">02. The fingerprint map</p>
       <h2 class="mt-2 font-display text-2xl text-text-hi">A landmark map, built once, per film.</h2>
       <p class="mt-3 text-text-mid">
         Before a film is listenable, we fingerprint it once into a compact map of landmarks and their
-        timestamps. Matching is a lookup against that map — fast enough to lock in the time it takes
-        you to get comfortable, and robust to the messy realities of a living room: TV speakers,
-        background chatter, your phone face-up on the couch.
+        timestamps. Matching is a lookup against that map. It's fast enough to lock in the time it
+        takes you to get comfortable, and it holds up in a real living room: TV speakers, background
+        chatter, your phone face-up on the couch.
       </p>
       <p class="mt-3 text-text-mid">
         Because the match is anchored to content rather than to a shared timer, it survives pauses,
@@ -70,12 +70,12 @@ const jsonLd = {
 
     <!-- Section 3 -->
     <section class="mt-14">
-      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">03 — Why it's legally clean</p>
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">03. Why it's legally clean</p>
       <h2 class="mt-2 font-display text-2xl text-text-hi">We never record or store the film.</h2>
       <p class="mt-3 text-text-mid">
         The mic capture is turned into a fingerprint on your device and discarded. We don't keep the
         audio, we don't stream the film, and we don't host a frame of it. The fingerprint map is a set
-        of hashes — you can't reconstruct a movie from it any more than you can rebuild a face from a
+        of hashes. You can't reconstruct a movie from it any more than you can rebuild a face from a
         checksum.
       </p>
       <p class="mt-3 text-text-mid">
@@ -87,17 +87,17 @@ const jsonLd = {
 
     <!-- Section 4 -->
     <section class="mt-14 mb-4">
-      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">04 — The flywheel</p>
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">04. The flywheel</p>
       <h2 class="mt-2 font-display text-2xl text-text-hi">Every live room becomes a permanent track.</h2>
       <p class="mt-3 text-text-mid">
         A creator goes live and talks over a film in real time; the room reacts, and those reactions
-        bake into the waveform. The moment it ends, the session is saved as an on-demand track —
-        already synced, already searchable, reactions intact. Six months later someone holds up their
-        phone, matches the same frame, and drops straight into that recorded room.
+        land on the waveform. The moment it ends, the session is saved as an on-demand track, already
+        synced, already searchable, with the reactions intact. Six months later someone holds up
+        their phone, matches the same frame, and drops straight into that recorded room.
       </p>
       <p class="mt-3 text-text-mid">
-        Live feeds the archive; the archive pulls people back to the next live show. Same sync engine
-        driving both — the only difference is whether the host is still in the room.
+        Live feeds the archive, and the archive pulls people back to the next live show. The same
+        sync engine drives both. The only difference is whether the host is still in the room.
       </p>
       <div class="mt-6 flex flex-wrap gap-3">
         <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">

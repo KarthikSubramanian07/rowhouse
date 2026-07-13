@@ -1,12 +1,13 @@
 /**
- * Offset-histogram matching — the money step.
+ * Offset-histogram matching.
  *
  * Each query landmark that hits the reference map votes for a relative offset
- * Δ = t_ref − t_query (frames). A correct alignment makes many landmarks agree
- * on one Δ → a sharp histogram peak; random collisions spread out. The peak Δ,
- * converted to seconds, is the reference position at the START of the capture.
- * (Duong & Thudor ICASSP 2013 — the 1-D projection of the (t_ref, t_query)
- * diagonal. We take the single dominant peak; one master timeline, no edits.)
+ * delta = t_ref - t_query (frames). A correct alignment makes many landmarks
+ * agree on one delta, producing a sharp histogram peak; random collisions spread
+ * out. The peak delta, converted to seconds, is the reference position at the
+ * start of the capture. (Duong & Thudor ICASSP 2013: the 1-D projection of the
+ * (t_ref, t_query) diagonal. We take the single dominant peak: one master
+ * timeline, no edits.)
  */
 import { captureToFingerprint, type QueryFingerprint } from './fingerprint.js';
 import type { FingerprintMap } from './map.js';
@@ -17,15 +18,15 @@ export interface MatchResult {
   offsetSeconds: number;
   /** Live position (s) now = offsetSeconds + capture duration. */
   positionSeconds: number;
-  /** 0…1 heuristic confidence blending peak strength and sharpness. */
+  /** 0...1 heuristic confidence blending peak strength and sharpness. */
   confidence: number;
   /** Agreeing landmarks in the (smoothed) peak bin. */
   score: number;
-  /** Passes the lock gate (count + prominence + matched fraction). */
+  /** Passes the lock gate (count, prominence, and matched fraction). */
   locked: boolean;
-  /** Peak offset in frames (t_ref − t_query). */
+  /** Peak offset in frames (t_ref - t_query). */
   bestDeltaFrames: number;
-  /** peak / runner-up smoothed counts — histogram sharpness. */
+  /** Peak / runner-up smoothed counts: histogram sharpness. */
   prominence: number;
   /** peak count / number of query landmarks. */
   matchedFraction: number;

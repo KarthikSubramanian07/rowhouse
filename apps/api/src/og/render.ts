@@ -1,17 +1,17 @@
 /**
  * Core render pipeline:  vdom -> Satori -> SVG -> resvg(WASM) -> PNG bytes.
  *
- * WORKERS GOTCHAS handled here:
- *  - resvg WASM is a STATIC import so wrangler precompiles it into a
+ * Workers gotchas handled here:
+ *  - resvg WASM is a static import so wrangler precompiles it into a
  *    `WebAssembly.Module`; `initWasm` is called exactly once, guarded by a
  *    module-scope promise (calling it twice throws "Already initialized").
  *  - Satori embeds glyphs as vector paths (`embedFont: true`), so the SVG is
- *    self-contained and resvg needs NO system fonts.
- *  - Output is always PNG. Never WebP (crashes resvg) — og:image wants PNG/JPEG.
+ *    self-contained and resvg needs no system fonts.
+ *  - Output is always PNG, never WebP (which crashes resvg). og:image wants PNG/JPEG.
  */
 
 import { initWasm, Resvg } from '@resvg/resvg-wasm';
-// Static import → wrangler precompiles to a WebAssembly.Module (see wasm.d.ts).
+// Static import; wrangler precompiles it to a WebAssembly.Module (see wasm.d.ts).
 import resvgWasm from '@resvg/resvg-wasm/index_bg.wasm';
 import satori from 'satori';
 import type { Env } from '../env.js';
@@ -67,7 +67,7 @@ export async function renderCard(env: Env, tree: VNode): Promise<Uint8Array> {
       background: 'rgba(0,0,0,0)',
     });
     const png = resvg.render().asPng();
-    // asPng() returns a Uint8Array (a Buffer-like view) — return as-is.
+    // asPng() returns a Uint8Array (a Buffer-like view); return it as-is.
     return png;
   } catch (err) {
     throw new OgRenderError('resvg failed to rasterize the SVG', err);

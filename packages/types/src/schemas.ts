@@ -1,5 +1,5 @@
 /**
- * Zod DTO schemas — validation at every trust boundary (the API contract).
+ * Zod DTO schemas. Validation at every trust boundary (the API contract).
  * Import the inferred types on both client and server so requests can't drift.
  */
 import { z } from 'zod';
@@ -30,7 +30,7 @@ export const paginationSchema = z.object({
 });
 export type Pagination = z.infer<typeof paginationSchema>;
 
-// ── Auth / profile ────────────────────────────────────────────────────
+// Auth / profile
 export const updateProfileSchema = z.object({
   displayName: z.string().min(1).max(60),
   bio: z.string().max(500).optional(),
@@ -38,7 +38,7 @@ export const updateProfileSchema = z.object({
 });
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 
-// ── Films ─────────────────────────────────────────────────────────────
+// Films
 export const filmSearchSchema = z.object({
   q: z.string().min(1).max(120),
   mediaType: z.enum(MEDIA_TYPES).optional(),
@@ -53,7 +53,7 @@ export const linkFilmSchema = z.object({
 });
 export type LinkFilm = z.infer<typeof linkFilmSchema>;
 
-// ── Commentary tracks ────────────────────────────────────────────────
+// Commentary tracks
 export const createTrackSchema = z.object({
   kind: z.enum(CONTENT_KINDS).default('commentary'),
   filmSlug: slugSchema,
@@ -77,7 +77,7 @@ export const requestUploadSchema = z.object({
 });
 export type RequestUpload = z.infer<typeof requestUploadSchema>;
 
-// ── Live sessions ─────────────────────────────────────────────────────
+// Live sessions
 export const scheduleSessionSchema = z.object({
   filmSlug: slugSchema,
   title: z.string().min(1).max(140),
@@ -93,7 +93,7 @@ export const chapterSchema = z.object({
 });
 export type ChapterInput = z.infer<typeof chapterSchema>;
 
-// ── Reactions (over the live WebSocket + async replay) ────────────────
+// Reactions (over the live WebSocket and async replay)
 export const reactionEventSchema = z.object({
   t: z.number().min(0),
   type: z.enum(REACTION_TYPES),
@@ -113,14 +113,14 @@ export const liveClientMessageSchema = z.discriminatedUnion('kind', [
 ]);
 export type LiveClientMessage = z.infer<typeof liveClientMessageSchema>;
 
-// ── Watchlist ─────────────────────────────────────────────────────────
+// Watchlist
 export const watchlistAddSchema = z.object({
   filmSlug: slugSchema,
   note: z.string().max(200).optional(),
 });
 export type WatchlistAdd = z.infer<typeof watchlistAddSchema>;
 
-// ── Reports (moderation, spec §11) ────────────────────────────────────
+// Reports (moderation, spec §11)
 export const reportSchema = z.object({
   targetType: z.enum(['track', 'chat_message', 'clip', 'creator']),
   targetId: z.string().min(1),
@@ -129,14 +129,14 @@ export const reportSchema = z.object({
 });
 export type ReportInput = z.infer<typeof reportSchema>;
 
-// ── Web Push ──────────────────────────────────────────────────────────
+// Web Push
 export const pushSubscriptionSchema = z.object({
   endpoint: z.string().url(),
   keys: z.object({ p256dh: z.string(), auth: z.string() }),
 });
 export type PushSubscriptionInput = z.infer<typeof pushSubscriptionSchema>;
 
-// ── Clip approval ─────────────────────────────────────────────────────
+// Clip approval
 export const approveClipSchema = z.object({
   clipId: z.string().min(1),
   approve: z.boolean(),

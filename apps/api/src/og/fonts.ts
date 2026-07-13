@@ -3,10 +3,10 @@
  *
  * Satori needs fonts as ArrayBuffers. We fetch static .ttf files from the
  * Fontsource CDN (the one runtime external of this module) and cache them in
- * TWO tiers so we only hit the network once per font, ever:
+ * two tiers so we only hit the network once per font:
  *
- *   1. module scope  — survives across requests on a warm isolate (free/instant).
- *   2. env.CONFIG KV — survives cold starts / new isolates (key `font:<family>:<weight>`).
+ *   1. module scope: survives across requests on a warm isolate (free, instant).
+ *   2. env.CONFIG KV: survives cold starts and new isolates (key `font:<family>:<weight>`).
  *
  * On a cold isolate we read from KV; on a truly first-ever load we fetch the CDN
  * and write both tiers. If the CDN fetch fails and KV has nothing, we throw
@@ -73,7 +73,7 @@ async function loadOne(env: Env, family: FontFamily, weight: FontWeight): Promis
       return fromKv;
     }
   } catch {
-    // KV read failure is non-fatal — fall through to the CDN.
+    // KV read failure is non-fatal; fall through to the CDN.
   }
 
   // Tier 3: origin fetch from Fontsource CDN.
@@ -101,7 +101,7 @@ async function loadOne(env: Env, family: FontFamily, weight: FontWeight): Promis
   try {
     await env.CONFIG.put(key, buf);
   } catch {
-    // ignore — we still have the buffer in memory for this isolate.
+    // Ignore: we still have the buffer in memory for this isolate.
   }
   return buf;
 }
@@ -124,7 +124,7 @@ export async function loadFonts(
   );
 }
 
-/** The font set every card loads: Inter 400/600/700 + Fraunces 600/700 for titles. */
+/** The font set every card loads: Inter 400/600/700 and Fraunces 600/700 for titles. */
 export const CARD_FONTS: ReadonlyArray<{ name: FontFamily; weight: FontWeight }> = [
   { name: 'Inter', weight: 400 },
   { name: 'Inter', weight: 600 },

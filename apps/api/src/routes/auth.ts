@@ -62,9 +62,9 @@ authRoutes.get('/google/callback', async (c) => {
 });
 
 /**
- * Zero-secret dev login. Only enabled when Google OAuth is NOT configured, so it
- * can't be abused in a real deployment — it exists so the whole app runs and can
- * be demoed without any secrets.
+ * Zero-secret dev login. Enabled only when Google OAuth is not configured, so it
+ * can't be abused in a real deployment. It exists so the whole app runs and can be
+ * demoed without any secrets.
  */
 authRoutes.post('/dev', async (c) => {
   if (googleConfigured(c.env))

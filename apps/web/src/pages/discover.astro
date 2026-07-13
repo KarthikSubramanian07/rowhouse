@@ -17,7 +17,7 @@ interface FilmItem {
 
 const catalog = (await apiFetch<{ films: FilmItem[] }>(Astro, '/films/catalog'))?.films ?? [];
 
-// Server-side filtering from query params — no client JS.
+// Server-side filtering from query params, no client JS.
 const params = Astro.url.searchParams;
 const typeFilter = params.get('type'); // 'movie' | 'tv' | null
 const genreFilter = params.get('genre');
@@ -57,23 +57,23 @@ const chipOn = 'border-accent bg-accent/15 text-accent-hi';
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: 'Discover film commentary — Rowhouse',
+  name: 'Discover film commentary | Rowhouse',
   url: 'https://rowhouse-gg.pages.dev/discover',
   description: 'Browse the canon and fall down the rabbit hole of synced film & TV commentary.',
 };
 ---
 
 <Base
-  title="Discover film commentary — Rowhouse"
-  description="Browse the canon. Every film here has commentary that snaps to your exact frame — live or on demand."
+  title="Discover film commentary | Rowhouse"
+  description="Browse the canon. Every film here has commentary that locks to your exact frame, live or on demand."
   jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
     <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">The rabbit hole</p>
     <h1 class="mt-3 font-display text-4xl text-text-hi sm:text-5xl">Discover</h1>
     <p class="mt-4 max-w-2xl text-text-mid">
-      This is the part where you meant to watch one thing and lost the evening. Pick a title —
-      every one carries commentary that finds your frame the second you hold up your phone.
+      This is the part where you meant to watch one thing and lost the evening. Pick a title. Every
+      one carries commentary that finds your frame the second you hold up your phone.
     </p>
 
     <!-- Filters -->
@@ -115,7 +115,7 @@ const jsonLd = {
               : 'Nothing matches those filters yet.'}
           </p>
           {catalog.length > 0 && (
-            <a href="/discover" class="mt-3 inline-block text-sm text-accent-hi hover:text-text-hi">Clear filters →</a>
+            <a href="/discover" class="mt-3 inline-block text-sm text-accent-hi hover:text-text-hi">Clear filters</a>
           )}
         </div>
       )}

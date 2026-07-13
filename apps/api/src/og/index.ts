@@ -4,11 +4,11 @@
  * Pipeline:  params -> Satori vdom -> SVG -> resvg(WASM) -> PNG bytes.
  * Every exported function is pure-ish: `(env, params) -> Promise<Uint8Array>`
  * PNG bytes. Caching (R2 `env.MEDIA` keyed by content hash) and HTTP serving are
- * the CALLER's responsibility — this module only renders.
+ * the caller's responsibility; this module only renders.
  *
  * Fonts are fetched from the Fontsource CDN once, then cached in module scope
  * and in `env.CONFIG` KV (see fonts.ts). Images (posters) must be supplied as
- * base64 by the caller — Satori cannot fetch remote images on Workers.
+ * base64 by the caller, since Satori cannot fetch remote images on Workers.
  *
  * Errors surface as typed `OgFontError` / `OgRenderError` for the caller to catch.
  */
@@ -45,8 +45,8 @@ export interface RenderFilmCardParams {
 }
 
 /**
- * The film-page share card: "<Title> — commentary on Rowhouse", with creator
- * and track counts, and an optional poster on the left.
+ * The film-page share card: "<Title>, commentary on Rowhouse", with creator and
+ * track counts, and an optional poster on the left.
  */
 export function renderFilmCard(env: Env, params: RenderFilmCardParams): Promise<Uint8Array> {
   const cardParams: FilmCardParams = {
@@ -74,7 +74,7 @@ export interface RenderTrackCardParams {
 
 /**
  * A commentary-track share card. Duration is rendered via `formatTimecode`
- * from `@rowhouse/types` (the signature typographic unit).
+ * from `@rowhouse/types`.
  */
 export function renderTrackCard(env: Env, params: RenderTrackCardParams): Promise<Uint8Array> {
   const cardParams: TrackCardParams = {
@@ -102,8 +102,8 @@ export interface RenderAudiogramCardParams {
 }
 
 /**
- * The CLIP audiogram — the "creator losing their mind" share format. Draws the
- * waveform as a row of flex bars with a cinema-red reaction spike at `peakX`.
+ * The clip audiogram share format. Draws the waveform as a row of flex bars with a
+ * cinema-red reaction spike at `peakX`.
  */
 export function renderAudiogramCard(
   env: Env,

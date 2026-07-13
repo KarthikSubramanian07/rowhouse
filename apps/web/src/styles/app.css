@@ -1,6 +1,6 @@
 /*
  * Web app stylesheet root. Pulls in the @rowhouse/ui design system (Tailwind v4
- * root + tokens + fonts + theme) and registers content sources — the UI package
+ * root + tokens + fonts + theme) and registers content sources. The UI package
  * lives outside the default scan, so its utility classes must be declared here.
  */
 @import '../../../../packages/ui/src/styles/index.css';

@@ -1,8 +1,8 @@
 /**
- * Session auth — the ID.secret + SHA-256 pattern (the maintained successor to
- * Lucia, which is deprecated). Token = `<sessionId>.<secret>`, delivered in an
- * HttpOnly/Secure/SameSite=Lax cookie. Only SHA-256(secret [+ pepper]) is stored
- * in D1, so a DB leak can't be replayed. Runs entirely on Workers WebCrypto.
+ * Session auth using the ID.secret + SHA-256 pattern (the maintained successor to
+ * the now-deprecated Lucia). Token is `<sessionId>.<secret>`, delivered in an
+ * HttpOnly/Secure/SameSite=Lax cookie. Only SHA-256(secret [+ pepper]) is stored in
+ * D1, so a DB leak can't be replayed. Runs entirely on Workers WebCrypto.
  */
 import { sha256 } from '@oslojs/crypto/sha2';
 import type { Database } from '@rowhouse/db';
