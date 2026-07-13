@@ -1,7 +1,7 @@
 import { follows, tracks, users } from '@rowhouse/db';
 import { desc, eq, inArray } from 'drizzle-orm';
 import { Hono } from 'hono';
-import { notFound } from '../lib/http.js';
+import { unauthorized } from '../lib/http.js';
 import { catalogFilms } from '../services/films.js';
 import type { AppEnv } from '../types.js';
 
@@ -37,7 +37,7 @@ async function recentTracks(
 /** Chronological home feed for a logged-in user: followed creators first. */
 feedRoutes.get('/', async (c) => {
   const user = c.get('user');
-  if (!user) throw notFound('not_authenticated');
+  if (!user) throw unauthorized('not_authenticated');
   const db = c.get('db');
   const following = await db
     .select({ id: follows.creatorId })

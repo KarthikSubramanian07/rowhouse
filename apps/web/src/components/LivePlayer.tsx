@@ -102,6 +102,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
   const floatIdRef = useRef(0);
 
   const [conn, setConn] = useState<ConnState>('idle');
+  const [canChat, setCanChat] = useState(false);
   const [messages, setMessages] = useState<ChatLine[]>([]);
   const [viewers, setViewers] = useState(session.peakViewers || 0);
   const [floats, setFloats] = useState<Float[]>([]);
@@ -170,24 +171,26 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
     }
 
     (async () => {
-      let name = 'guest';
-      try {
-        const me = await api<{ user: { displayName?: string } | null }>('/auth/me');
-        if (me.user?.displayName) name = me.user.displayName;
-      } catch {
-        /* fall back to guest */
-      }
       if (cancelled) return;
       setConn('connecting');
-      ws = new WebSocket(`${wsUrl}?name=${encodeURIComponent(name)}&chat=1`);
-      wsRef.current = ws;
-      ws.onopen = () => setConn('open');
-      ws.onmessage = (ev) => handleMessage(ev.data);
-      ws.onclose = () => setConn('closed');
-      ws.onerror = () => setConn('error');
-      ping = setInterval(() => {
-        if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ kind: 'ping' }));
-      }, 25000);
+      try {
+        const minted = await api<{ token: string; chat: boolean }>(`/live/${session.id}/ws-token`, {
+          method: 'POST',
+        });
+        if (cancelled) return;
+        setCanChat(minted.chat);
+        ws = new WebSocket(`${wsUrl}?token=${encodeURIComponent(minted.token)}`);
+        wsRef.current = ws;
+        ws.onopen = () => setConn('open');
+        ws.onmessage = (ev) => handleMessage(ev.data);
+        ws.onclose = () => setConn('closed');
+        ws.onerror = () => setConn('error');
+        ping = setInterval(() => {
+          if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ kind: 'ping' }));
+        }, 25000);
+      } catch {
+        if (!cancelled) setConn('error');
+      }
     })();
 
     return () => {
@@ -199,7 +202,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
       }
       wsRef.current = null;
     };
-  }, [isLive, wsUrl]);
+  }, [isLive, wsUrl, session.id]);
 
   // Release the mic if we unmount mid-listen.
   useEffect(
@@ -214,7 +217,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
     e.preventDefault();
     const ws = wsRef.current;
     const body = draft.trim();
-    if (!body || !ws || ws.readyState !== WebSocket.OPEN) return;
+    if (!canChat || !body || !ws || ws.readyState !== WebSocket.OPEN) return;
     ws.send(JSON.stringify({ kind: 'chat', body }));
     setDraft('');
   }
@@ -423,8 +426,10 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder={isLive ? 'Say something...' : 'Chat is closed'}
-              disabled={!isLive || conn !== 'open'}
+              placeholder={
+                !isLive ? 'Chat is closed' : canChat ? 'Say something...' : 'Sign in to chat'
+              }
+              disabled={!isLive || conn !== 'open' || !canChat}
               className="h-9 flex-1 rounded-md border border-border bg-bg px-3 text-sm text-text-hi outline-none placeholder:text-text-dim focus:border-accent disabled:opacity-50"
             />
             <Button size="sm" type="submit" disabled={!isLive || conn !== 'open' || !draft.trim()}>

@@ -6,6 +6,7 @@
 export interface Env {
   // Storage / data
   DB: D1Database;
+  /** Reserved KV namespace (sessions live in D1 today). Kept for future session cache. */
   SESSIONS: KVNamespace;
   CONFIG: KVNamespace;
   AUDIO: R2Bucket;
@@ -22,6 +23,8 @@ export interface Env {
 
   // Secrets. All optional; when one is absent, its adapter falls back to a mock.
   SESSION_PEPPER?: string;
+  /** Opt-in for POST /auth/dev on non-localhost deployments (never needed with Google OAuth). */
+  ALLOW_DEV_LOGIN?: string;
   GOOGLE_CLIENT_ID?: string;
   GOOGLE_CLIENT_SECRET?: string;
   VAPID_PUBLIC_KEY?: string;
@@ -53,7 +56,8 @@ export interface ProviderReport {
 
 export function describeProviders(env: Env): ProviderReport {
   return {
-    sync: env.ACRCLOUD_KEY ? 'acrcloud' : 'self-hosted',
+    // ACRCloud adapter is still a stub; report self-hosted until it is implemented.
+    sync: 'self-hosted',
     tmdb: env.TMDB_READ_TOKEN || env.TMDB_API_KEY ? 'tmdb' : 'mock',
     stream: 'mock',
     ai: 'mock',

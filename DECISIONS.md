@@ -50,8 +50,10 @@ The web app proxies `/api/*` to the backend Worker on the server side
 (`src/pages/api/[...path].ts`) and passes Set-Cookie back through, so session
 cookies stay first-party on the Pages domain. That is how a clean public domain
 coexists with working auth and no third-party cookies. The live WebSocket connects
-straight to the Worker (cross-origin WebSockets are fine; chat identity travels as
-a query param).
+straight to the Worker (cross-origin WebSockets are fine). Chat identity is a
+short-lived HMAC token minted via `POST /live/:id/ws-token` over the first-party
+`/api` proxy, then passed as `?token=` on the WS URL. Client-supplied display names
+are not trusted.
 
 ## The sync engine
 

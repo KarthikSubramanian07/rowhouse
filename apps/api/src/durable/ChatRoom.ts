@@ -8,6 +8,7 @@
 import { DurableObject } from 'cloudflare:workers';
 import type { ReactionType } from '@rowhouse/types';
 import { liveClientMessageSchema } from '@rowhouse/types';
+import { checkInternalAuth } from '../auth/chatToken.js';
 import type { Env } from '../env.js';
 
 interface SocketMeta {
@@ -55,6 +56,9 @@ export class ChatRoom extends DurableObject<Env> {
 
     // Internal: the API pulls the reaction timeline to assemble the async track.
     if (url.pathname.endsWith('/timeline')) {
+      if (!checkInternalAuth(this.env, request)) {
+        return new Response('forbidden', { status: 403 });
+      }
       return Response.json(this.timeline());
     }
 

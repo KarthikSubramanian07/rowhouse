@@ -9,7 +9,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
-    "deploy": "astro build && wrangler pages deploy dist --project-name=rowhouse --commit-dirty=true"
+    "deploy": "astro build && wrangler pages deploy dist --project-name=rowhouse-gg --commit-dirty=true"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.0",
