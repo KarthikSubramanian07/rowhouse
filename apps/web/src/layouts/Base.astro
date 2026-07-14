@@ -8,6 +8,8 @@ interface Props {
   ogImage?: string | undefined;
   canonical?: string | undefined;
   jsonLd?: unknown;
+  /** When false, ask crawlers not to index (studio, 404, etc.). */
+  index?: boolean;
 }
 
 const {
@@ -16,10 +18,13 @@ const {
   ogImage,
   canonical,
   jsonLd,
+  index = true,
 } = Astro.props;
 
 const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse-gg.pages.dev';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
+const resolvedOg = ogImage ?? `${site}/og.png`;
+const robots = index ? 'index, follow, max-image-preview:large' : 'noindex, nofollow';
 ---
 
 <!doctype html>
@@ -29,17 +34,24 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <link rel="canonical" href={canonicalUrl} />
     <meta name="theme-color" content="#0B0B0D" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Rowhouse" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
-    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
-    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <meta property="og:image" content={resolvedOg} />
+    <meta property="og:image:alt" content="Rowhouse: commentary synced to your frame" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedOg} />
+    <meta name="twitter:image:alt" content="Rowhouse: commentary synced to your frame" />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0B0D'/%3E%3Crect x='6' y='9' width='4' height='14' fill='%23E0362E'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3Crect x='22' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3C/svg%3E" />
@@ -55,7 +67,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
           </span>
           <span class="font-display text-xl font-semibold tracking-tight">Rowhouse</span>
         </a>
-        <nav class="flex items-center gap-1 text-sm">
+        <nav class="flex items-center gap-1 text-sm" aria-label="Primary">
           <a href="/discover" class="rounded-md px-3 py-1.5 text-text-mid transition-colors hover:bg-surface hover:text-text-hi">Discover</a>
           <a href="/live" class="rounded-md px-3 py-1.5 text-text-mid transition-colors hover:bg-surface hover:text-text-hi">Live</a>
           <AuthNav client:load />
@@ -73,7 +85,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
           <p class="font-mono text-xs uppercase tracking-widest text-text-mid">Rowhouse</p>
           <p class="mt-1">Watch together. React live. Replay forever. We carry the commentary; the film stays on your platform of choice.</p>
         </div>
-        <nav class="flex flex-wrap gap-x-5 gap-y-2">
+        <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
           <a href="/discover" class="hover:text-text-hi">Discover</a>
           <a href="/live" class="hover:text-text-hi">Live now</a>
           <a href="/about" class="hover:text-text-hi">How sync works</a>
