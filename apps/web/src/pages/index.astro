@@ -44,12 +44,23 @@ const liveNow = (await apiFetch<{ live: LiveItem[]; upcoming: LiveItem[] }>(Astr
   upcoming: [],
 };
 
+const site = 'https://rowhouse-gg.pages.dev';
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'Rowhouse',
-  url: 'https://rowhouse-gg.pages.dev',
-  description: 'Live and on-demand film commentary, synced to your exact frame.',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'Rowhouse',
+      url: site,
+      description: 'Live and on-demand film commentary, synced to your exact frame.',
+    },
+    {
+      '@type': 'Organization',
+      name: 'Rowhouse',
+      url: site,
+      logo: `${site}/og.png`,
+    },
+  ],
 };
 ---
 
