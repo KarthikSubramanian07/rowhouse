@@ -57,13 +57,16 @@ without an authenticated Cloudflare account token. Real secrets are set with
 
 ## Dependency advisories
 
-`pnpm audit` reports findings that are almost entirely **build/dev tooling**
-(`wrangler` to `miniflare` to `undici`/`ws`, `esbuild`, `sharp`, `postcss`), which
-never ship to the Cloudflare Worker runtime. Patched transitive versions are pinned
-via `pnpm.overrides` in the root `package.json` (`undici`, `ws`, `esbuild`).
+`pnpm audit --prod` reports **no known vulnerabilities**. Runtime dependencies are
+kept on patched versions:
 
-Astro (the SEO site framework) is kept current (Astro 6) to pick up its security
-fixes. The app also does not render user-controlled slot names or `transition:*`
-directive values, and JSON-LD is escaped at the source (`serializeJsonLd`), so the
-known Astro XSS vectors are mitigated regardless. Keep Astro on a supported major
-as new advisories land.
+- **Astro 7** (the SEO site framework), which fixes the View-Transition / spread-
+  attribute XSS advisories that had no Astro 6 patch. JSON-LD is also escaped at
+  the source (`serializeJsonLd`) as defense in depth.
+- **hono 4.13+**, fixing the CORS-middleware ReDoS.
+
+Remaining `pnpm audit` findings (without `--prod`) are **build/dev tooling**
+(`wrangler` to `miniflare` to `undici`/`ws`, `esbuild`, `sharp`, `postcss`,
+`brace-expansion`, `fast-uri`) that never ship to the Worker runtime. Patched
+versions are pinned via `pnpm.overrides` in the root `package.json`. Keep these
+current as new advisories land; Dependabot tracks them.

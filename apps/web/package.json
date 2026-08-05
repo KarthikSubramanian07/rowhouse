@@ -12,13 +12,13 @@
     "deploy": "astro build && wrangler pages deploy dist --project-name=rowhouse-gg --commit-dirty=true"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^13.7.0",
+    "@astrojs/cloudflare": "^14.1.7",
     "@astrojs/react": "^5.0.7",
     "@rowhouse/sync-engine": "workspace:*",
     "@rowhouse/types": "workspace:*",
     "@rowhouse/ui": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
-    "astro": "^6.4.8",
+    "astro": "^7.1.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^4.3.0"
