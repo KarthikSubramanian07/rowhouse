@@ -50,5 +50,13 @@ jobs:
         continue-on-error: true
 
       - if: steps.creds.outputs.ready == 'true'
-        name: Deploy API + web
-        run: pnpm deploy
+        name: Deploy web (Pages)
+        run: pnpm run deploy:web
+
+      # Best-effort: the API Worker deploy needs R2/D1/KV provisioned in the
+      # account. Don't fail the pipeline (and block the public site) if the
+      # backend infra isn't ready yet; the step's log surfaces any error.
+      - if: steps.creds.outputs.ready == 'true'
+        name: Deploy API (Worker)
+        run: pnpm run deploy:api
+        continue-on-error: true
