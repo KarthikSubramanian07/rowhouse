@@ -20,6 +20,12 @@ export interface Env {
   PUBLIC_API_ORIGIN: string;
   VAPID_SUBJECT: string;
   TMDB_IMAGE_BASE: string;
+  /**
+   * "development" enables local-only affordances (the keyless dev login and
+   * localhost CORS origins). It is intentionally unset on the deployed Worker, so
+   * production fails closed regardless of which secrets happen to be present.
+   */
+  ENVIRONMENT?: string;
 
   // Secrets. All optional; when one is absent, its adapter falls back to a mock.
   SESSION_PEPPER?: string;
@@ -52,6 +58,11 @@ export interface ProviderReport {
   ai: 'anthropic' | 'mock';
   push: 'web-push' | 'mock';
   payment: 'stripe' | 'mock';
+}
+
+/** True only when explicitly running in the local development environment. */
+export function isDevEnvironment(env: Env): boolean {
+  return env.ENVIRONMENT === 'development';
 }
 
 export function describeProviders(env: Env): ProviderReport {

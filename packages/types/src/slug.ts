@@ -18,7 +18,7 @@ export function slugify(input: string): string {
  */
 export function filmSlug(input: {
   title: string;
-  mediaType: 'movie' | 'tv';
+  mediaType: 'movie' | 'tv' | 'audiobook';
   season?: number | null | undefined;
   episode?: number | null | undefined;
 }): string {

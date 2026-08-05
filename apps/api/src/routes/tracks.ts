@@ -2,9 +2,11 @@ import { chapters, clips, reactionMarkers, tracks, users } from '@rowhouse/db';
 import { createTrackSchema } from '@rowhouse/types';
 import { asc, eq, sql } from 'drizzle-orm';
 import { type Context, Hono } from 'hono';
+import { z } from 'zod';
 import { requireCreator } from '../auth/middleware.js';
 import { badRequest, forbidden, notFound } from '../lib/http.js';
 import { newId } from '../lib/ids.js';
+import { rateLimit } from '../lib/ratelimit.js';
 import { getFilmBySlug } from '../services/films.js';
 import type { AppEnv } from '../types.js';
 
@@ -12,6 +14,41 @@ export const trackRoutes = new Hono<AppEnv>();
 
 const audioKey = (id: string) => `audio/${id}.bin`;
 const fpKey = (id: string) => `fp/${id}.rhf`;
+
+/** Hard caps so a creator can't buffer/store an unbounded body. */
+const MAX_AUDIO_BYTES = 120 * 1024 * 1024; // 120 MB
+const MAX_FP_BYTES = 24 * 1024 * 1024; // 24 MB (a 2h film map is ~11 MB)
+
+/**
+ * Only these content types are ever stored/served for commentary audio. Anything
+ * else is coerced to application/octet-stream so an attacker cannot upload a body
+ * of `<script>...` labelled text/html and have the browser render it on the API
+ * origin (a stored-XSS vector, since this origin holds the session cookie).
+ */
+const AUDIO_CONTENT_TYPES = new Set([
+  'audio/mpeg',
+  'audio/mp4',
+  'audio/aac',
+  'audio/ogg',
+  'audio/opus',
+  'audio/webm',
+  'audio/wav',
+  'audio/x-m4a',
+]);
+
+function safeAudioType(ct?: string | null): string {
+  const base = (ct ?? '').split(';')[0]!.trim().toLowerCase();
+  return AUDIO_CONTENT_TYPES.has(base) ? base : 'application/octet-stream';
+}
+
+function declaredLength(c: Context<AppEnv>): number | null {
+  const v = c.req.header('content-length');
+  if (!v) return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+const listenSchema = z.object({ completed: z.boolean().optional() });
 
 /** Create a commentary track / mini-take. Returns upload targets. */
 trackRoutes.post('/', requireCreator, async (c) => {
@@ -56,17 +93,24 @@ async function ownedTrack(c: Context<AppEnv>, id: string) {
 /** Upload the COMMENTARY audio (never film audio) to R2. */
 trackRoutes.put('/:id/audio', requireCreator, async (c) => {
   const track = await ownedTrack(c, c.req.param('id'));
-  const body = await c.req.arrayBuffer();
-  await c.env.AUDIO.put(track.audioKey, body, {
-    httpMetadata: { contentType: c.req.header('content-type') ?? 'application/octet-stream' },
+  const len = declaredLength(c);
+  if (len !== null && len > MAX_AUDIO_BYTES) throw badRequest('audio_too_large');
+  if (!c.req.raw.body) throw badRequest('empty_body');
+  // Stream to R2 rather than buffering the whole body in the Worker's memory.
+  // The stored content type is coerced to a safe audio type (never client-chosen).
+  const obj = await c.env.AUDIO.put(track.audioKey, c.req.raw.body, {
+    httpMetadata: { contentType: safeAudioType(c.req.header('content-type')) },
   });
-  return c.json({ ok: true, bytes: body.byteLength });
+  return c.json({ ok: true, bytes: obj?.size ?? len ?? 0 });
 });
 
 /** Upload the fingerprint MAP blob (built client-side from reference audio). */
 trackRoutes.put('/:id/fingerprint', requireCreator, async (c) => {
   const track = await ownedTrack(c, c.req.param('id'));
+  const len = declaredLength(c);
+  if (len !== null && len > MAX_FP_BYTES) throw badRequest('fingerprint_too_large');
   const blob = await c.req.arrayBuffer();
+  if (blob.byteLength > MAX_FP_BYTES) throw badRequest('fingerprint_too_large');
   const check = c.get('providers').sync.validateMap(blob);
   if (!check.ok) throw badRequest('invalid_fingerprint_map', check.reason);
   const key = fpKey(track.id);
@@ -141,6 +185,10 @@ trackRoutes.get('/:id/audio', async (c) => {
   if (!obj) throw notFound('audio_not_found');
   const headers = new Headers();
   obj.writeHttpMetadata(headers);
+  // Force a safe audio content type and forbid MIME sniffing, so the response can
+  // never be interpreted as HTML/script on this (cookie-bearing) origin.
+  headers.set('content-type', safeAudioType(headers.get('content-type')));
+  headers.set('x-content-type-options', 'nosniff');
   headers.set('accept-ranges', 'bytes');
   headers.set('etag', obj.httpEtag);
   headers.set('cache-control', 'public, max-age=86400');
@@ -161,27 +209,33 @@ trackRoutes.get('/:id/fingerprint', async (c) => {
   return new Response(obj.body, {
     headers: {
       'content-type': 'application/octet-stream',
+      'x-content-type-options': 'nosniff',
       'cache-control': 'public, max-age=604800, immutable',
     },
   });
 });
 
 /** Record a listen; `completed` feeds the completion rate. */
-trackRoutes.post('/:id/listen', async (c) => {
-  const id = c.req.param('id');
-  const body = (await c.req.json().catch(() => ({}))) as { completed?: boolean };
-  const inc = body.completed ? 1 : 0;
-  const res = await c
-    .get('db')
-    .update(tracks)
-    .set({
-      listenCount: sql`${tracks.listenCount} + 1`,
-      completionCount: sql`${tracks.completionCount} + ${inc}`,
-    })
-    .where(eq(tracks.id, id));
-  if (res.meta.changes === 0) throw notFound('track_not_found');
-  return c.json({ ok: true });
-});
+trackRoutes.post(
+  '/:id/listen',
+  rateLimit({ bucket: 'listen', limit: 30, windowSec: 60 }),
+  async (c) => {
+    const id = c.req.param('id');
+    const parsed = listenSchema.safeParse(await c.req.json().catch(() => ({})));
+    if (!parsed.success) throw badRequest('invalid_listen');
+    const inc = parsed.data.completed ? 1 : 0;
+    const res = await c
+      .get('db')
+      .update(tracks)
+      .set({
+        listenCount: sql`${tracks.listenCount} + 1`,
+        completionCount: sql`${tracks.completionCount} + ${inc}`,
+      })
+      .where(eq(tracks.id, id));
+    if (res.meta.changes === 0) throw notFound('track_not_found');
+    return c.json({ ok: true });
+  },
+);
 
 /** Clip candidates for a track (creator reviews/approves). */
 trackRoutes.get('/:id/clips', async (c) => {

@@ -1,4 +1,4 @@
-import { linkFilmSchema } from '@rowhouse/types';
+import { linkFilmSchema, MEDIA_TYPES, type MediaType } from '@rowhouse/types';
 import { Hono } from 'hono';
 import { requireAuth } from '../auth/middleware.js';
 import { badRequest, notFound } from '../lib/http.js';
@@ -10,7 +10,10 @@ export const filmRoutes = new Hono<AppEnv>();
 filmRoutes.get('/search', async (c) => {
   const q = c.req.query('q') ?? '';
   if (q.trim().length === 0) return c.json({ results: [] });
-  const mediaType = c.req.query('mediaType') === 'tv' ? 'tv' : undefined;
+  const requested = c.req.query('mediaType');
+  const mediaType = (MEDIA_TYPES as readonly string[]).includes(requested ?? '')
+    ? (requested as MediaType)
+    : undefined;
   const results = await c.get('providers').tmdb.search(q, mediaType);
   return c.json({ results });
 });

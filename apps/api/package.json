@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Rowhouse backend: Hono API, ChatRoom Durable Object, queues/cron, Satori OG cards.",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "wrangler dev --var ENVIRONMENT:development",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

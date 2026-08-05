@@ -9,6 +9,31 @@ import type { AppEnv } from '../types.js';
 
 export const pushRoutes = new Hono<AppEnv>();
 
+/**
+ * A push endpoint is later fetched server-side by the web-push provider, so an
+ * arbitrary URL would be a blind-SSRF sink. Restrict to the real browser push
+ * services over https. This is validated at subscribe time; /test only ever
+ * sends to a stored (already-validated) endpoint.
+ */
+const PUSH_HOST_EXACT = new Set([
+  'fcm.googleapis.com',
+  'updates.push.services.mozilla.com',
+  'web.push.apple.com',
+]);
+const PUSH_HOST_SUFFIXES = ['.push.services.mozilla.com', '.notify.windows.com', '.push.apple.com'];
+
+function isAllowedPushEndpoint(raw: string): boolean {
+  let u: URL;
+  try {
+    u = new URL(raw);
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'https:') return false;
+  const host = u.hostname.toLowerCase();
+  return PUSH_HOST_EXACT.has(host) || PUSH_HOST_SUFFIXES.some((s) => host.endsWith(s));
+}
+
 /** The client needs the VAPID public key to subscribe. */
 pushRoutes.get('/vapid', (c) => c.json({ publicKey: c.env.VAPID_PUBLIC_KEY ?? null }));
 
@@ -17,6 +42,7 @@ pushRoutes.post('/subscribe', requireAuth, async (c) => {
   if (!parsed.success) throw badRequest('invalid_subscription');
   const db = c.get('db');
   const sub = parsed.data;
+  if (!isAllowedPushEndpoint(sub.endpoint)) throw badRequest('invalid_endpoint');
   await db
     .insert(pushSubscriptions)
     .values({

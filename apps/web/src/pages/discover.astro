@@ -9,7 +9,7 @@ interface FilmItem {
   slug: string;
   title: string;
   year: number | null;
-  mediaType: 'movie' | 'tv';
+  mediaType: 'movie' | 'tv' | 'audiobook';
   genres: string[];
   director: string | null;
   trackCount: number;
@@ -59,7 +59,7 @@ const jsonLd = {
   '@type': 'CollectionPage',
   name: 'Discover film commentary | Rowhouse',
   url: 'https://rowhouse-gg.pages.dev/discover',
-  description: 'Browse the canon and fall down the rabbit hole of synced film & TV commentary.',
+  description: 'Browse the canon and fall down the rabbit hole of synced film, TV, and audiobook commentary.',
 };
 ---
 
@@ -83,6 +83,7 @@ const jsonLd = {
         <a href={chipHref({ type: null })} class={`${chipBase} ${typeFilter ? chipOff : chipOn}`}>All</a>
         <a href={chipHref({ type: 'movie' })} class={`${chipBase} ${typeFilter === 'movie' ? chipOn : chipOff}`}>Film</a>
         <a href={chipHref({ type: 'tv' })} class={`${chipBase} ${typeFilter === 'tv' ? chipOn : chipOff}`}>Series</a>
+        <a href={chipHref({ type: 'audiobook' })} class={`${chipBase} ${typeFilter === 'audiobook' ? chipOn : chipOff}`}>Audiobooks</a>
       </div>
       {genres.length > 0 && (
         <div class="flex flex-wrap items-center gap-2">

@@ -189,6 +189,40 @@ export const MOCK_CATALOG: Film[] = [
     episode: 1,
     genres: ['Drama', 'Mystery'],
   }),
+  // Audiobooks are public-domain recordings (LibriVox and the like). The `director`
+  // field holds the author/reader for the byline. TMDB has no audiobooks, so the
+  // real provider sources these from the seeded catalog; Open Library is the
+  // metadata seam if you want live lookups.
+  film({
+    tmdbId: 900001,
+    mediaType: 'audiobook',
+    title: 'Frankenstein',
+    year: 1818,
+    overview:
+      "Mary Shelley's novel of ambition and the creature it abandons. The public-domain recording is an easy first sync target, and the commentary writes itself.",
+    posterPath: null,
+    backdropPath: null,
+    director: 'Mary Shelley',
+    runtimeMinutes: 512,
+    season: null,
+    episode: null,
+    genres: ['Gothic', 'Horror', 'Classic'],
+  }),
+  film({
+    tmdbId: 900002,
+    mediaType: 'audiobook',
+    title: 'The Adventures of Sherlock Holmes',
+    year: 1892,
+    overview:
+      "Arthur Conan Doyle's twelve stories, in the public domain and widely narrated. A natural fit for a story-by-story commentary track.",
+    posterPath: null,
+    backdropPath: null,
+    director: 'Arthur Conan Doyle',
+    runtimeMinutes: 700,
+    season: null,
+    episode: null,
+    genres: ['Mystery', 'Classic'],
+  }),
 ];
 
 const CATALOG_BY_SLUG = new Map(MOCK_CATALOG.map((f) => [f.slug, f]));
@@ -253,6 +287,9 @@ export class TmdbApiProvider implements TmdbProvider {
   }
 
   async search(query: string, mediaType: MediaType = 'movie'): Promise<FilmSummary[]> {
+    // TMDB only covers movies and TV. Audiobooks come from the seeded catalog
+    // (or an Open Library adapter), so there is nothing to query here.
+    if (mediaType === 'audiobook') return [];
     const data = await this.get<{ results: TmdbSearchResult[] }>(`/search/${mediaType}`, { query });
     return data.results.slice(0, 20).map((r) => ({
       slug: filmSlug({ title: r.title ?? r.name ?? 'Untitled', mediaType }),
@@ -270,6 +307,7 @@ export class TmdbApiProvider implements TmdbProvider {
     season?: number | undefined,
     episode?: number | undefined,
   ): Promise<Film | null> {
+    if (mediaType === 'audiobook') return null; // not a TMDB resource
     const d = await this.get<TmdbDetail>(`/${mediaType}/${tmdbId}`, {
       append_to_response: 'credits',
     });

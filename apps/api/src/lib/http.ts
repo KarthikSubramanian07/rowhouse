@@ -19,6 +19,7 @@ export const unauthorized = (msg?: string) => new AppError(401, 'unauthorized', 
 export const forbidden = (msg?: string) => new AppError(403, 'forbidden', msg);
 export const notFound = (what = 'not_found') => new AppError(404, what);
 export const conflict = (code: string, msg?: string) => new AppError(409, code, msg);
+export const tooMany = (msg?: string) => new AppError(429, 'rate_limited', msg);
 
 export function zodError(err: ZodError): AppError {
   const first = err.issues[0];
