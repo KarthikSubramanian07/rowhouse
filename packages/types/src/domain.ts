@@ -21,8 +21,12 @@ export type LiveStatus = (typeof LIVE_STATUS)[number];
 export const TONES = ['analytical', 'comedic', 'emotional', 'chaotic'] as const;
 export type Tone = (typeof TONES)[number];
 
-/** The media a track is attached to. TV episodes carry season/episode. */
-export const MEDIA_TYPES = ['movie', 'tv'] as const;
+/**
+ * The media a track is attached to. TV episodes carry season/episode.
+ * Audiobooks are just another reference-audio timeline, so the sync engine
+ * handles them unchanged; they carry no season/episode.
+ */
+export const MEDIA_TYPES = ['movie', 'tv', 'audiobook'] as const;
 export type MediaType = (typeof MEDIA_TYPES)[number];
 
 export const REPORT_REASONS = [

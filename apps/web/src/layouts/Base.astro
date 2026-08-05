@@ -25,6 +25,20 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse-gg.p
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
 const resolvedOg = ogImage ?? `${site}/og.png`;
 const robots = index ? 'index, follow, max-image-preview:large' : 'noindex, nofollow';
+
+/**
+ * Serialize JSON-LD for a <script> context. JSON.stringify does not escape
+ * `<`, so a `</script>` inside any user-controlled field (creator name, bio,
+ * track title) would break out of the element. Escaping `<`, `>` and `&` to
+ * their \\uXXXX forms keeps the JSON valid and makes script-context breakout
+ * impossible.
+ */
+function serializeJsonLd(data: unknown): string {
+  return JSON.stringify(data)
+    .replace(/</g, '\\u003c')
+    .replace(/>/g, '\\u003e')
+    .replace(/&/g, '\\u0026');
+}
 ---
 
 <!doctype html>
@@ -53,7 +67,7 @@ const robots = index ? 'index, follow, max-image-preview:large' : 'noindex, nofo
     <meta name="twitter:image" content={resolvedOg} />
     <meta name="twitter:image:alt" content="Rowhouse: commentary synced to your frame" />
 
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />}
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0B0D'/%3E%3Crect x='6' y='9' width='4' height='14' fill='%23E0362E'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3Crect x='22' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3C/svg%3E" />
   </head>
   <body class="min-h-screen bg-bg text-text-hi">
@@ -89,6 +103,18 @@ const robots = index ? 'index, follow, max-image-preview:large' : 'noindex, nofo
           <a href="/discover" class="hover:text-text-hi">Discover</a>
           <a href="/live" class="hover:text-text-hi">Live now</a>
           <a href="/about" class="hover:text-text-hi">How sync works</a>
+          <a
+            href="https://github.com/KarthikSubramanian07/rowhouse"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-text-hi">GitHub</a
+          >
+          <a
+            href="https://buymeacoffee.com/winnerkarthik"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-accent hover:text-accent-hi">Buy me a coffee</a
+          >
         </nav>
       </div>
     </footer>

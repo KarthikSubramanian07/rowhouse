@@ -46,12 +46,15 @@ const description = film.overview
   : `Synced film commentary for ${film.title}. Hold up your phone and the track locks to your frame.`;
 const ogImage = `${site}/api/og/film/${film.slug}`;
 
+const jsonLdType =
+  film.mediaType === 'tv' ? 'TVEpisode' : film.mediaType === 'audiobook' ? 'Audiobook' : 'Movie';
+const creditKey = film.mediaType === 'audiobook' ? 'author' : 'director';
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': film.mediaType === 'tv' ? 'TVEpisode' : 'Movie',
+  '@type': jsonLdType,
   name: film.title,
   ...(film.year ? { dateCreated: String(film.year) } : {}),
-  ...(film.director ? { director: { '@type': 'Person', name: film.director } } : {}),
+  ...(film.director ? { [creditKey]: { '@type': 'Person', name: film.director } } : {}),
   genre: film.genres,
   url: `${site}/film/${film.slug}`,
 };
@@ -69,7 +72,13 @@ const jsonLd = {
         style="background: linear-gradient(155deg, var(--surface-2), var(--bg));"
       >
         <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">
-          {film.mediaType === 'tv' ? `S${film.season ?? 1} E${film.episode ?? 1}` : 'Film'}
+          {
+            film.mediaType === 'tv'
+              ? `S${film.season ?? 1} E${film.episode ?? 1}`
+              : film.mediaType === 'audiobook'
+                ? 'Audiobook'
+                : 'Film'
+          }
         </span>
         <h1 class="font-display text-3xl leading-tight text-text-hi">{film.title}</h1>
       </div>

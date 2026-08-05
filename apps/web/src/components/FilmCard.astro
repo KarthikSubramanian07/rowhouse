@@ -24,7 +24,9 @@ const hue = [...film.slug].reduce((a, c) => a + c.charCodeAt(0), 0) % 12;
     style={`background: linear-gradient(155deg, color-mix(in srgb, var(--surface-2) 92%, var(--accent) ${hue}%), var(--bg));`}
   >
     <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">
-      {film.mediaType === 'tv' ? 'Series' : 'Film'}{film.year ? ` · ${film.year}` : ''}
+      {film.mediaType === 'tv' ? 'Series' : film.mediaType === 'audiobook' ? 'Audiobook' : 'Film'}{
+        film.year ? ` · ${film.year}` : ''
+      }
     </span>
     <div>
       <h3 class="font-display text-2xl leading-tight text-text-hi">{film.title}</h3>

@@ -106,7 +106,11 @@ function FilmSearch({
 
   return (
     <div className="relative">
-      <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search films & TV..." />
+      <Input
+        value={q}
+        onChange={(e) => setQ(e.target.value)}
+        placeholder="Search films, TV & audiobooks..."
+      />
       {(results.length > 0 || busy) && (
         <div className="mt-1 max-h-56 overflow-y-auto rounded-md border border-border bg-surface">
           {busy && results.length === 0 ? (
