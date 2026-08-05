@@ -36,12 +36,29 @@ cd apps/api && pnpm db:migrate:remote && cd ..
 ## 2. Deploy
 
 ```bash
-pnpm deploy         # deploys the API Worker, then the Pages site
+pnpm run deploy         # deploys the Pages site, then the API Worker
 ```
 
 - Backend Worker: `rowhouse-api.<your-subdomain>.workers.dev`, called through the proxy.
 - Public site: `rowhouse-gg.pages.dev`. A production Pages deploy gets the bare
   project domain rather than a hashed preview subdomain.
+
+### CI auto-deploy (GitHub Actions)
+
+The `Deploy` workflow runs on every push to `main`, but only if a valid Cloudflare
+token is present. If the token is missing or cannot authenticate, it skips cleanly
+(the job stays green) and prints a warning. To enable auto-deploy, add two repo
+secrets (Settings, Secrets and variables, Actions):
+
+- `CLOUDFLARE_ACCOUNT_ID` - your account id.
+- `CLOUDFLARE_API_TOKEN` - a token created at
+  https://dash.cloudflare.com/profile/api-tokens with these account permissions:
+  Cloudflare Pages: Edit, Workers Scripts: Edit, D1: Edit,
+  Workers R2 Storage: Edit, Workers KV Storage: Edit, Account Settings: Read.
+
+An `Authentication error [code: 10000]` in the deploy log means the token is
+expired or under-scoped; recreate it with the permissions above and update the
+secret.
 
 Point the web project's proxy at your Worker:
 

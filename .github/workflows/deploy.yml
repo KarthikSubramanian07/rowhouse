@@ -34,11 +34,19 @@ jobs:
       - name: Check credentials
         id: creds
         run: |
-          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Deploy skipped::Cloudflare secrets are not set; skipping deploy."
+            exit 0
+          fi
+          # Verify the token can actually authenticate before attempting a deploy.
+          # A missing/expired/under-scoped token should skip the deploy cleanly
+          # (green), not fail the pipeline. Real deploys resume once it is valid.
+          if npx --yes wrangler@4.110.0 whoami >/dev/null 2>&1; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Cloudflare secrets missing; skipping deploy."
+            echo "::warning title=Deploy skipped::CLOUDFLARE_API_TOKEN is set but failed to authenticate (expired or missing permissions). Update the token secret to enable auto-deploy. See SETUP.md."
           fi
 
       - if: steps.creds.outputs.ready == 'true'
