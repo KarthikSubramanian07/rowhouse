@@ -21,11 +21,15 @@
     { "binding": "CONFIG", "id": "b17f435b605a4b7c808759d460e100fc" }
   ],
 
-  "r2_buckets": [
-    { "binding": "AUDIO", "bucket_name": "rowhouse-audio" },
-    { "binding": "FINGERPRINTS", "bucket_name": "rowhouse-fingerprints" },
-    { "binding": "MEDIA", "bucket_name": "rowhouse-media" }
-  ],
+  // R2 is not enabled on the account yet, so the buckets are unbound and the
+  // Worker serves everything except audio/fingerprint storage (503
+  // storage_not_configured). To turn storage on: enable R2 in the dashboard,
+  // `wrangler r2 bucket create` each bucket below, then uncomment and redeploy.
+  // "r2_buckets": [
+  //   { "binding": "AUDIO", "bucket_name": "rowhouse-audio" },
+  //   { "binding": "FINGERPRINTS", "bucket_name": "rowhouse-fingerprints" },
+  //   { "binding": "MEDIA", "bucket_name": "rowhouse-media" }
+  // ],
 
   "durable_objects": {
     "bindings": [{ "name": "CHAT", "class_name": "ChatRoom" }]
@@ -52,7 +56,7 @@
 
   "vars": {
     "APP_ORIGIN": "https://rowhouse-gg.pages.dev",
-    "PUBLIC_API_ORIGIN": "https://rowhouse-api.workers.dev",
+    "PUBLIC_API_ORIGIN": "https://rowhouse-api.karthik-e5e.workers.dev",
     "VAPID_SUBJECT": "mailto:push@rowhouse.gg",
     "TMDB_IMAGE_BASE": "https://image.tmdb.org/t/p"
   }

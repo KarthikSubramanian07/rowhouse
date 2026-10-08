@@ -9,9 +9,13 @@ export interface Env {
   /** Reserved KV namespace (sessions live in D1 today). Kept for future session cache. */
   SESSIONS: KVNamespace;
   CONFIG: KVNamespace;
-  AUDIO: R2Bucket;
-  FINGERPRINTS: R2Bucket;
-  MEDIA: R2Bucket;
+  /**
+   * R2 buckets are optional so the Worker can run before R2 is enabled on the
+   * account. Routes that need them go through `requireBucket` (503 when absent).
+   */
+  AUDIO?: R2Bucket;
+  FINGERPRINTS?: R2Bucket;
+  MEDIA?: R2Bucket;
   CHAT: DurableObjectNamespace;
   JOBS: Queue<JobMessage>;
 
