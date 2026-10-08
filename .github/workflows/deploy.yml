@@ -61,6 +61,12 @@ jobs:
         name: Deploy web (Pages)
         run: pnpm run deploy:web
 
+      # Verify the live site still serves Markdown, llms.txt, the sitemap,
+      # JSON-LD, and the trust pages agents rely on.
+      - if: steps.creds.outputs.ready == 'true'
+        name: Verify agent readiness
+        run: pnpm --filter @rowhouse/web run agent:check https://rowhouse-gg.pages.dev
+
       # Best-effort: the API Worker deploy needs R2/D1/KV provisioned in the
       # account. Don't fail the pipeline (and block the public site) if the
       # backend infra isn't ready yet; the step's log surfaces any error.
