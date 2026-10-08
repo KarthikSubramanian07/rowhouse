@@ -1,4 +1,6 @@
 /// <reference types="../../.astro/types.d.ts" />
+
+import { env } from 'cloudflare:workers';
 import type { APIContext, AstroGlobal } from 'astro';
 
 /**
@@ -6,10 +8,13 @@ import type { APIContext, AstroGlobal } from 'astro';
  * hits same-origin /api/*, which the proxy (src/pages/api/[...path].ts) forwards
  * here, piping Set-Cookie through so sessions stay first-party on pages.dev.
  */
-export function apiOrigin(ctx: APIContext | AstroGlobal): string {
-  const runtimeEnv = (ctx.locals as { runtime?: { env?: Record<string, string> } }).runtime?.env;
+export function apiOrigin(_ctx?: APIContext | AstroGlobal): string {
+  // Runtime vars come from the Pages project settings via `cloudflare:workers`
+  // (Astro 6+ removed `locals.runtime.env`; reading it now throws). The
+  // build-time value and a local default cover `astro dev` and tests.
+  const runtimeEnv = env as { PUBLIC_API_ORIGIN?: string };
   return (
-    runtimeEnv?.PUBLIC_API_ORIGIN ?? import.meta.env.PUBLIC_API_ORIGIN ?? 'http://localhost:8787'
+    runtimeEnv.PUBLIC_API_ORIGIN ?? import.meta.env.PUBLIC_API_ORIGIN ?? 'http://localhost:8787'
   );
 }
 
