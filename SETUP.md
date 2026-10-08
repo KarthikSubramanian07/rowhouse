@@ -39,6 +39,16 @@ Then apply the schema to the remote database:
 cd apps/api && pnpm db:migrate:remote && cd ..
 ```
 
+Load the film catalog (real films and public-domain audiobooks only, no demo
+users or tracks; safe to re-run):
+
+```bash
+pnpm --filter @rowhouse/api db:seed:catalog:remote
+```
+
+`seed/seed.sql` adds demo creators and tracks whose audio exists only locally, so
+it is for `pnpm db:seed` in development and never for the remote database.
+
 ## 2. Deploy
 
 ```bash
