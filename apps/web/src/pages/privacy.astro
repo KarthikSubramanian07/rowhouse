@@ -1,0 +1,100 @@
+---
+import Base from '../layouts/Base.astro';
+import { ORG_ID } from '../lib/agent/jsonld';
+import { CONTACT, SITE } from '../lib/agent/site';
+
+const updated = '2026-10-08';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Rowhouse privacy policy',
+  url: `${SITE.url}/privacy`,
+  dateModified: updated,
+  publisher: { '@id': ORG_ID },
+};
+
+const linkClass = 'text-accent-hi underline decoration-accent/40 underline-offset-4 hover:decoration-accent-hi';
+---
+
+<Base
+  title="Privacy | Rowhouse"
+  description="What Rowhouse collects, why, and what it never records. Your microphone audio is fingerprinted on your device and discarded; the film never leaves your room."
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Privacy · updated {updated}</p>
+    <h1 class="mt-3 font-display text-4xl leading-[1.05] text-text-hi sm:text-5xl">
+      We listen for ten seconds. We keep none of it.
+    </h1>
+    <p class="mt-5 text-lg text-text-mid">
+      Rowhouse needs your microphone to find your place in a film, and an account if you want to
+      chat, follow creators, or publish commentary. This page lists everything we store, why, and
+      who else touches it. No ads, no tracking pixels, no selling data.
+    </p>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">01. Your microphone</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Audio never leaves your device.</h2>
+      <p class="mt-3 text-text-mid">
+        When you sync, the browser captures about ten seconds of room audio. It's turned into a
+        fingerprint, a set of hashes of spectral peaks, right there on your device, matched against
+        the film's map, and discarded. We don't record it, upload it, or store it. That rule is
+        enforced in the code and guarded by an automated test in the open-source sync engine.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">02. Your account</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">The minimum to know it's you.</h2>
+      <p class="mt-3 text-text-mid">
+        You can browse and listen without signing in. If you sign in with Google, we store your email
+        address, display name, profile picture URL, a public handle, and the Google account ID that
+        links them. A sign-in session is a random token kept in an HttpOnly cookie for up to 30 days;
+        we store only a hash of it. Two short-lived cookies protect the sign-in handshake and expire
+        after ten minutes.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">03. What you do here</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">The things you choose to share.</h2>
+      <p class="mt-3 text-text-mid">
+        We store the creators you follow, watchlist votes, reports you file, and, if you're a creator,
+        your bio, the commentary audio you upload, and the fingerprint maps built from it. Live chat
+        messages are stored with your display name so late arrivals can scroll back; each room keeps
+        only its most recent 500. Reactions are stored as anonymous timestamps on the track. If you
+        turn on notifications, we keep your browser's push subscription so we can tell you when a
+        creator goes live.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">04. Who else is involved</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">A short list of processors.</h2>
+      <p class="mt-3 text-text-mid">
+        Rowhouse runs on Cloudflare, which hosts the site, database, and audio storage and processes
+        standard request data such as IP addresses to serve and protect it. Google handles sign-in.
+        Film posters load from TMDB's image servers, so your browser contacts them directly. Push
+        notifications are delivered by your browser vendor's push service. We don't use analytics or
+        advertising services.
+      </p>
+    </section>
+
+    <section class="mt-14 mb-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">05. Your choices</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Ask, and it's gone.</h2>
+      <p class="mt-3 text-text-mid">
+        You can sign out at any time, which deletes your session. To get a copy of your data or have
+        your account and everything attached to it deleted,{' '}
+        {CONTACT.email ? (
+          <>email <a class={linkClass} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.</>
+        ) : (
+          <>reach us through the <a class={linkClass} href="/contact">contact page</a>.</>
+        )}{' '}
+        Rowhouse isn't directed at children under 13. If this policy changes, we'll update the date
+        at the top of this page.
+      </p>
+    </section>
+  </article>
+</Base>

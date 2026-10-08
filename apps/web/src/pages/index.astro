@@ -5,6 +5,7 @@ import TrackCard from '../components/TrackCard.astro';
 import SyncDemo from '../components/SyncDemo';
 import { apiFetch } from '../lib/runtime';
 import { formatTimecode } from '@rowhouse/types';
+import { webApplicationJsonLd, websiteJsonLd } from '../lib/agent/jsonld';
 
 export const prerender = false;
 
@@ -44,24 +45,7 @@ const liveNow = (await apiFetch<{ live: LiveItem[]; upcoming: LiveItem[] }>(Astr
   upcoming: [],
 };
 
-const site = 'https://rowhouse-gg.pages.dev';
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebSite',
-      name: 'Rowhouse',
-      url: site,
-      description: 'Live and on-demand film commentary, synced to your exact frame.',
-    },
-    {
-      '@type': 'Organization',
-      name: 'Rowhouse',
-      url: site,
-      logo: `${site}/og.png`,
-    },
-  ],
-};
+const jsonLd = [websiteJsonLd(), webApplicationJsonLd()];
 ---
 
 <Base jsonLd={jsonLd}>
@@ -69,7 +53,7 @@ const jsonLd = {
   <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-24">
     <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
       <div>
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Watch together. React live. Replay forever.</p>
+        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Rowhouse · live commentary for film &amp; TV</p>
         <h1 class="mt-4 font-display text-5xl leading-[1.02] text-text-hi sm:text-6xl">
           The film conversation, synced to <span class="text-accent-hi">your exact frame.</span>
         </h1>
