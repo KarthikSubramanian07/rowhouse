@@ -42,6 +42,11 @@ pnpm run deploy         # deploys the Pages site, then the API Worker
 - Backend Worker: `rowhouse-api.<your-subdomain>.workers.dev`, called through the proxy.
 - Public site: `rowhouse-gg.pages.dev`. A production Pages deploy gets the bare
   project domain rather than a hashed preview subdomain.
+- `@astrojs/cloudflare` builds a Workers-style layout (`dist/client` plus
+  `dist/server`). `scripts/pages-bundle.mjs` repackages it as a Pages advanced-mode
+  `_worker.js` in `dist/pages`, which is what gets deployed. To try a change on
+  Cloudflare without touching production, deploy a preview branch:
+  `wrangler pages deploy dist/pages --project-name=rowhouse-gg --branch=<name>`.
 
 ### CI auto-deploy (GitHub Actions)
 
