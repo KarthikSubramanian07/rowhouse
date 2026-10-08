@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { captureToFingerprint } from './fingerprint.js';
 import { FingerprintMap } from './map.js';
 import { matchPcm } from './match.js';
-import { buildReferenceFixture, PROFILES, simulateCapture } from './testing/index.js';
+import {
+  buildReferenceFixture,
+  generateReference,
+  PROFILES,
+  simulateCapture,
+} from './testing/index.js';
 
 const REF_SECONDS = 90;
 const CAPTURE_SECONDS = 10;
@@ -65,9 +70,11 @@ describe('offset-histogram matching - fixture corpus', () => {
 
 describe('rejection of non-matching audio', () => {
   it('does not lock when the capture is from a different film', () => {
-    const other = buildReferenceFixture(REF_SECONDS, 999);
-    const cap = simulateCapture(other.pcm, 30, CAPTURE_SECONDS, PROFILES.clean);
-    const res = matchPcm(cap, other.sampleRate, ref.map);
+    // Only the other film's audio is needed; fingerprinting it into a map of its
+    // own would just burn CPU (and push this test toward the timeout).
+    const otherPcm = generateReference(REF_SECONDS, 999);
+    const cap = simulateCapture(otherPcm, 30, CAPTURE_SECONDS, PROFILES.clean);
+    const res = matchPcm(cap, ref.sampleRate, ref.map);
     expect(res.locked).toBe(false);
     expect(res.confidence).toBeLessThan(0.5);
   });

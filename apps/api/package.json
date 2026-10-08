@@ -11,7 +11,8 @@
     "test": "vitest run",
     "db:migrate": "wrangler d1 migrations apply rowhouse --local",
     "db:migrate:remote": "wrangler d1 migrations apply rowhouse --remote",
-    "db:seed": "wrangler d1 execute rowhouse --local --file=./seed/seed.sql",
+    "db:seed": "wrangler d1 execute rowhouse --local --file=./seed/catalog.sql && wrangler d1 execute rowhouse --local --file=./seed/seed.sql",
+    "db:seed:catalog:remote": "wrangler d1 execute rowhouse --remote --file=./seed/catalog.sql",
     "cf-typegen": "wrangler types"
   },
   "dependencies": {

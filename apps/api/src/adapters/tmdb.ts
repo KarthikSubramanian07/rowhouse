@@ -85,7 +85,7 @@ export const MOCK_CATALOG: Film[] = [
     genres: ['Comedy', 'Thriller', 'Drama'],
   }),
   film({
-    tmdbId: 843,
+    tmdbId: 7345,
     mediaType: 'movie',
     title: 'There Will Be Blood',
     year: 2007,
@@ -115,7 +115,7 @@ export const MOCK_CATALOG: Film[] = [
     genres: ['Science Fiction', 'Adventure'],
   }),
   film({
-    tmdbId: 843906,
+    tmdbId: 843,
     mediaType: 'movie',
     title: 'In the Mood for Love',
     year: 2000,
