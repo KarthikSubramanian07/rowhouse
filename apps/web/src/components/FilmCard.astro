@@ -13,6 +13,12 @@ interface Props {
 const { film } = Astro.props;
 // Deterministic accent tilt for the typographic poster (no external images).
 const hue = [...film.slug].reduce((a, c) => a + c.charCodeAt(0), 0) % 12;
+// Size the title so its longest word fits the poster at any card width: the
+// poster is a size container, and a display glyph averages ~0.62em, so the word
+// spans 100cqi at 100 / (0.62 * length) cqi. Capped at the usual 2xl size, with
+// wrapping kept only as a last resort.
+const longestWord = Math.max(4, ...film.title.split(/\s+/).map((w) => w.length));
+const titleFontSize = `min(var(--text-2xl), ${(100 / (0.62 * longestWord)).toFixed(1)}cqi)`;
 ---
 
 <a
@@ -20,7 +26,7 @@ const hue = [...film.slug].reduce((a, c) => a + c.charCodeAt(0), 0) % 12;
   class="group flex flex-col overflow-hidden rounded-lg border border-border bg-surface transition-colors hover:border-accent/40"
 >
   <div
-    class="relative flex aspect-[2/3] flex-col justify-between p-4"
+    class="relative flex aspect-[2/3] flex-col justify-between p-4 [container-type:inline-size]"
     style={`background: linear-gradient(155deg, color-mix(in srgb, var(--surface-2) 92%, var(--accent) ${hue}%), var(--bg));`}
   >
     <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">
@@ -29,7 +35,12 @@ const hue = [...film.slug].reduce((a, c) => a + c.charCodeAt(0), 0) % 12;
       }
     </span>
     <div>
-      <h3 class="font-display text-2xl leading-tight text-text-hi">{film.title}</h3>
+      <h3
+        class="font-display leading-tight text-text-hi [overflow-wrap:anywhere]"
+        style={`font-size: ${titleFontSize}`}
+      >
+        {film.title}
+      </h3>
       {film.director && <p class="mt-1 text-xs text-text-mid">{film.director}</p>}
     </div>
   </div>
