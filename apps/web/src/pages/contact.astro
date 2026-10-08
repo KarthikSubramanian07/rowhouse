@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import { ORG_ID } from '../lib/agent/jsonld';
+import { CONTACT, SITE } from '../lib/agent/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: 'Contact Rowhouse',
+  url: `${SITE.url}/contact`,
+  about: { '@id': ORG_ID },
+};
+
+const linkClass = 'text-accent-hi underline decoration-accent/40 underline-offset-4 hover:decoration-accent-hi';
+---
+
+<Base
+  title="Contact | Rowhouse"
+  description="How to reach the Rowhouse team: support and bug reports, security disclosures, content and copyright reports, and creator questions."
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-3xl px-4 pt-12 sm:px-6">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Contact</p>
+    <h1 class="mt-3 font-display text-4xl leading-[1.05] text-text-hi sm:text-5xl">
+      Talk to the people who build Rowhouse.
+    </h1>
+    <p class="mt-5 text-lg text-text-mid">
+      Rowhouse is a small, independent, open-source project. There's no call center and no ticket
+      queue, just the people who write the code reading what you send. Pick the channel that fits,
+      and we'll get back to you as soon as we can.
+    </p>
+
+    {CONTACT.email && (
+      <section class="mt-14">
+        <p class="font-mono text-xs uppercase tracking-widest text-text-dim">Email</p>
+        <h2 class="mt-2 font-display text-2xl text-text-hi">Anything at all.</h2>
+        <p class="mt-3 text-text-mid">
+          Write to <a class={linkClass} href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. It
+          reaches a person, and it's the right channel for anything private: account and data
+          requests, copyright notices, or questions you'd rather not post in public.
+        </p>
+      </section>
+    )}
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">01. Support and bugs</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Something broke, or something's missing.</h2>
+      <p class="mt-3 text-text-mid">
+        Open an issue on <a class={linkClass} href={SITE.issues} target="_blank" rel="noopener noreferrer">GitHub</a>.
+        Tell us the film or track you were on, what you expected, and what happened instead. If the
+        sync didn't lock, say what you were watching on (Netflix, a Blu-ray, a projector) and roughly
+        how loud the room was. Feature ideas are welcome there too.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">02. Security</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Found a vulnerability? Tell us privately.</h2>
+      <p class="mt-3 text-text-mid">
+        Please don't file exploitable bugs as public issues. Open a{' '}
+        <a class={linkClass} href={SITE.securityAdvisory} target="_blank" rel="noopener noreferrer">private security advisory</a>{' '}
+        on the repository instead. We'll confirm we've seen it, work on a fix, and credit you if
+        you'd like.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">03. Content and copyright</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Report a track, a room, or a creator.</h2>
+      <p class="mt-3 text-text-mid">
+        Rowhouse never hosts films, only commentary that creators record over them. If a commentary
+        track, live chat, or creator profile is abusive, infringing, or otherwise breaks the rules,
+        report it {CONTACT.email ? 'by email' : 'in a GitHub issue'} with a link to the page and a
+        short description of the problem. Rights holders sending a copyright notice should include
+        the work, the infringing URL, and how to reach them.
+      </p>
+    </section>
+
+    <section class="mt-14 mb-4">
+      <p class="font-mono text-xs uppercase tracking-widest text-text-dim">04. Creators</p>
+      <h2 class="mt-2 font-display text-2xl text-text-hi">Want to host a commentary?</h2>
+      <p class="mt-3 text-text-mid">
+        You don't need to ask anyone. Sign in, open the studio, and go live over a film, or upload a
+        track you've already recorded. If you're planning something bigger, like a festival
+        watch-along or a series, open a GitHub issue and we'll help you set it up.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/studio" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">
+          Open the studio
+        </a>
+        <a href="/privacy" class="rounded-md border border-border px-4 py-2.5 text-sm text-text-mid transition-colors hover:border-text-mid hover:text-text-hi">
+          Read the privacy policy
+        </a>
+      </div>
+    </section>
+  </article>
+</Base>

@@ -18,6 +18,12 @@ The sync demo, film pages, players, and the live-to-async save all work on mocks
 You need a free Cloudflare account, logged in once. Note that R2 has to be enabled
 in the dashboard first (Cloudflare gates bucket creation until you do).
 
+R2 is optional for a first deploy. The `r2_buckets` block in
+`apps/api/wrangler.jsonc` ships commented out, and without it the API serves
+every read endpoint while audio and fingerprint storage answer `503
+storage_not_configured`. Once R2 is enabled and the buckets exist, uncomment the
+block and redeploy.
+
 ```bash
 pnpm exec wrangler login
 ./setup.sh          # idempotent: creates D1, R2 buckets, KV namespaces, the queues
@@ -42,6 +48,11 @@ pnpm run deploy         # deploys the Pages site, then the API Worker
 - Backend Worker: `rowhouse-api.<your-subdomain>.workers.dev`, called through the proxy.
 - Public site: `rowhouse-gg.pages.dev`. A production Pages deploy gets the bare
   project domain rather than a hashed preview subdomain.
+- `@astrojs/cloudflare` builds a Workers-style layout (`dist/client` plus
+  `dist/server`). `scripts/pages-bundle.mjs` repackages it as a Pages advanced-mode
+  `_worker.js` in `dist/pages`, which is what gets deployed. To try a change on
+  Cloudflare without touching production, deploy a preview branch:
+  `wrangler pages deploy dist/pages --project-name=rowhouse-gg --branch=<name>`.
 
 ### CI auto-deploy (GitHub Actions)
 
@@ -66,6 +77,10 @@ Point the web project's proxy at your Worker:
 pnpm exec wrangler pages secret put PUBLIC_API_ORIGIN --project-name rowhouse-gg
 # value: https://rowhouse-api.<your-subdomain>.workers.dev
 ```
+
+Run it once per environment (`--env production` and `--env preview`), and set the
+same URL as `PUBLIC_API_ORIGIN` in `apps/api/wrangler.jsonc`. The live API is
+`https://rowhouse-api.karthik-e5e.workers.dev`.
 
 If your account's `*.workers.dev` subdomain looks random, set a cleaner one under
 Workers and Pages, Account, Subdomain in the dashboard, or attach a custom domain

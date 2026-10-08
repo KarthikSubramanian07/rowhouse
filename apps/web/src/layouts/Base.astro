@@ -1,20 +1,23 @@
 ---
 import '../styles/app.css';
 import AuthNav from '../components/AuthNav';
+import { organizationJsonLd } from '../lib/agent/jsonld';
+import { SITE } from '../lib/agent/site';
 
 interface Props {
   title?: string;
   description?: string;
   ogImage?: string | undefined;
   canonical?: string | undefined;
+  /** One JSON-LD object, or several; each renders as its own script block. */
   jsonLd?: unknown;
   /** When false, ask crawlers not to index (studio, 404, etc.). */
   index?: boolean;
 }
 
 const {
-  title = 'Rowhouse: commentary synced to whatever you’re watching',
-  description = 'Free-forever live commentary for film & TV. Hold up your phone; the commentary snaps to your exact frame. Live or on demand.',
+  title = 'Rowhouse: live commentary synced to whatever you’re watching',
+  description = SITE.description,
   ogImage,
   canonical,
   jsonLd,
@@ -25,6 +28,8 @@ const site = Astro.site?.toString().replace(/\/$/, '') ?? 'https://rowhouse-gg.p
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
 const resolvedOg = ogImage ?? `${site}/og.png`;
 const robots = index ? 'index, follow, max-image-preview:large' : 'noindex, nofollow';
+// The organization identifies the site on every page; page-specific nodes follow.
+const jsonLdBlocks = [organizationJsonLd(), ...(Array.isArray(jsonLd) ? jsonLd : jsonLd ? [jsonLd] : [])];
 
 /**
  * Serialize JSON-LD for a <script> context. JSON.stringify does not escape
@@ -59,6 +64,8 @@ function serializeJsonLd(data: unknown): string {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={resolvedOg} />
+    {!ogImage && <meta property="og:image:width" content="1536" />}
+    {!ogImage && <meta property="og:image:height" content="1024" />}
     <meta property="og:image:alt" content="Rowhouse: commentary synced to your frame" />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -67,7 +74,9 @@ function serializeJsonLd(data: unknown): string {
     <meta name="twitter:image" content={resolvedOg} />
     <meta name="twitter:image:alt" content="Rowhouse: commentary synced to your frame" />
 
-    {jsonLd && <script type="application/ld+json" set:html={serializeJsonLd(jsonLd)} />}
+    {jsonLdBlocks.map((block) => <script type="application/ld+json" set:html={serializeJsonLd(block)} />)}
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0B0D'/%3E%3Crect x='6' y='9' width='4' height='14' fill='%23E0362E'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3Crect x='22' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3C/svg%3E" />
   </head>
   <body class="min-h-screen bg-bg text-text-hi">
@@ -103,6 +112,8 @@ function serializeJsonLd(data: unknown): string {
           <a href="/discover" class="hover:text-text-hi">Discover</a>
           <a href="/live" class="hover:text-text-hi">Live now</a>
           <a href="/about" class="hover:text-text-hi">How sync works</a>
+          <a href="/contact" class="hover:text-text-hi">Contact</a>
+          <a href="/privacy" class="hover:text-text-hi">Privacy</a>
           <a
             href="https://github.com/KarthikSubramanian07/rowhouse"
             target="_blank"

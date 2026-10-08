@@ -4,7 +4,7 @@ import { asc, eq, sql } from 'drizzle-orm';
 import { type Context, Hono } from 'hono';
 import { z } from 'zod';
 import { requireCreator } from '../auth/middleware.js';
-import { badRequest, forbidden, notFound } from '../lib/http.js';
+import { badRequest, forbidden, notFound, requireBucket } from '../lib/http.js';
 import { newId } from '../lib/ids.js';
 import { rateLimit } from '../lib/ratelimit.js';
 import { getFilmBySlug } from '../services/films.js';
@@ -98,7 +98,7 @@ trackRoutes.put('/:id/audio', requireCreator, async (c) => {
   if (!c.req.raw.body) throw badRequest('empty_body');
   // Stream to R2 rather than buffering the whole body in the Worker's memory.
   // The stored content type is coerced to a safe audio type (never client-chosen).
-  const obj = await c.env.AUDIO.put(track.audioKey, c.req.raw.body, {
+  const obj = await requireBucket(c.env.AUDIO).put(track.audioKey, c.req.raw.body, {
     httpMetadata: { contentType: safeAudioType(c.req.header('content-type')) },
   });
   return c.json({ ok: true, bytes: obj?.size ?? len ?? 0 });
@@ -114,7 +114,7 @@ trackRoutes.put('/:id/fingerprint', requireCreator, async (c) => {
   const check = c.get('providers').sync.validateMap(blob);
   if (!check.ok) throw badRequest('invalid_fingerprint_map', check.reason);
   const key = fpKey(track.id);
-  await c.env.FINGERPRINTS.put(key, blob);
+  await requireBucket(c.env.FINGERPRINTS).put(key, blob);
   await c.get('db').update(tracks).set({ fingerprintKey: key }).where(eq(tracks.id, track.id));
   return c.json({ ok: true, entries: check.entries, version: check.version });
 });
@@ -178,7 +178,7 @@ trackRoutes.get('/:id/audio', async (c) => {
     .get();
   if (!track) throw notFound('track_not_found');
   const range = c.req.header('range');
-  const obj = await c.env.AUDIO.get(
+  const obj = await requireBucket(c.env.AUDIO).get(
     track.audioKey,
     range ? { range: parseRange(range) } : undefined,
   );
@@ -204,7 +204,7 @@ trackRoutes.get('/:id/fingerprint', async (c) => {
     .where(eq(tracks.id, c.req.param('id')))
     .get();
   if (!track?.fingerprintKey) throw notFound('fingerprint_not_found');
-  const obj = await c.env.FINGERPRINTS.get(track.fingerprintKey);
+  const obj = await requireBucket(c.env.FINGERPRINTS).get(track.fingerprintKey);
   if (!obj) throw notFound('fingerprint_not_found');
   return new Response(obj.body, {
     headers: {

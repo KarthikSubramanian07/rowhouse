@@ -90,6 +90,18 @@ an adapter with a mock default, so the app works before you spend anything.
 `DECISIONS.md` has the reasoning, the substitutions from the original spec, and the
 per-unit cost of each adapter. `SETUP.md` covers provisioning and deploy.
 
+## For agents
+
+Every page is also Markdown. Send `Accept: text/markdown` to any URL and the
+middleware returns the page's `<main>` content as Markdown, with title,
+description, and canonical URL as front matter and `Vary: Accept` set, per
+[acceptmarkdown.com](https://acceptmarkdown.com). Unknown URLs keep their 404
+status and get a Markdown body that points to `/llms.txt` and `/sitemap.xml`.
+`/llms.txt` says when an agent should reach for Rowhouse; `/sitemap.xml` is
+rendered per request from the film catalog. Organization and WebApplication
+JSON-LD come from one identity file, `apps/web/src/lib/agent/site.ts`. Run
+`pnpm --filter @rowhouse/web agent:check <url>` to verify a deployment.
+
 ## Design
 
 Dark and high-contrast, built for film obsessives. One accent (a cinema red, the

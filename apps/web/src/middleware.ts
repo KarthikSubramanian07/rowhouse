@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { negotiateResponse } from './lib/agent/respond';
 
 /**
  * Security headers for every response. The Cloudflare adapter serves the site
@@ -7,6 +8,9 @@ import { defineMiddleware } from 'astro:middleware';
  * covers any purely static assets. The microphone is granted to self for the
  * sync demo; script-src keeps 'unsafe-inline' for Astro's inline hydration, with
  * the JSON-LD injection vector already closed at the source (see Base.astro).
+ *
+ * Pages are also content-negotiated here: `Accept: text/markdown` gets the same
+ * URL as Markdown (see lib/agent/respond.ts).
  */
 const CSP = [
   "default-src 'self'",
@@ -22,8 +26,8 @@ const CSP = [
   "connect-src 'self' https: wss:",
 ].join('; ');
 
-export const onRequest = defineMiddleware(async (_context, next) => {
-  const res = await next();
+export const onRequest = defineMiddleware(async (context, next) => {
+  const res = await negotiateResponse(context.request, await next());
   const h = res.headers;
   h.set('Content-Security-Policy', CSP);
   h.set('X-Content-Type-Options', 'nosniff');

@@ -9,7 +9,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "typecheck": "astro check",
-    "deploy": "astro build && wrangler pages deploy dist --project-name=rowhouse-gg --commit-dirty=true"
+    "test": "vitest run",
+    "agent:check": "node scripts/agent-check.mjs",
+    "deploy": "pnpm run build:pages && wrangler pages deploy dist/pages --project-name=rowhouse-gg --commit-dirty=true",
+    "build:pages": "astro build && node scripts/pages-bundle.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.7",
@@ -19,6 +22,8 @@
     "@rowhouse/ui": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^7.1.6",
+    "node-html-markdown": "^2.0.0",
+    "node-html-parser": "^9.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwindcss": "^4.3.0"
@@ -29,6 +34,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "typescript": "^5.7.3",
+    "vitest": "^4.1.0",
     "wrangler": "^4.110.0"
   }
 }

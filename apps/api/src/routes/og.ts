@@ -35,7 +35,8 @@ async function serveCached(
   render: () => Promise<Uint8Array>,
 ): Promise<Response> {
   try {
-    const cached = await c.env.MEDIA.get(key);
+    // Without R2 the card still renders; it just isn't cached.
+    const cached = await c.env.MEDIA?.get(key);
     if (cached) {
       return new Response(cached.body, {
         headers: {
@@ -45,7 +46,7 @@ async function serveCached(
       });
     }
     const png = await render();
-    await c.env.MEDIA.put(key, png, { httpMetadata: { contentType: 'image/png' } });
+    await c.env.MEDIA?.put(key, png, { httpMetadata: { contentType: 'image/png' } });
     return new Response(png, {
       headers: { 'content-type': 'image/png', 'cache-control': 'public, max-age=86400, immutable' },
     });
