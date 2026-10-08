@@ -1,4 +1,5 @@
 ---
+import { filmDescription } from '../../lib/filmMeta';
 import Base from '../../layouts/Base.astro';
 import TrackCard from '../../components/TrackCard.astro';
 import { apiFetch } from '../../lib/runtime';
@@ -41,9 +42,7 @@ if (!page) {
 const { film, tracks, creatorCount } = page;
 const site = 'https://rowhouse-gg.pages.dev';
 const title = `${film.title} commentary | Rowhouse`;
-const description = film.overview
-  ? `${film.overview.slice(0, 150)}... Listen to synced commentary on ${film.title}, from ${creatorCount} creators.`
-  : `Synced film commentary for ${film.title}. Hold up your phone and the track locks to your frame.`;
+const description = filmDescription({ title: film.title, overview: film.overview, creatorCount });
 const ogImage = `${site}/api/og/film/${film.slug}`;
 
 const jsonLdType =
