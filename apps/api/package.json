@@ -25,7 +25,7 @@
     "@rowhouse/types": "workspace:*",
     "arctic": "^3.7.0",
     "drizzle-orm": "^0.45.2",
-    "hono": "^4.13.0",
+    "hono": "^4.13.7",
     "satori": "^0.26.0",
     "zod": "^4.4.3"
   },
