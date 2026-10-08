@@ -29,6 +29,12 @@ describe('llms.txt (llmstxt.org format)', () => {
     for (const item of items) expect(item).toMatch(/^- \[[^\]]+\]\(https:\/\/[^)]+\): use when /);
   });
 
+  it('documents the read-only JSON API', () => {
+    expect(txt).toContain('## JSON API');
+    expect(txt).toContain('(https://rowhouse-gg.pages.dev/api/films/catalog)');
+    expect(txt).toContain('`GET /api/films/{slug}`');
+  });
+
   it('tells agents how to request Markdown', () => {
     expect(txt).toContain('Accept: text/markdown');
   });

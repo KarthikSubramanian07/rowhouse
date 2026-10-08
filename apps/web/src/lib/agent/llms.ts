@@ -29,6 +29,13 @@ Do not use ${SITE.name} to find where to stream a film, to download or watch vid
 - [Sitemap](${u('/sitemap.xml')}): every indexable URL, including each film page at \`/film/{slug}\`, with lastmod dates.
 - [Film pages](${u('/discover')}): \`/film/{slug}\` lists that film's commentary tracks; \`/track/{id}\` is a single track; \`/creator/{handle}\` is a creator profile; \`/live/{id}\` is a live room.
 
+## JSON API
+
+- [Film catalog](${u('/api/films/catalog')}): every film that has commentary, with slug, title, year, genres, and track count. Every endpoint here is read-only GET, needs no auth, and returns JSON; unknown ids return 404 with \`{"error": "..."}\`.
+- [Discover feed](${u('/api/feed/discover')}): trending commentary tracks plus the catalog.
+- [Live now](${u('/api/live/now')}): rooms that are live and upcoming scheduled rooms.
+- [Detail endpoints](${u('/api/films/catalog')}): take a slug from the catalog, then \`GET /api/films/{slug}\` returns the film and its commentary tracks; \`GET /api/tracks/{id}\`, \`GET /api/creators/{handle}\`, and \`GET /api/live/{id}\` work the same way.
+
 ## Trust and policies
 
 - [About](${u('/about')}): how the fingerprint sync works and why it stays legally clean.
