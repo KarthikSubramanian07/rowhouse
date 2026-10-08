@@ -20,9 +20,27 @@ describe('JSON-LD identity', () => {
     });
   });
 
-  it('adds email and PostalAddress only once they are configured', () => {
-    expect(organizationJsonLd().address).toBeUndefined();
+  it('publishes the configured Berkeley, CA PostalAddress', () => {
+    expect(organizationJsonLd().address).toEqual({
+      '@type': 'PostalAddress',
+      addressLocality: 'Berkeley',
+      addressRegion: 'CA',
+      addressCountry: 'US',
+    });
+  });
+
+  it('adds email and PostalAddress only when they are configured', () => {
     const saved = { ...CONTACT };
+    try {
+      CONTACT.email = undefined;
+      CONTACT.address = undefined;
+      const bare = organizationJsonLd();
+      expect(bare.address).toBeUndefined();
+      expect(bare.email).toBeUndefined();
+    } finally {
+      CONTACT.email = saved.email;
+      CONTACT.address = saved.address;
+    }
     try {
       CONTACT.email = 'hello@example.com';
       CONTACT.address = { addressLocality: 'Berkeley', addressRegion: 'CA', addressCountry: 'US' };

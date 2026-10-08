@@ -15,8 +15,8 @@ export const SITE = {
 } as const;
 
 /**
- * Public contact details. `email` and `address` are deliberately unset until the
- * owner chooses what to publish; every consumer renders them only when present.
+ * Public contact details. Every consumer renders a field only when present;
+ * `email` stays unset until the owner chooses an address to publish.
  */
 export interface PostalAddressInfo {
   streetAddress?: string;
@@ -26,7 +26,9 @@ export interface PostalAddressInfo {
   addressCountry: string;
 }
 
-export const CONTACT: { email?: string; address?: PostalAddressInfo } = {};
+export const CONTACT: { email?: string; address?: PostalAddressInfo } = {
+  address: { addressLocality: 'Berkeley', addressRegion: 'CA', addressCountry: 'US' },
+};
 
 /** Indexable static routes, with the date their content last meaningfully changed. */
 export const STATIC_PAGES: {

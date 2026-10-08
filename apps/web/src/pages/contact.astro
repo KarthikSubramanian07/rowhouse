@@ -28,6 +28,7 @@ const linkClass = 'text-accent-hi underline decoration-accent/40 underline-offse
       Rowhouse is a small, independent, open-source project. There's no call center and no ticket
       queue, just the people who write the code reading what you send. Pick the channel that fits,
       and we'll get back to you as soon as we can.
+      {CONTACT.address && ` We're based in ${CONTACT.address.addressLocality}, ${CONTACT.address.addressRegion}.`}
     </p>
 
     {CONTACT.email && (
