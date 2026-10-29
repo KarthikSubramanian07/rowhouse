@@ -21,7 +21,7 @@
     "@rowhouse/types": "workspace:*",
     "@rowhouse/ui": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
-    "astro": "^7.1.6",
+    "astro": "^7.3.3",
     "node-html-markdown": "^2.0.0",
     "node-html-parser": "^9.0.4",
     "react": "^19.1.0",
@@ -34,7 +34,7 @@
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "typescript": "^5.7.3",
-    "vitest": "^4.1.0",
+    "vitest": "^5.0.5",
     "wrangler": "^4.110.0"
   }
 }
