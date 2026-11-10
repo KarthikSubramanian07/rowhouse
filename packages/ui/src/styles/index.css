@@ -16,6 +16,8 @@
 }
 
 html {
+  /* Keep focused and anchored elements clear of the sticky header (WCAG 2.4.11). */
+  scroll-padding-top: 6.5rem;
   background-color: var(--bg);
   color: var(--text-hi);
   font-family: var(--rh-font-ui);
@@ -30,4 +32,16 @@ body {
 ::selection {
   background-color: color-mix(in srgb, var(--accent) 35%, transparent);
   color: var(--text-hi);
+}
+
+/*
+ * A visible keyboard focus indicator on everything focusable (WCAG 2.4.7).
+ * Components that draw their own ring set outline-none, and utilities win over
+ * this base layer, so they keep their ring.
+ */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--rh-focus-ring);
+    outline-offset: 2px;
+  }
 }
