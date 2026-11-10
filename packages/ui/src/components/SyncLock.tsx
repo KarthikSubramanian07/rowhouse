@@ -1,4 +1,6 @@
+import { formatTimecode } from '@rowhouse/types';
 import { RefreshCw } from 'lucide-react';
+import * as React from 'react';
 import { cn } from '../lib/cn.js';
 import { TimeCode } from './TimeCode.js';
 
@@ -29,6 +31,10 @@ const STATUS_LABEL: Record<SyncStatus, string> = {
  *              collapses the sweep to a static "listening...".
  *   locked     resolves to the semantic "locked" green: the big mono TimeCode
  *              plus a confidence readout. Resync stays visible.
+ *
+ * Screen readers hear one short message per status change from a polite live
+ * region. The readout itself is not live: once locked it ticks with playback,
+ * and a live region there would talk over the commentary every frame.
  */
 export function SyncLock({
   status,
@@ -42,22 +48,40 @@ export function SyncLock({
   const confidencePct =
     confidence != null ? Math.round(Math.max(0, Math.min(1, confidence)) * 100) : null;
 
+  // Snapshot the values at the moment the status changes, so the announcement
+  // names where the lock landed and then stays put while playback ticks on.
+  const latest = React.useRef({ positionSeconds, confidencePct });
+  latest.current = { positionSeconds, confidencePct };
+  const [announcement, setAnnouncement] = React.useState('');
+  React.useEffect(() => {
+    const { positionSeconds: pos, confidencePct: pct } = latest.current;
+    if (status === 'listening') setAnnouncement('Sync: listening for your film.');
+    else if (status === 'locked')
+      setAnnouncement(
+        `Sync locked at ${formatTimecode(pos ?? 0)}${pct != null ? `, ${pct}% match` : ''}.`,
+      );
+    else setAnnouncement('');
+  }, [status]);
+
   return (
     <div
       data-slot="sync-lock"
       data-status={status}
-      role="status"
-      aria-live="polite"
       className={cn(
         'flex flex-col gap-3 rounded-md border bg-surface-2 p-3',
         isLocked ? 'border-locked/40' : 'border-border',
         className,
       )}
     >
+      <p role="status" className="sr-only">
+        {announcement}
+      </p>
+
       {/* Header: status dot + label + resync */}
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span
+            aria-hidden
             className={cn(
               'size-1.5 rounded-full',
               isLocked && 'bg-locked',
@@ -79,9 +103,8 @@ export function SyncLock({
           <button
             type="button"
             onClick={onResync}
-            aria-label="Resync"
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-sm px-1.5 py-1',
+              'inline-flex min-h-6 items-center gap-1.5 rounded-sm px-1.5 py-1',
               'font-mono text-[0.6875rem] uppercase tracking-[0.08em] text-text-dim',
               'transition-colors hover:text-text-hi',
               'outline-none focus-visible:ring-2 focus-visible:ring-accent',
