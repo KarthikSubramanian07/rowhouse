@@ -22,12 +22,14 @@
   /* ── Text (warm off-white, never pure white) ───────────────────────── */
   --text-hi: #f2f0ec;
   --text-mid: #9e9ea7;
-  --text-dim: #64646d;
+  /* text-dim is the quietest text still at 4.5:1 on every surface (WCAG 1.4.3). */
+  --text-dim: #868690;
 
   /* ── Brand accent - cinema red. THE single accent.
    *    live/REC, primary action, focus rings. Nothing else. ──────────── */
-  --accent: #e0362e;
-  --accent-hi: #ff5b54;
+  --accent: #d0271f; /* deep enough for text-hi on it at 4.5:1, still 3:1 as a ring on bg */
+  --accent-hi: #ff5b54; /* text and icons on dark surfaces */
+  --accent-deep: #bf231c; /* hover fill under text-hi; accent-hi is too light to carry text */
 
   /* ── Semantic status: the sync "locked" state ONLY.
    *    Never use in chrome or branding. ──────────────────────────────── */

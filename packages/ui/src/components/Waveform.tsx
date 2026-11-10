@@ -93,8 +93,8 @@ export function Waveform({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
 
-    const colPlayed = readVar(wrap, '--accent', '#e0362e');
-    const colUnplayed = readVar(wrap, '--text-dim', '#64646d');
+    const colPlayed = readVar(wrap, '--accent', '#d0271f');
+    const colUnplayed = readVar(wrap, '--text-dim', '#868690');
     const colPlayhead = readVar(wrap, '--accent-hi', '#ff5b54');
 
     const step = BAR_WIDTH + BAR_GAP;

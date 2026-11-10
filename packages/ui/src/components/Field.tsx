@@ -29,7 +29,7 @@ export function Field({
           className="font-mono text-xs uppercase tracking-[0.06em] text-text-mid"
         >
           {label}
-          {required ? <span className="ml-1 text-accent">*</span> : null}
+          {required ? <span className="ml-1 text-accent-hi">*</span> : null}
         </label>
       ) : null}
       {children}

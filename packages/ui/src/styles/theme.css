@@ -19,6 +19,7 @@
 
   --color-accent: var(--accent);
   --color-accent-hi: var(--accent-hi);
+  --color-accent-deep: var(--accent-deep);
 
   --color-locked: var(--locked);
 
