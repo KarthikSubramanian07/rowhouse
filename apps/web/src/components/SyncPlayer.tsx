@@ -127,7 +127,10 @@ export default function SyncPlayer({ detail }: { detail: TrackDetail }) {
 
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <Button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}>
+          <Button
+            onClick={togglePlay}
+            aria-label={playing ? 'Pause commentary' : 'Play commentary'}
+          >
             {playing ? 'Pause' : 'Play commentary'}
           </Button>
           <TimeCode seconds={position} className="text-text-mid" />
