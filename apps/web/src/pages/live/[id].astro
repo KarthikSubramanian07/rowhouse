@@ -29,8 +29,8 @@ const statusLabel =
 
 <Base title={title} description={description}>
   <article class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
-    <nav class="font-mono text-xs text-text-dim">
-      <a href="/live" class="hover:text-text-mid">live</a> / <span class="text-text-mid">{session.filmSlug}</span>
+    <nav class="font-mono text-xs text-text-dim" aria-label="Breadcrumb">
+      <a href="/live" class="hover:text-text-mid">live</a> / <span class="text-text-mid" aria-current="page">{session.filmSlug}</span>
     </nav>
 
     <header class="mt-4">
