@@ -79,7 +79,7 @@ function serializeJsonLd(data: unknown): string {
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230B0B0D'/%3E%3Crect x='6' y='9' width='4' height='14' fill='%23E0362E'/%3E%3Crect x='14' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3Crect x='22' y='9' width='4' height='14' fill='%23F2F0EC'/%3E%3C/svg%3E" />
   </head>
-  <body class="min-h-screen bg-bg text-text-hi">
+  <body class="min-h-screen overflow-x-clip bg-bg text-text-hi">
     <a
       href="#main"
       class="sr-only rounded-md bg-surface-2 px-4 py-2 text-sm text-text-hi ring-2 ring-accent focus:not-sr-only focus:fixed focus:left-4 focus:top-3 focus:z-50"
@@ -105,7 +105,7 @@ function serializeJsonLd(data: unknown): string {
       </div>
     </header>
 
-    <main id="main" tabindex="-1" class="outline-none">
+    <main id="main" tabindex="-1" class="min-w-0 outline-none">
       <slot />
     </main>
 
