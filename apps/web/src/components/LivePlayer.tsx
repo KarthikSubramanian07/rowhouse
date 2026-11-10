@@ -335,15 +335,15 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
 
         {/* Sync panel. Manual entry and resync stay visible. */}
         <div className="rounded-lg border border-border bg-surface/60 p-5 sm:p-6">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-text-mid">Sync to my film</p>
               <p className="text-xs text-text-dim">
                 Press play on {film ? film.title : 'your film'}, then line the commentary up to your
                 frame.
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={startSync}>
+            <Button className="shrink-0 self-start" variant="outline" size="sm" onClick={startSync}>
               {syncStatus === 'listening' ? 'Listening...' : 'Sync to my film'}
             </Button>
           </div>

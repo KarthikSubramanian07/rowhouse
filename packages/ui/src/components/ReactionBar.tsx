@@ -45,7 +45,7 @@ export function ReactionBar({ onReact, className, disabled = false }: ReactionBa
     <div
       role="group"
       aria-label="React"
-      className={cn('inline-flex items-center gap-1.5', className)}
+      className={cn('inline-flex max-w-full flex-wrap items-center gap-1.5', className)}
     >
       {REACTION_TYPES.map((type) => {
         const Icon = ICONS[type];
