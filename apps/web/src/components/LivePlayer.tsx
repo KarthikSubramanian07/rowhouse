@@ -271,13 +271,13 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
   const initials = creator.name.slice(0, 1).toUpperCase();
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+    <div className="grid min-w-0 max-w-full gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
       <style dangerouslySetInnerHTML={{ __html: LOCAL_STYLE }} />
 
       {/* Left column: stream and sync. */}
-      <div className="flex flex-col gap-6">
+      <div className="flex min-w-0 flex-col gap-6">
         {/* Stream panel (audio transport is stubbed in this build). */}
-        <div className="relative overflow-hidden rounded-lg border border-border bg-surface/60">
+        <div className="relative min-w-0 overflow-hidden rounded-lg border border-border bg-surface/60">
           <div className="flex aspect-video flex-col items-center justify-center gap-5 bg-[radial-gradient(circle_at_50%_35%,var(--surface-2),var(--bg))] p-6">
             {/* Floating reaction bursts. */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -300,11 +300,13 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
               fallback={initials}
               className="size-16 text-base"
             />
-            <div className="text-center">
-              <p className="font-display text-lg text-text-hi">{creator.name}</p>
-              <div className="mt-2 flex items-center justify-center gap-2">
+            <div className="min-w-0 text-center">
+              <p className="font-display text-lg text-text-hi [overflow-wrap:anywhere]">
+                {creator.name}
+              </p>
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
                 {isLive ? (
-                  <LiveBadge label={`Live ${session.mode} commentary`} />
+                  <LiveBadge label={`Live ${session.mode}`} />
                 ) : (
                   <Badge variant="outline">{session.status}</Badge>
                 )}
@@ -335,15 +337,15 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
 
         {/* Sync panel. Manual entry and resync stay visible. */}
         <div className="rounded-lg border border-border bg-surface/60 p-5 sm:p-6">
-          <div className="mb-4 flex items-center justify-between gap-3">
-            <div>
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
               <p className="text-sm text-text-mid">Sync to my film</p>
               <p className="text-xs text-text-dim">
                 Press play on {film ? film.title : 'your film'}, then line the commentary up to your
                 frame.
               </p>
             </div>
-            <Button variant="outline" size="sm" onClick={startSync}>
+            <Button className="shrink-0 self-start" variant="outline" size="sm" onClick={startSync}>
               {syncStatus === 'listening' ? 'Listening...' : 'Sync to my film'}
             </Button>
           </div>
@@ -387,9 +389,9 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
       </div>
 
       {/* Right column: chat and reactions. */}
-      <aside className="flex min-h-[420px] flex-col rounded-lg border border-border bg-surface/60">
-        <div className="flex items-center justify-between gap-2 border-b border-border px-4 py-3">
-          <div className="flex items-center gap-2">
+      <aside className="flex min-h-[420px] min-w-0 flex-col rounded-lg border border-border bg-surface/60">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
             <span className="font-mono text-xs uppercase tracking-widest text-text-mid">
               Live chat
             </span>
@@ -416,13 +418,13 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
         </div>
 
         <div className="border-t border-border p-3">
-          <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="mb-3 flex min-w-0 flex-wrap items-center justify-between gap-2">
             <span className="font-mono text-[10px] uppercase tracking-widest text-text-dim">
               React
             </span>
             <ReactionBar onReact={sendReaction} disabled={!isLive || conn !== 'open'} />
           </div>
-          <form onSubmit={sendChat} className="flex items-center gap-2">
+          <form onSubmit={sendChat} className="flex min-w-0 items-center gap-2">
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -430,7 +432,7 @@ export default function LivePlayer({ session, creator, film, wsUrl }: LiveDetail
                 !isLive ? 'Chat is closed' : canChat ? 'Say something...' : 'Sign in to chat'
               }
               disabled={!isLive || conn !== 'open' || !canChat}
-              className="h-9 flex-1 rounded-md border border-border bg-bg px-3 text-sm text-text-hi outline-none placeholder:text-text-dim focus:border-accent disabled:opacity-50"
+              className="h-9 min-w-0 flex-1 rounded-md border border-border bg-bg px-3 text-sm text-text-hi outline-none placeholder:text-text-dim focus:border-accent disabled:opacity-50"
             />
             <Button size="sm" type="submit" disabled={!isLive || conn !== 'open' || !draft.trim()}>
               Send

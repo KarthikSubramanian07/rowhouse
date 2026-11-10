@@ -136,10 +136,10 @@ export default function SyncDemo() {
   const pos = state.status === 'locked' ? displayPos : state.positionSeconds;
 
   return (
-    <div className="rounded-lg border border-border bg-surface/60 p-5 sm:p-6">
-      <div className="mb-4 flex items-center justify-between">
+    <div className="min-w-0 max-w-full rounded-lg border border-border bg-surface/60 p-5 sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
         <p className="font-mono text-xs uppercase tracking-widest text-text-mid">Sync demo</p>
-        <p className="font-mono text-xs text-text-dim">
+        <p className="min-w-0 font-mono text-xs text-text-dim [overflow-wrap:anywhere]">
           reference @ {START_OFFSET}s, found automatically
         </p>
       </div>

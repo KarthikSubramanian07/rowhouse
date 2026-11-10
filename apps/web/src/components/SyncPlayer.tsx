@@ -125,16 +125,19 @@ export default function SyncPlayer({ detail }: { detail: TrackDetail }) {
         }}
       />
 
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <Button onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'}>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
+          <Button
+            onClick={togglePlay}
+            aria-label={playing ? 'Pause commentary' : 'Play commentary'}
+          >
             {playing ? 'Pause' : 'Play commentary'}
           </Button>
           <TimeCode seconds={position} className="text-text-mid" />
           <span className="text-text-dim">/</span>
           <TimeCode seconds={duration} className="text-text-dim" />
         </div>
-        <ReactionBar onReact={() => {}} />
+        <ReactionBar className="flex-wrap" onReact={() => {}} />
       </div>
 
       <div className="mt-5">

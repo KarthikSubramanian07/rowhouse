@@ -13,7 +13,7 @@ export const button = tv({
   ],
   variants: {
     variant: {
-      primary: 'bg-accent text-text-hi hover:bg-accent-hi active:bg-accent',
+      primary: 'bg-accent text-text-hi hover:bg-accent-deep active:bg-accent',
       ghost: 'bg-transparent text-text-mid hover:text-text-hi hover:bg-surface-2',
       outline:
         'border border-border bg-transparent text-text-hi hover:border-text-dim hover:bg-surface',

@@ -45,9 +45,10 @@ hand-written CSS / canvas code.
 | `--border` | `#24242B` | `border-border` | Hairlines. |
 | `--text-hi` | `#F2F0EC` | `text-text-hi` | Primary text: warm off-white, **never pure `#fff`**. |
 | `--text-mid` | `#9E9EA7` | `text-text-mid` | Secondary text. |
-| `--text-dim` | `#64646D` | `text-text-dim` | Tertiary / meta. |
-| `--accent` | `#E0362E` | `bg-accent` / `text-accent` | **The single brand accent, cinema red.** live/REC, primary action, focus rings. Nothing else. |
-| `--accent-hi` | `#FF5B54` | `text-accent-hi` | Accent hover / emphasis. |
+| `--text-dim` | `#868690` | `text-text-dim` | Tertiary / meta. The quietest text that still reads at 4.5:1 on every surface. |
+| `--accent` | `#D0271F` | `bg-accent` | **The single brand accent, cinema red.** live/REC, primary action, focus rings. Nothing else. Text on dark surfaces uses `accent-hi`, since `accent` is under 4.5:1 there. |
+| `--accent-hi` | `#FF5B54` | `text-accent-hi` | Accent text and icons on dark surfaces. Too light to put text on. |
+| `--accent-deep` | `#BF231C` | `hover:bg-accent-deep` | Hover fill for accent buttons, keeping their text at 4.5:1. |
 | `--locked` | `#3DD68C` | `text-locked` | **Semantic status only:** the sync "locked" state. Never in chrome or branding. |
 | `--react-fire` | `#FF7A45` | `text-fire` | Reaction: fire. |
 | `--react-laugh` | `#F5C518` | `text-laugh` | Reaction: laugh. |

@@ -51,10 +51,10 @@ const jsonLd = [websiteJsonLd(), webApplicationJsonLd()];
 <Base jsonLd={jsonLd}>
   <!-- Hero -->
   <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6 sm:pt-24">
-    <div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
-      <div>
-        <p class="font-mono text-xs uppercase tracking-[0.2em] text-accent-hi">Rowhouse · live commentary for film &amp; TV</p>
-        <h1 class="mt-4 font-display text-5xl leading-[1.02] text-text-hi sm:text-6xl">
+    <div class="grid min-w-0 items-center gap-10 lg:grid-cols-[1.05fr_1fr]">
+      <div class="min-w-0">
+        <p class="font-mono text-xs uppercase tracking-[0.12em] text-accent-hi sm:tracking-[0.2em] [overflow-wrap:anywhere]">Rowhouse · live commentary for film &amp; TV</p>
+        <h1 class="mt-4 font-display text-4xl leading-[1.02] text-text-hi [overflow-wrap:anywhere] sm:text-5xl md:text-6xl">
           The film conversation, synced to <span class="text-accent-hi">your exact frame.</span>
         </h1>
         <p class="mt-5 max-w-xl text-lg text-text-mid">
@@ -64,7 +64,7 @@ const jsonLd = [websiteJsonLd(), webApplicationJsonLd()];
           commentary on top.
         </p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-hi">
+          <a href="/discover" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-deep">
             Find a commentary
           </a>
           <a href="/about" class="rounded-md border border-border px-4 py-2.5 text-sm text-text-mid transition-colors hover:border-text-mid hover:text-text-hi">
@@ -131,7 +131,7 @@ const jsonLd = [websiteJsonLd(), webApplicationJsonLd()];
         saves as a permanent, searchable track, with the room's reactions marked on the waveform.
       </p>
       <div class="mt-6 flex flex-wrap items-center gap-4">
-        <a href="/studio" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-hi">Open the studio</a>
+        <a href="/studio" class="rounded-md bg-accent px-4 py-2.5 text-sm font-medium text-white hover:bg-accent-deep">Open the studio</a>
         <span class="font-mono text-xs text-text-dim">Free forever. Your first sync in about {formatTimecode(600)}.</span>
       </div>
     </div>

@@ -472,7 +472,7 @@ export default function Studio({ me }: { me: StudioUser }) {
                   </div>
                   <a
                     href={`/track/${endResult.trackId}`}
-                    className="mt-3 inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-text-hi hover:bg-accent-hi"
+                    className="mt-3 inline-block rounded-md bg-accent px-3 py-2 text-sm font-medium text-text-hi hover:bg-accent-deep"
                   >
                     Open the replay track
                   </a>
@@ -525,7 +525,7 @@ export default function Studio({ me }: { me: StudioUser }) {
               </p>
               <a
                 href={`/track/${takeTrackId}`}
-                className="mt-2 inline-block font-mono text-xs uppercase tracking-widest text-accent-hi hover:text-accent"
+                className="mt-2 inline-block font-mono text-xs uppercase tracking-widest text-accent-hi hover:text-text-hi"
               >
                 Open the track
               </a>

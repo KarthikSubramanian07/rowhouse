@@ -78,19 +78,19 @@ const jsonLd = {
 
     <!-- Filters -->
     <div class="mt-8 space-y-3">
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Format</span>
-        <a href={chipHref({ type: null })} class={`${chipBase} ${typeFilter ? chipOff : chipOn}`}>All</a>
-        <a href={chipHref({ type: 'movie' })} class={`${chipBase} ${typeFilter === 'movie' ? chipOn : chipOff}`}>Film</a>
-        <a href={chipHref({ type: 'tv' })} class={`${chipBase} ${typeFilter === 'tv' ? chipOn : chipOff}`}>Series</a>
-        <a href={chipHref({ type: 'audiobook' })} class={`${chipBase} ${typeFilter === 'audiobook' ? chipOn : chipOff}`}>Audiobooks</a>
+      <div class="flex flex-wrap items-center gap-2" role="group" aria-labelledby="filter-format">
+        <span id="filter-format" class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Format</span>
+        <a href={chipHref({ type: null })} class={`${chipBase} ${typeFilter ? chipOff : chipOn}`} aria-current={typeFilter ? undefined : 'page'}>All</a>
+        <a href={chipHref({ type: 'movie' })} class={`${chipBase} ${typeFilter === 'movie' ? chipOn : chipOff}`} aria-current={typeFilter === 'movie' ? 'page' : undefined}>Film</a>
+        <a href={chipHref({ type: 'tv' })} class={`${chipBase} ${typeFilter === 'tv' ? chipOn : chipOff}`} aria-current={typeFilter === 'tv' ? 'page' : undefined}>Series</a>
+        <a href={chipHref({ type: 'audiobook' })} class={`${chipBase} ${typeFilter === 'audiobook' ? chipOn : chipOff}`} aria-current={typeFilter === 'audiobook' ? 'page' : undefined}>Audiobooks</a>
       </div>
       {genres.length > 0 && (
-        <div class="flex flex-wrap items-center gap-2">
-          <span class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Genre</span>
-          <a href={chipHref({ genre: null })} class={`${chipBase} ${genreFilter ? chipOff : chipOn}`}>All</a>
+        <div class="flex flex-wrap items-center gap-2" role="group" aria-labelledby="filter-genre">
+          <span id="filter-genre" class="font-mono text-[10px] uppercase tracking-widest text-text-dim">Genre</span>
+          <a href={chipHref({ genre: null })} class={`${chipBase} ${genreFilter ? chipOff : chipOn}`} aria-current={genreFilter ? undefined : 'page'}>All</a>
           {genres.map((g) => (
-            <a href={chipHref({ genre: g })} class={`${chipBase} ${genreFilter === g ? chipOn : chipOff}`}>{g}</a>
+            <a href={chipHref({ genre: g })} class={`${chipBase} ${genreFilter === g ? chipOn : chipOff}`} aria-current={genreFilter === g ? 'page' : undefined}>{g}</a>
           ))}
         </div>
       )}

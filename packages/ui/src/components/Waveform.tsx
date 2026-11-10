@@ -1,7 +1,8 @@
-import type { ReactionMarker } from '@rowhouse/types';
+import type { ReactionMarker, ReactionType } from '@rowhouse/types';
+import { formatTimecode } from '@rowhouse/types';
 import * as React from 'react';
 import { cn } from '../lib/cn.js';
-import { REACTION_COLORS } from '../lib/reactions.js';
+import { REACTION_COLORS, REACTION_LABELS } from '../lib/reactions.js';
 
 export interface WaveformProps {
   /** Precomputed peak amplitudes 0..1. If omitted, a deterministic pattern is synthesized. */
@@ -15,6 +16,8 @@ export interface WaveformProps {
   className?: string;
   /** Canvas height in px. Default 72. */
   height?: number;
+  /** Accessible name. Default "Seek commentary" when seekable, else "Commentary timeline". */
+  label?: string;
 }
 
 const BAR_WIDTH = 2;
@@ -45,6 +48,56 @@ function synthPeaks(seed: number, n: number): number[] {
   return out;
 }
 
+/** How many reaction peaks the text alternative names, busiest first. */
+const MAX_DESCRIBED_MARKERS = 6;
+
+/**
+ * Text alternative for the reaction dots (WCAG 1.1.1): the busiest moments,
+ * in timeline order, e.g. "Reaction peaks: Shock at 0:15, Cry at 0:33."
+ */
+function describeMarkers(markers: ReactionMarker[] | undefined): string {
+  if (!markers || markers.length === 0) return '';
+  const top = [...markers]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, MAX_DESCRIBED_MARKERS)
+    .sort((a, b) => a.t - b.t);
+  return `Reaction peaks: ${top.map((m) => `${REACTION_LABELS[m.type]} at ${formatTimecode(m.t)}`).join(', ')}.`;
+}
+
+/**
+ * Each reaction gets its own shape as well as its own color, so the type
+ * never rests on color alone (WCAG 1.4.1): fire points up, cry points down,
+ * shock is a diamond, laugh stays round.
+ */
+function markerPath(
+  ctx: CanvasRenderingContext2D,
+  type: ReactionType,
+  x: number,
+  y: number,
+  r: number,
+) {
+  ctx.beginPath();
+  if (type === 'fire') {
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r, y + r * 0.8);
+    ctx.lineTo(x - r, y + r * 0.8);
+    ctx.closePath();
+  } else if (type === 'cry') {
+    ctx.moveTo(x - r, y - r * 0.8);
+    ctx.lineTo(x + r, y - r * 0.8);
+    ctx.lineTo(x, y + r);
+    ctx.closePath();
+  } else if (type === 'shock') {
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x + r, y);
+    ctx.lineTo(x, y + r);
+    ctx.lineTo(x - r, y);
+    ctx.closePath();
+  } else {
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+  }
+}
+
 function readVar(el: Element, name: string, fallback: string): string {
   const v = getComputedStyle(el).getPropertyValue(name).trim();
   return v || fallback;
@@ -54,6 +107,10 @@ function readVar(el: Element, name: string, fallback: string): string {
  * Waveform: the async player centerpiece. A canvas-rendered commentary waveform
  * with a cinema-red playhead and reaction-marker dots clustered along the
  * timeline. Click or use the arrow keys to seek.
+ *
+ * With onSeek it is a slider whose value reads as timecodes; without, it is an
+ * image whose name says where playback is. Either way the reaction peaks are
+ * spelled out in text, since the canvas itself is invisible to assistive tech.
  */
 export function Waveform({
   peaks,
@@ -63,6 +120,7 @@ export function Waveform({
   onSeek,
   className,
   height = 72,
+  label,
 }: WaveformProps) {
   const wrapRef = React.useRef<HTMLDivElement | null>(null);
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
@@ -93,8 +151,8 @@ export function Waveform({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
 
-    const colPlayed = readVar(wrap, '--accent', '#e0362e');
-    const colUnplayed = readVar(wrap, '--text-dim', '#64646d');
+    const colPlayed = readVar(wrap, '--accent', '#d0271f');
+    const colUnplayed = readVar(wrap, '--text-dim', '#868690');
     const colPlayhead = readVar(wrap, '--accent-hi', '#ff5b54');
 
     const step = BAR_WIDTH + BAR_GAP;
@@ -126,8 +184,7 @@ export function Waveform({
         const mx = Math.max(0, Math.min(1, m.t / duration)) * width;
         const r = 2.5 + (Math.min(m.count, maxCount) / maxCount) * 4.5;
         const my = 7;
-        ctx.beginPath();
-        ctx.arc(mx, my, r, 0, Math.PI * 2);
+        markerPath(ctx, m.type, mx, my, r);
         ctx.fillStyle = REACTION_COLORS[m.type];
         ctx.globalAlpha = 0.9;
         ctx.fill();
@@ -161,44 +218,64 @@ export function Waveform({
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (!onSeek) return;
     const stepSec = e.shiftKey ? 30 : 5;
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      onSeek(Math.min(duration, positionSeconds + stepSec));
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      onSeek(Math.max(0, positionSeconds - stepSec));
-    } else if (e.key === 'Home') {
-      e.preventDefault();
-      onSeek(0);
-    } else if (e.key === 'End') {
-      e.preventDefault();
-      onSeek(duration);
-    }
+    let next: number | null = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = positionSeconds + stepSec;
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = positionSeconds - stepSec;
+    else if (e.key === 'PageUp') next = positionSeconds + 60;
+    else if (e.key === 'PageDown') next = positionSeconds - 60;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = duration;
+    if (next === null) return;
+    e.preventDefault();
+    onSeek(Math.max(0, Math.min(duration, next)));
   };
 
-  const interactive = Boolean(onSeek);
+  const descriptionId = React.useId();
+  const markerText = describeMarkers(markers);
+  const where = `${formatTimecode(positionSeconds)} of ${formatTimecode(duration)}`;
+  const canvas = <canvas ref={canvasRef} className="block" aria-hidden />;
+
+  if (!onSeek) {
+    return (
+      <div
+        ref={wrapRef}
+        data-slot="waveform"
+        role="img"
+        aria-label={`${label ?? 'Commentary timeline'}, ${where}.${markerText ? ` ${markerText}` : ''}`}
+        className={cn('relative w-full select-none', className)}
+        style={{ height }}
+      >
+        {canvas}
+      </div>
+    );
+  }
 
   return (
     <div
       ref={wrapRef}
       data-slot="waveform"
-      role={interactive ? 'slider' : undefined}
-      aria-label={interactive ? 'Seek' : undefined}
-      aria-valuemin={interactive ? 0 : undefined}
-      aria-valuemax={interactive ? Math.round(duration) : undefined}
-      aria-valuenow={interactive ? Math.round(positionSeconds) : undefined}
-      tabIndex={interactive ? 0 : undefined}
-      onKeyDown={interactive ? onKeyDown : undefined}
-      onPointerDown={interactive ? (e) => seekFromClientX(e.clientX) : undefined}
+      role="slider"
+      aria-label={label ?? 'Seek commentary'}
+      aria-valuemin={0}
+      aria-valuemax={Math.round(duration)}
+      aria-valuenow={Math.round(positionSeconds)}
+      aria-valuetext={where}
+      aria-describedby={markerText ? descriptionId : undefined}
+      tabIndex={0}
+      onKeyDown={onKeyDown}
+      onPointerDown={(e) => seekFromClientX(e.clientX)}
       className={cn(
-        'relative w-full select-none',
-        interactive &&
-          'cursor-pointer rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+        'relative w-full cursor-pointer select-none rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
         className,
       )}
       style={{ height }}
     >
-      <canvas ref={canvasRef} className="block" />
+      {canvas}
+      {markerText ? (
+        <span id={descriptionId} className="sr-only">
+          {markerText}
+        </span>
+      ) : null}
     </div>
   );
 }

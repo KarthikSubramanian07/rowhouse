@@ -29,12 +29,12 @@ const statusLabel =
 
 <Base title={title} description={description}>
   <article class="mx-auto max-w-6xl px-4 pt-12 sm:px-6">
-    <nav class="font-mono text-xs text-text-dim">
-      <a href="/live" class="hover:text-text-mid">live</a> / <span class="text-text-mid">{session.filmSlug}</span>
+    <nav class="font-mono text-xs text-text-dim" aria-label="Breadcrumb">
+      <a href="/live" class="hover:text-text-mid">live</a> / <span class="text-text-mid" aria-current="page">{session.filmSlug}</span>
     </nav>
 
     <header class="mt-4">
-      <div class="flex items-center gap-2">
+      <div class="flex flex-wrap items-center gap-2">
         {session.status === 'live' ? <LiveBadge /> : <Badge variant="outline">{statusLabel}</Badge>}
         {session.platform && (
           <span class="rounded border border-border px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-text-dim">
@@ -46,7 +46,7 @@ const statusLabel =
         </span>
       </div>
 
-      <h1 class="mt-3 font-display text-4xl leading-tight text-text-hi">{session.title}</h1>
+      <h1 class="mt-3 font-display text-3xl leading-tight text-text-hi [overflow-wrap:anywhere] sm:text-4xl">{session.title}</h1>
       <p class="mt-2 text-text-mid">
         <a href={`/creator/${creator.handle}`} class="hover:text-text-hi">{creator.name}</a>
         <span class="text-text-dim"> · commentary on </span>
