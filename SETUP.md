@@ -67,9 +67,10 @@ pnpm run deploy         # deploys the Pages site, then the API Worker
 ### CI auto-deploy (GitHub Actions)
 
 The `Deploy` workflow runs on every push to `main`, but only if a valid Cloudflare
-token is present. If the token is missing or cannot authenticate, it skips cleanly
-(the job stays green) and prints a warning. To enable auto-deploy, add two repo
-secrets (Settings, Secrets and variables, Actions):
+token is present. If the token is missing or cannot authenticate, the
+`Check Cloudflare credentials` job passes, the `Build and deploy` job shows as
+skipped, and the run summary says why, so the run stays green. To enable
+auto-deploy, add two repo secrets (Settings, Secrets and variables, Actions):
 
 - `CLOUDFLARE_ACCOUNT_ID` - your account id.
 - `CLOUDFLARE_API_TOKEN` - a token created at
